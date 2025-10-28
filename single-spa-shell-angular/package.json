@@ -1,0 +1,12 @@
+{
+  "name": "single-spa-shell-angular",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "serve -l 9000 ."
+  },
+  "devDependencies": {
+    "serve": "^14.2.3",
+    "systemjs": "^6.14.3"
+  }
+}

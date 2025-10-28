@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Native Federation Shell (demo)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>body{font-family:system-ui,Segoe UI,Roboto,Arial;padding:16px}</style>
+</head>
+<body>
+  <h1>Native Federation Shell (demo)</h1>
+  <p>Integra: (1) NF demo, (2) MF demo, (3) Single‑SPA demo.</p>
+  <nav>
+    <button id="btn-nf">Carregar MFE1 (NF demo)</button>
+    <button id="btn-mf">Carregar Remote-A (MF demo)</button>
+    <button id="btn-ssa">Carregar MFE-A (Single-SPA demo)</button>
+  </nav>
+  <div id="nf-outlet" style="margin-top:16px"></div>
+
+  <script type="module">
+    document.getElementById('btn-nf').onclick = async () => {
+      const mod = await import('http://localhost:9201/mfe1.js');
+      mod.render(document.getElementById('nf-outlet'));
+    };
+    document.getElementById('btn-mf').onclick = async () => {
+      const mod = await import('http://localhost:9101/remote-a.js');
+      mod.render(document.getElementById('nf-outlet'));
+    };
+    document.getElementById('btn-ssa').onclick = async () => {
+      const mod = await import('http://localhost:9001/mfe-a.js');
+      const outlet = document.getElementById('nf-outlet');
+      outlet.innerHTML = '';
+      mod.mount({ outlet });
+    };
+    window.addEventListener('BUS', (e)=> console.log('Shell NF recebeu BUS', e.detail));
+  </script>
+</body>
+</html>

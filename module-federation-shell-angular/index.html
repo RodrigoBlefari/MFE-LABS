@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Module Federation Host (demo)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>body{font-family:system-ui,Segoe UI,Roboto,Arial;padding:16px}</style>
+</head>
+<body>
+  <h1>Module Federation Host (demo)</h1>
+  <nav>
+    <button id="load-remote">Carregar Remote-A</button>
+  </nav>
+  <div id="host-outlet"></div>
+
+  <script type="module">
+    document.getElementById('load-remote').onclick = async () => {
+      const mod = await import('http://localhost:9101/remote-a.js');
+      mod.render(document.getElementById('host-outlet'));
+    };
+    window.addEventListener('BUS', (e)=> console.log('Host MF recebeu BUS', e.detail));
+  </script>
+</body>
+</html>

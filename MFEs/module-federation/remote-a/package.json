@@ -1,0 +1,11 @@
+{
+  "name": "remote-a-mf",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "serve -l 9101 ."
+  },
+  "devDependencies": {
+    "serve": "^14.2.3"
+  }
+}

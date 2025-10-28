@@ -1,0 +1,11 @@
+{
+  "name": "mfe1-nf",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "serve -l 9201 ."
+  },
+  "devDependencies": {
+    "serve": "^14.2.3"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "@org/mfe-a",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "serve -l 9001 .",
+    "build": "echo 'bundle with your Angular + single-spa-angular toolchain'"
+  },
+  "devDependencies": {
+    "serve": "^14.2.3"
+  }
+}
