@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "serve -l 9101 ."
+    "start": "serve -l 9101 --cors ."
   },
   "devDependencies": {
     "serve": "^14.2.3"

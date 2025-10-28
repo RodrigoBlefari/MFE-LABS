@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "serve -l 9001 .",
+    "start": "serve -l 9001 --cors .",
     "build": "echo 'bundle with your Angular + single-spa-angular toolchain'"
   },
   "devDependencies": {
