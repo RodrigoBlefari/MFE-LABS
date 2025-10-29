@@ -128,7 +128,7 @@ export function render(outlet, options = {}) {
   const pingBtn = doc.createElement('button');
   pingBtn.type = 'button';
   pingBtn.className = 'mf-btn';
-  pingBtn.textContent = 'Emitir BUS (Module Federation)';
+  pingBtn.textContent = 'Emitir BUS (Module Federation) Console.log()';
 
   const toggleBtn = doc.createElement('button');
   toggleBtn.type = 'button';

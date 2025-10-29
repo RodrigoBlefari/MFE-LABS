@@ -129,7 +129,7 @@ export function render(outlet, options = {}) {
   const pingBtn = doc.createElement('button');
   pingBtn.type = 'button';
   pingBtn.className = 'nf-btn';
-  pingBtn.textContent = 'Emitir BUS (Native Federation)';
+  pingBtn.textContent = 'Emitir BUS (Native Federation) Console.log()';
 
   const toggleBtn = doc.createElement('button');
   toggleBtn.type = 'button';

@@ -142,7 +142,7 @@ export async function mount(props = {}) {
   const pingBtn = doc.createElement('button');
   pingBtn.type = 'button';
   pingBtn.className = 'mfe-btn';
-  pingBtn.textContent = 'Emitir PING';
+  pingBtn.textContent = 'Emitir PING Console.log()';
 
   const toggleBtn = doc.createElement('button');
   toggleBtn.type = 'button';

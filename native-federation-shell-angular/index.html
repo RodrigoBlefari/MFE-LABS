@@ -22,63 +22,148 @@
   <script type="importmap" src="./importmap.json"></script>
 </head>
 <body>
-  <h1>Native Federation Shell (demo)</h1>
-  <p class="lead">
-    Integra remotos Native Federation, Module Federation, Single-SPA, Angular, React e Vue em um shell de orquestracao
-    resiliente.
-  </p>
-  <nav class="top-nav">
-    <div class="nav-section nav-section--primary">
-      <h2>Experimente individualmente</h2>
-      <p class="nav-hint">Escolha um MFE para assumir o painel principal.</p>
-      <div id="primary-controls" class="nav-buttons"></div>
+  <div id="modal-backdrop" class="modal-backdrop" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button type="button" class="modal-close" data-close-modal aria-label="Fechar">
+        ×
+      </button>
+      <header class="modal-header">
+        <h2 id="modal-title"></h2>
+      </header>
+      <div class="modal-body" id="modal-content"></div>
     </div>
-    <div class="nav-section nav-section--multi">
-      <h2>Painel combinado</h2>
-      <p class="nav-hint">Selecione quais MFEs permanecem no painel lateral (renderizacao simultanea).</p>
-      <div id="multi-toggle" class="multi-toggle"></div>
-      <div class="nav-actions">
-        <button id="btn-panel" type="button" class="primary">Mostrar selecionados</button>
-        <button id="btn-select-all" type="button" class="ghost">Selecionar todos</button>
-        <button id="btn-select-none" type="button" class="ghost">Limpar selecao</button>
+  </div>
+
+  <header class="hero">
+    <div class="hero-content">
+      <span class="hero-badge">Native Federation Lab</span>
+      <h1>Experiência Orquestrada Multicanal</h1>
+      <p>
+        Esta página demonstra como blocos feitos em tecnologias diferentes trabalham juntos sem amarração.
+        Você pode ligar e desligar cada bloco com segurança, observar o que acontece e continuar usando o restante normalmente.
+      </p>
+      <div class="hero-actions">
+        <button type="button" class="primary" data-doc-overview>Manifesto Native Federation</button>
+        <button type="button" class="ghost" id="btn-scroll-controls">Ir para os controles</button>
       </div>
     </div>
-    <div class="nav-section nav-section--telemetry">
-      <h2>Telemetria de renderizacao</h2>
-      <p class="nav-hint">Atualizado apos cada montagem registrada.</p>
-      <dl class="insights-list">
-        <div>
-          <dt>Mais rapido (media)</dt>
-          <dd id="insight-fastest">--</dd>
-        </div>
-        <div>
-          <dt>Mais lento (media)</dt>
-          <dd id="insight-slowest">--</dd>
-        </div>
-        <div>
-          <dt>Media global</dt>
-          <dd id="insight-average">--</dd>
-        </div>
-        <div>
-          <dt>Coletas</dt>
-          <dd id="insight-samples">0</dd>
-        </div>
-      </dl>
+    <div class="hero-highlight">
+      <ul>
+        <li>Times independentes, sem efeito cascata entre blocos</li>
+        <li>Entrar e sair de tela sem sujeira (desmontagem segura)</li>
+        <li>Atualizar cada parte sem derrubar o resto da página</li>
+        <li>BUS: avisos simples para entender e integrar comportamentos</li>
+      </ul>
     </div>
-  </nav>
-  <main class="layout">
-    <section class="panel">
-      <h2>Visualizacao individual</h2>
-      <div id="primary-outlet"></div>
-    </section>
-    <section class="panel">
-      <h2>Painel combinado</h2>
-      <div id="dashboard" class="dashboard">
-        <div id="dashboard-grid" class="dashboard-grid"></div>
-        <p id="dashboard-error" class="dashboard-error" aria-live="polite"></p>
+  </header>
+
+  <main class="shell-main">
+    <section class="layout-playground" aria-label="Layout federado">
+      <div class="page-preview" id="page-preview">
+        <div class="page-grid" id="page-grid"></div>
+        <p class="page-error" id="page-preview-error" aria-live="polite"></p>
       </div>
+      <section class="primary-stage" id="primary-stage" aria-label="Palco individual">
+        <header class="stage-header">
+          <span class="stage-badge">Laboratório Individual</span>
+          <h2 id="primary-title">Selecione um MFE</h2>
+          <p id="primary-summary">
+            Monte qualquer micro front-end no palco central para investigar interações, BUS e telemetria em isolamento.
+          </p>
+        </header>
+        <div id="primary-outlet" class="stage-outlet"></div>
+        <p class="stage-footnote">
+          O shell propaga métricas, garante desmontagem com <code>unmount()</code> e sincroniza o BUS entre MFEs.
+        </p>
+      </section>
     </section>
+
+    <aside class="control-panel" id="control-panel">
+      <section class="panel-card docs-card">
+        <h2>Documentação do experimento</h2>
+        <p>
+          Entenda a arquitetura Native Federation com esbuild, políticas de segurança, contratos de lifecycle e as
+          integrações entre frameworks.
+        </p>
+        <button type="button" class="primary" data-doc-overview>Abrir visão geral</button>
+        <p class="doc-hint">Cada bloco do layout possui um atalho para a documentação detalhada do respectivo MFE.</p>
+      </section>
+
+      <section class="panel-card layout-card">
+        <h2>Compor o esqueleto</h2>
+        <p>Selecione quais MFEs precisam aparecer no mock de página. O layout reage em tempo real.</p>
+        <div id="multi-toggle" class="multi-toggle"></div>
+        <div class="panel-actions">
+          <button id="btn-panel" type="button" class="primary">Atualizar layout</button>
+          <button id="btn-select-all" type="button" class="ghost">Selecionar todos</button>
+          <button id="btn-select-none" type="button" class="ghost">Limpar seleção</button>
+        </div>
+      </section>
+
+      <section class="panel-card primary-card">
+        <h2>Palco isolado</h2>
+        <p>Escolha um MFE para assumir o palco central. Ideal para depuração, demos focadas e testes de integrações.</p>
+        <div id="primary-controls" class="nav-buttons"></div>
+      </section>
+
+      <section class="panel-card insights-card">
+        <h2>Telemetria de renderização</h2>
+        <dl class="insights-list">
+          <div>
+            <dt>Mais rápido (média)</dt>
+            <dd id="insight-fastest">--</dd>
+          </div>
+          <div>
+            <dt>Mais lento (média)</dt>
+            <dd id="insight-slowest">--</dd>
+          </div>
+          <div>
+            <dt>Média global</dt>
+            <dd id="insight-average">--</dd>
+          </div>
+          <div data-wide="true">
+            <dt>Melhor pico</dt>
+            <dd id="insight-best">--</dd>
+          </div>
+          <div>
+            <dt>Montagens observadas</dt>
+            <dd id="insight-samples">0</dd>
+          </div>
+        </dl>
+
+        <table class="insights-table" aria-label="Ranking de MFEs por média">
+          <thead>
+            <tr>
+              <th>MFE</th>
+              <th>Média</th>
+              <th>Melhor</th>
+              <th>Pior</th>
+              <th>Amostras</th>
+              <th>Bundle</th>
+            </tr>
+          </thead>
+          <tbody id="insights-table-body"></tbody>
+          <tfoot>
+            <tr id="insights-table-foot">
+              <td>Resumo</td>
+              <td>--</td>
+              <td>--</td>
+              <td>--</td>
+              <td>0</td>
+              <td>--</td>
+            </tr>
+          </tfoot>
+        </table>
+      </section>
+    </aside>
   </main>
+
+  <footer class="shell-footer">
+    <p>
+      Native Federation Shell • ES Modules, esbuild pipelines, CSP rigorosa, lifecycle unificado e métricas em tempo real
+      para canais regulados.
+    </p>
+  </footer>
 
   <script type="module" src="./app.js"></script>
 </body>

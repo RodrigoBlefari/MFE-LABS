@@ -1,4 +1,4 @@
-import { defineCustomElement, h, ref, computed, watch } from './node_modules/vue/dist/vue.runtime.esm-browser.prod.js';
+import { defineCustomElement, h, ref, computed, watch, onMounted, getCurrentInstance } from './node_modules/vue/dist/vue.runtime.esm-browser.prod.js';
 
 const instances = new Map();
 let elementDefined = false;
@@ -12,6 +12,17 @@ function ensureStylesheet() {
   link.href = new URL('./mfe-vue.css', import.meta.url).href;
   link.dataset.vueMfeStyle = 'true';
   document.head.appendChild(link);
+}
+
+// Garante o CSS também dentro do Shadow DOM do custom element
+function ensureShadowStyles(shadowRoot) {
+  if (!(shadowRoot instanceof ShadowRoot)) return;
+  if (shadowRoot.querySelector('link[data-vue-mfe-style]')) return;
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = new URL('./mfe-vue.css', import.meta.url).href;
+  link.dataset.vueMfeStyle = 'true';
+  shadowRoot.appendChild(link);
 }
 
 export function createOutlet({ mountPoint = document.body, append = false } = {}) {
@@ -127,6 +138,21 @@ function defineVueElement() {
         },
       });
 
+      // Injeta a folha de estilo dentro do ShadowRoot para garantir aplicação das classes
+      onMounted(() => {
+        try {
+          const inst = getCurrentInstance();
+          const rootEl = inst?.vnode?.el;
+          const shadow = rootEl?.getRootNode?.();
+          if (shadow instanceof ShadowRoot) {
+            ensureShadowStyles(shadow);
+          }
+        } catch (e) {
+          // Falha silenciosa: o CSS global já cobre como fallback
+          console.warn('Vue MFE: não foi possível anexar CSS ao shadowRoot', e);
+        }
+      });
+
       return {
         props,
         pings,
@@ -161,14 +187,16 @@ function defineVueElement() {
             'button',
             {
               type: 'button',
+              class: 'vue-actions__primary',
               onClick: this.emitPing,
             },
-            'Emitir BUS (Vue)',
+            'Emitir BUS (Vue) console.log()',
           ),
           h(
             'button',
             {
               type: 'button',
+              class: 'vue-actions__secondary',
               'aria-expanded': this.detailsOpen,
               onClick: this.toggleDetails,
             },
