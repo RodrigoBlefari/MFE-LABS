@@ -28,11 +28,54 @@ p.lead {
   max-width: 54ch;
 }
 
-nav {
+.top-nav {
+  display: grid;
+  gap: 20px;
+  margin: 28px 0 20px;
+}
+
+@media (min-width: 960px) {
+  .top-nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+}
+
+.nav-section {
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 16px;
+  padding: 18px;
+  background: rgba(15, 23, 42, 0.6);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.32);
+}
+
+.nav-section h2 {
+  margin: 0;
+  font-size: 1.15rem;
+  color: #5eead4;
+}
+
+.nav-hint {
+  margin: 6px 0 14px;
+  color: rgba(226, 232, 240, 0.75);
+  font-size: 0.9rem;
+}
+
+.nav-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin: 24px 0 16px;
+  gap: 10px;
+}
+
+.nav-section--multi .nav-buttons {
+  flex-direction: column;
+}
+
+.nav-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
 }
 
 button {
@@ -60,6 +103,56 @@ button:hover:not(:disabled) {
 button:disabled {
   opacity: 0.6;
   cursor: wait;
+}
+
+.ghost {
+  background: rgba(15, 23, 42, 0.5);
+  color: #e2e8f0;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+}
+
+.primary {
+  background: linear-gradient(135deg, #38bdf8, #2563eb);
+  color: #0b1120;
+}
+
+.nav-buttons .nav-button {
+  flex: 1 1 140px;
+  text-align: center;
+  background: linear-gradient(135deg, var(--accent, #38bdf8), color-mix(in srgb, var(--accent, #38bdf8) 70%, #1e293b 30%));
+  color: #020617;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+}
+
+.nav-button.active {
+  box-shadow: 0 12px 26px rgba(14, 165, 233, 0.35);
+  transform: translateY(-1px);
+}
+
+.multi-toggle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.multi-chip {
+  border-radius: 999px;
+  padding: 10px 16px;
+  background: rgba(30, 41, 59, 0.65);
+  color: var(--accent, #cbd5f5);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  cursor: pointer;
+  transition: transform 0.2s ease, border 0.2s ease, background 0.2s ease;
+}
+
+.multi-chip:hover {
+  transform: translateY(-1px);
+}
+
+.multi-chip.selected {
+  border-color: var(--accent, #60a5fa);
+  background: rgba(59, 130, 246, 0.22);
+  color: var(--accent, #60a5fa);
 }
 
 .layout {
@@ -96,22 +189,44 @@ button:disabled {
   min-height: 120px;
 }
 
-#dashboard {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  min-height: 120px;
+.dashboard {
   transition: opacity 0.2s ease;
-  opacity: 0.7;
+  opacity: 0.85;
 }
 
-#dashboard.dashboard-active {
+.dashboard.dashboard-active {
   opacity: 1;
 }
 
-.dashboard-slot {
+.dashboard-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.dashboard-grid .dashboard-slot {
   display: grid;
   gap: 12px;
+}
+
+.dashboard-error-card {
+  border-radius: 12px;
+  padding: 18px;
+  border: 1px dashed rgba(248, 113, 113, 0.6);
+  background: rgba(127, 29, 29, 0.28);
+  color: #fecaca;
+  font-size: 0.95rem;
+}
+
+.empty-state {
+  margin: 0;
+  padding: 24px;
+  text-align: center;
+  border-radius: 12px;
+  border: 1px dashed rgba(148, 163, 184, 0.35);
+  background: rgba(15, 23, 42, 0.4);
+  color: rgba(229, 231, 235, 0.7);
+  font-size: 0.95rem;
 }
 
 #dashboard-error {

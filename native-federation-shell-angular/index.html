@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   <meta http-equiv="Permissions-Policy" content="accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=()" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' http://localhost:9001 http://localhost:9101 http://localhost:9201 'sha256-ieoeWczDHkReVBsRBqaal5AFMlBtNjMzgwKvLqi/tSU='; connect-src 'self' http://localhost:9001 http://localhost:9101 http://localhost:9201; style-src 'self' http://localhost:9001 http://localhost:9101 http://localhost:9201 'unsafe-hashes' 'sha256-QIjW/+aUzfg58HcITJNHkkCTGmLovNUIQbL+Zq2TsIE=' 'sha256-jHfeyg6bGOgJf9ss8zgGinbIkW80hpY8YViDLBmeC8A='; img-src 'self' data:; font-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' http://localhost:9001 http://localhost:9101 http://localhost:9201 http://localhost:9301 http://localhost:9302 http://localhost:9303 https://cdn.jsdelivr.net https://esm.sh https://unpkg.com 'sha256-ieoeWczDHkReVBsRBqaal5AFMlBtNjMzgwKvLqi/tSU='; connect-src 'self' http://localhost:9001 http://localhost:9101 http://localhost:9201 http://localhost:9301 http://localhost:9302 http://localhost:9303 https://cdn.jsdelivr.net https://esm.sh https://unpkg.com; style-src 'self' http://localhost:9001 http://localhost:9101 http://localhost:9201 http://localhost:9301 http://localhost:9302 http://localhost:9303 https://cdn.jsdelivr.net https://esm.sh https://unpkg.com 'unsafe-hashes' 'sha256-QIjW/+aUzfg58HcITJNHkkCTGmLovNUIQbL+Zq2TsIE=' 'sha256-jHfeyg6bGOgJf9ss8zgGinbIkW80hpY8YViDLBmeC8A='; img-src 'self' data:; font-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none';" />
   <meta name="referrer" content="same-origin" />
   <link
     rel="icon"
@@ -16,12 +16,23 @@
 </head>
 <body>
   <h1>Native Federation Shell (demo)</h1>
-  <p class="lead">Integra remotos de Native Federation, Module Federation e Single-SPA simulando uma orquestração corporativa.</p>
-  <nav>
-    <button id="btn-nf" type="button">Carregar MFE1 (NF demo)</button>
-    <button id="btn-mf" type="button">Carregar Remote-A (MF demo)</button>
-    <button id="btn-ssa" type="button">Carregar MFE-A (Single-SPA demo)</button>
-    <button id="btn-all" type="button">Mostrar os 3 juntos</button>
+  <p class="lead">Integra remotos Native MF, Module Federation, Single-SPA, Angular, React e Vue em um shell de orquestração resiliente.</p>
+  <nav class="top-nav">
+    <div class="nav-section">
+      <h2>Experimente individualmente</h2>
+      <p class="nav-hint">Escolha um MFE para assumir o painel principal.</p>
+      <div id="primary-controls" class="nav-buttons"></div>
+    </div>
+    <div class="nav-section nav-section--multi">
+      <h2>Painel combinado</h2>
+      <p class="nav-hint">Selecione quais MFEs permanecem no painel lateral (renderização simultânea).</p>
+      <div id="multi-toggle" class="multi-toggle"></div>
+      <div class="nav-actions">
+        <button id="btn-panel" type="button" class="primary">Mostrar selecionados</button>
+        <button id="btn-select-all" type="button" class="ghost">Selecionar todos</button>
+        <button id="btn-select-none" type="button" class="ghost">Limpar seleção</button>
+      </div>
+    </div>
   </nav>
   <main class="layout">
     <section class="panel">
@@ -30,10 +41,8 @@
     </section>
     <section class="panel">
       <h2>Painel combinado</h2>
-      <div id="dashboard">
-        <div id="dashboard-nf" class="dashboard-slot" aria-label="NF demo"></div>
-        <div id="dashboard-mf" class="dashboard-slot" aria-label="MF demo"></div>
-        <div id="dashboard-ssa" class="dashboard-slot" aria-label="Single-SPA demo"></div>
+      <div id="dashboard" class="dashboard">
+        <div id="dashboard-grid" class="dashboard-grid"></div>
         <p id="dashboard-error" class="dashboard-error" aria-live="polite"></p>
       </div>
     </section>

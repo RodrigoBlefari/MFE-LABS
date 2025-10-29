@@ -44,7 +44,9 @@ export function render(outlet, options = {}) {
   const {
     appendTo = document.body,
     replace = true,
-    title = 'MFE1 (Native Federation demo ESM)',
+    title = 'Native Federation - Event Stream',
+    description = 'MFE ESM direto, ideal para times que desejam aderir a federacao sem empacotadores pesados.',
+    tagline = 'Emitido via CustomEvent - integracao agnostica com Module/Single-SPA.',
     log = true,
     onBus,
   } = options;
@@ -59,27 +61,54 @@ export function render(outlet, options = {}) {
   }
 
   const card = host.ownerDocument.createElement('section');
-  card.className = 'mfe-card';
+  card.className = 'nf-card';
+
+  const badge = host.ownerDocument.createElement('span');
+  badge.className = 'nf-badge';
+  badge.textContent = 'Native Federation Remote';
 
   const heading = host.ownerDocument.createElement('h2');
   heading.textContent = title;
 
-  const toolbar = host.ownerDocument.createElement('div');
-  toolbar.className = 'mfe-toolbar';
+  const descriptionEl = host.ownerDocument.createElement('p');
+  descriptionEl.className = 'nf-description';
+  descriptionEl.textContent = description;
+
+  const taglineEl = host.ownerDocument.createElement('p');
+  taglineEl.className = 'nf-tagline';
+  taglineEl.textContent = tagline;
+
+  const metrics = host.ownerDocument.createElement('div');
+  metrics.className = 'nf-metrics';
+  const metricRows = [
+    ['Latencia media', `${(Math.random() * 20 + 12).toFixed(0)} ms`],
+    ['Roteadores ativos', `${(Math.random() * 4 + 3).toFixed(0)}`],
+    ['Eventos emitidos', '0'],
+  ];
+  let eventsValueEl = null;
+  metricRows.forEach(([label, value]) => {
+    const row = host.ownerDocument.createElement('span');
+    const strong = host.ownerDocument.createElement('strong');
+    strong.textContent = label;
+    const val = host.ownerDocument.createElement('span');
+    val.textContent = value;
+    if (label === 'Eventos emitidos') {
+      eventsValueEl = val;
+    }
+    row.append(strong, val);
+    metrics.appendChild(row);
+  });
 
   const pingBtn = host.ownerDocument.createElement('button');
   pingBtn.type = 'button';
   pingBtn.className = 'mfe-btn';
   pingBtn.textContent = 'Emitir BUS (NF)';
 
-  toolbar.appendChild(pingBtn);
-
   const logArea = host.ownerDocument.createElement('div');
   logArea.className = 'mfe-log';
   logArea.setAttribute('aria-live', 'polite');
 
-  card.appendChild(heading);
-  card.appendChild(toolbar);
+  card.append(badge, heading, descriptionEl, taglineEl, metrics, pingBtn);
   if (log) {
     card.appendChild(logArea);
   }
@@ -87,13 +116,17 @@ export function render(outlet, options = {}) {
   host.appendChild(card);
 
   const onPing = () => {
-    const detail = { type: 'NF-PING' };
+    const total = Number(eventsValueEl?.textContent || '0') + 1;
+    if (eventsValueEl) {
+      eventsValueEl.textContent = String(total);
+    }
+    const detail = { type: 'NF-PING', count: total };
     window.dispatchEvent(new CustomEvent('BUS', { detail }));
     if (typeof onBus === 'function') {
       onBus(detail);
     }
     if (log && logArea) {
-      logArea.textContent = 'BUS emitido pelo MFE1';
+      logArea.textContent = `BUS emitido pelo MFE1 - total ${total}`;
     }
   };
 
@@ -123,24 +156,19 @@ export function render(outlet, options = {}) {
 
   instances.set(host, state);
 
-  const destroy = () => {
-    if (!instances.has(host)) return;
+  return () => {
     cleanup(state);
     instances.delete(host);
   };
-
-  destroy.host = host;
-  destroy.card = card;
-
-  return destroy;
 }
 
 export function unmount(ctx = {}) {
-  const target = ctx && ctx.host instanceof Element
-    ? ctx.host
-    : ctx && ctx.outlet instanceof Element
-      ? ctx.outlet
-      : null;
+  const target =
+    ctx && ctx.host instanceof Element
+      ? ctx.host
+      : ctx && ctx.outlet instanceof Element
+        ? ctx.outlet
+        : null;
 
   if (target && instances.has(target)) {
     const state = instances.get(target);

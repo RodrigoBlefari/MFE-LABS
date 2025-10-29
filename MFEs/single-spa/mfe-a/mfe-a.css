@@ -4,46 +4,84 @@
   margin: 8px 0;
 }
 
-.mfe-card {
-  border: 1px solid #fde68a;
-  border-radius: 12px;
-  padding: 16px;
-  background: #fffbeb;
-  box-shadow: 0 4px 12px rgba(180, 83, 9, 0.16);
-}
-
-.mfe-card h2 {
-  margin: 0 0 12px;
-  font-size: 1.1rem;
+.ssa-card {
+  border-radius: 18px;
+  padding: 20px;
+  background: linear-gradient(135deg, #f97316, #fb923c);
   color: #7c2d12;
+  box-shadow: 0 18px 32px rgba(249, 115, 22, 0.32);
+  border: 1px solid rgba(251, 146, 60, 0.55);
+  position: relative;
+  overflow: hidden;
 }
 
-.mfe-toolbar {
-  display: flex;
-  gap: 8px;
+.ssa-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at bottom left, rgba(255, 255, 255, 0.22), transparent 60%);
+  pointer-events: none;
+}
+
+.ssa-card h2 {
+  margin: 0 0 10px;
+  font-size: 1.2rem;
+}
+
+.ssa-badge {
+  display: inline-flex;
   align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(124, 45, 18, 0.18);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.ssa-description {
+  margin: 8px 0 14px;
+  line-height: 1.45;
+}
+
+.ssa-tagline {
+  margin: 6px 0 18px;
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+.ssa-metrics {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 14px;
+  font-size: 0.92rem;
+}
+
+.ssa-metrics span {
+  display: flex;
+  justify-content: space-between;
 }
 
 .mfe-btn {
   appearance: none;
   border: none;
-  border-radius: 8px;
-  padding: 8px 16px;
-  background: linear-gradient(135deg, #f97316, #ea580c);
-  color: #fff;
-  cursor: pointer;
+  border-radius: 10px;
+  padding: 10px 18px;
+  background: rgba(124, 45, 18, 0.92);
+  color: #fff7ed;
   font-weight: 600;
+  cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .mfe-btn:focus-visible {
-  outline: 2px solid #ea580c;
+  outline: 2px solid rgba(255, 247, 237, 0.7);
   outline-offset: 2px;
 }
 
 .mfe-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(249, 115, 22, 0.24);
+  box-shadow: 0 12px 24px rgba(124, 45, 18, 0.32);
 }
 
 .mfe-log {
@@ -52,4 +90,5 @@
   color: #7c2d12;
   min-height: 1.2em;
   word-break: break-word;
+  opacity: 0.85;
 }

@@ -54,7 +54,9 @@ export async function mount(props = {}) {
   const {
     appendTo = document.body,
     replace = true,
-    title = 'MFE-A (Single-SPA demo)',
+    title = 'Single-SPA - Orchestration Tile',
+    description = 'Widget Single-SPA embalado como modulo ESM, ideal para shells legados evoluirem gradualmente.',
+    tagline = 'Expose mount/unmount e deixe o host decidir quem convive em tela.',
     log = true,
   } = props;
 
@@ -69,34 +71,60 @@ export async function mount(props = {}) {
   }
   host.classList.add('mfe-surface');
 
-  // Remove previous instance bound to this host.
   if (instances.has(host)) {
     cleanup(instances.get(host));
     instances.delete(host);
   }
 
   const card = host.ownerDocument.createElement('section');
-  card.className = 'mfe-card';
+  card.className = 'ssa-card';
+
+  const badge = host.ownerDocument.createElement('span');
+  badge.className = 'ssa-badge';
+  badge.textContent = 'Single-SPA Remote';
 
   const heading = host.ownerDocument.createElement('h2');
   heading.textContent = title;
 
-  const toolbar = host.ownerDocument.createElement('div');
-  toolbar.className = 'mfe-toolbar';
+  const descriptionEl = host.ownerDocument.createElement('p');
+  descriptionEl.className = 'ssa-description';
+  descriptionEl.textContent = description;
+
+  const taglineEl = host.ownerDocument.createElement('p');
+  taglineEl.className = 'ssa-tagline';
+  taglineEl.textContent = tagline;
+
+  const metrics = host.ownerDocument.createElement('div');
+  metrics.className = 'ssa-metrics';
+  const metricRows = [
+    ['Cluster', 'APAC-CX'],
+    ['Deploys semanais', `${(Math.random() * 4 + 4).toFixed(0)}x`],
+    ['Eventos emitidos', '0'],
+  ];
+  let eventsValueEl = null;
+  metricRows.forEach(([label, value]) => {
+    const row = host.ownerDocument.createElement('span');
+    const strong = host.ownerDocument.createElement('strong');
+    strong.textContent = label;
+    const val = host.ownerDocument.createElement('span');
+    val.textContent = value;
+    if (label === 'Eventos emitidos') {
+      eventsValueEl = val;
+    }
+    row.append(strong, val);
+    metrics.appendChild(row);
+  });
 
   const pingBtn = host.ownerDocument.createElement('button');
   pingBtn.type = 'button';
   pingBtn.className = 'mfe-btn';
   pingBtn.textContent = 'Emitir PING';
 
-  toolbar.appendChild(pingBtn);
-
   const logArea = host.ownerDocument.createElement('div');
   logArea.className = 'mfe-log';
   logArea.setAttribute('aria-live', 'polite');
 
-  card.appendChild(heading);
-  card.appendChild(toolbar);
+  card.append(badge, heading, descriptionEl, taglineEl, metrics, pingBtn);
   if (log) {
     card.appendChild(logArea);
   }
@@ -104,9 +132,13 @@ export async function mount(props = {}) {
   host.appendChild(card);
 
   const onPing = () => {
-    window.dispatchEvent(new CustomEvent('BUS', { detail: { type: 'PING' } }));
+    const next = Number(eventsValueEl?.textContent || '0') + 1;
+    if (eventsValueEl) {
+      eventsValueEl.textContent = String(next);
+    }
+    window.dispatchEvent(new CustomEvent('BUS', { detail: { type: 'PING', count: next } }));
     if (log && logArea) {
-      logArea.textContent = 'BUS emitido pelo MFE-A';
+      logArea.textContent = `BUS emitido pelo MFE-A - total ${next}`;
     }
   };
 
@@ -132,25 +164,20 @@ export async function mount(props = {}) {
 
   instances.set(host, state);
 
-  const destroy = () => {
-    if (!instances.has(host)) return;
+  return () => {
     cleanup(state);
     instances.delete(host);
   };
-
-  destroy.host = host;
-  destroy.card = card;
-
-  return destroy;
 }
 
 export async function unmount(props = {}) {
   const host = resolveHost(props);
-  const target = host instanceof Element
-    ? host
-    : props && props.outlet instanceof Element
-      ? props.outlet
-      : null;
+  const target =
+    host instanceof Element
+      ? host
+      : props && props.outlet instanceof Element
+        ? props.outlet
+        : null;
 
   if (target && instances.has(target)) {
     const state = instances.get(target);

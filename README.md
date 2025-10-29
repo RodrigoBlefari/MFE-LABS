@@ -9,9 +9,12 @@
 - `MFEs/single-spa/mfe-a/` (porta 9001)
 - `MFEs/module-federation/remote-a/` (porta 9101)
 - `MFEs/native-federation/mfe1/` (porta 9201)
+- `MFEs/angular/mfe-ng/` (porta 9301) - Angular Web Component (simulado com Web Component vanilla, mantendo contrato NF)
+- `MFEs/react/mfe-react/` (porta 9302) - React 18 encapsulado em Custom Element
+- `MFEs/vue/mfe-vue/` (porta 9303) - Vue 3 via `defineCustomElement` usando bundle local (`node_modules/vue/dist/vue.esm-browser.prod.js`)
 
 ## Rodando em desenvolvimento
-Abra seis terminais (ou execute em sequencia, mantendo todos ativos):
+Abra nove terminais (ou execute em sequencia, mantendo todos ativos):
 
 ```bash
 cd single-spa-shell-angular && npm install && npm start
@@ -22,17 +25,24 @@ cd MFEs/module-federation/remote-a && npm install && npm start
 
 cd native-federation-shell-angular && npm install && npm start
 cd MFEs/native-federation/mfe1 && npm install && npm start
+
+cd MFEs/angular/mfe-ng && npm install && npm start
+cd MFEs/react/mfe-react && npm install && npm start
+cd MFEs/vue/mfe-vue && npm install && npm start
 ```
 
 Interfaces:
 - Single-SPA shell: http://localhost:9000 (rota `#/a` carrega o MFE-A)
 - Module Federation host: http://localhost:9100 (botao carrega Remote-A)
-- Native Federation shell: http://localhost:9200 (botoes carregam NF/MF/SSA ou o painel combinado)
+- Native Federation shell: http://localhost:9200 (painel individual + seletor multi-instancia)
 
-### Multiplo carregamento e outlets dedicados
-- Cada MFE expone `createOutlet()` para gerar containers autocontidos; `render`/`mount` aceitam `{ replace: false }` para coexistir com outros widgets.
-- Remotos devolvem funcoes de teardown assinc, permitindo multiplas instancias simultaneas sem interferencia entre hosts.
-- O shell nativo inclui uma acao "Mostrar os 3 juntos" que renderiza NF+MF+Single-SPA em slots dedicados, simulando dashboards compostos de bancos ou big techs.
+### Selecionar dinamicamente e manter multiplos outlets
+- Cada MFE expoe `createOutlet()` para gerar containers autocontidos; `render`/`mount` aceitam `{ replace: false }` para coexistir com outros widgets.
+- Remotos devolvem funcoes de teardown assincrono, permitindo multiplas instancias simultaneas sem interferencia entre hosts.
+- O shell nativo traz painel principal + painel combinado. Os seletores (chips) mantem os MFEs sincronizados em tempo real, com fallback tratada em caso de erro.
+- O estado inicial apresenta todos os MFEs selecionados; falhas na carga exibem mensagem contextual em cada card mantendo os demais ativos.
+- Angular opera em modo mockado (Web Component vanilla) para evitar cadeia pesada de imports CDN, mas preserva comportamento (BUS, metricas, visual).
+- Vue utiliza `node_modules/vue/dist/vue.esm-browser.prod.js`, garantindo montagem tanto no painel individual quanto no combinado sem depender de CDN.
 
 ## Build
 Cada projeto gera artefatos estaticos em `dist/` via um script de copia padrao. Execute apos `npm install`:
@@ -45,6 +55,9 @@ cd native-federation-shell-angular && npm run build
 cd MFEs/single-spa/mfe-a && npm run build
 cd MFEs/module-federation/remote-a && npm run build
 cd MFEs/native-federation/mfe1 && npm run build
+cd MFEs/angular/mfe-ng && npm run build
+cd MFEs/react/mfe-react && npm run build
+cd MFEs/vue/mfe-vue && npm run build
 ```
 
 Os arquivos em `dist/` podem ser publicados em CDNs distintas ou agregados por pipelines dedicados de cada equipe.
@@ -57,6 +70,7 @@ Os arquivos em `dist/` podem ser publicados em CDNs distintas ou agregados por p
 - Remotos carregam CSS proprio (sem inline), exportam APIs idempotentes (`render`, `unmount`, `bootstrap/mount`) e nunca avaliam entrada de usuario.
 - Scripts dos hosts normalizam funcoes de cleanup assinc, limpam slots compartilhados e impedem vazamento de listeners.
 - `npm run build` copia somente artefatos finais, facilitando pipelines com scanners SAST/DAST e deploy sem tooling desnecessario.
+- O meta CSP do shell nativo inclui `https://cdn.jsdelivr.net`, `https://esm.sh` e `https://unpkg.com` para liberar modulos ESM; em producao, configure os headers HTTP (ex.: `frame-ancestors`) diretamente no servidor reverso para evitar alertas e controlar dominios externos.
 
 ## Deploy (boas praticas)
 - Repos separados por micro app, pipelines independentes e versionamento semantico.
@@ -65,3 +79,8 @@ Os arquivos em `dist/` podem ser publicados em CDNs distintas ou agregados por p
 - Single-SPA: mantenha import-maps versionados; preferencialmente sirva MFEs via CDN com cache busting por hash.
 - CORS: permita apenas origens host <-> remoto necessarias; associe com HTTPS e headers `Access-Control-Allow-Origin` especificos.
 - Observabilidade: health-checks, logs e acordos de contrato entre times para tratar falhas cross-team rapidamente.
+
+## Roadmap imediato
+- Evoluir o card Vue (testes + integracao com design system) e acompanhar seu comportamento em producao.
+- Substituir o mock Angular por um bundle real federado quando a infraestrutura ESM estiver estabilizada.
+- Automatizar testes de smoke para garantir que todos os remotos respondem antes de iniciar o shell nativo.

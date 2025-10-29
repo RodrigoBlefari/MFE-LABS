@@ -1,0 +1,12 @@
+{
+  "name": "mfe-react-webcomponent",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "serve -l 9302 --cors .",
+    "build": "node ../../scripts/build-copy.mjs mfe-react.js mfe-react.css"
+  },
+  "devDependencies": {
+    "serve": "^14.2.3"
+  }
+}

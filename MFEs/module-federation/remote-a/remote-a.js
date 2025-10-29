@@ -44,7 +44,9 @@ export function render(outlet, options = {}) {
   const {
     appendTo = document.body,
     replace = true,
-    title = 'Remote-A (MF demo ESM)',
+    title = 'Remote-A - Module Federation',
+    description = 'Remote webpack exposto como ESM, pensado para catalogos financeiros e dashboards omnichannel.',
+    tagline = 'Bridge MF + Native Federation - carregado sob demanda com isolamento leve.',
     log = true,
   } = options;
 
@@ -58,27 +60,54 @@ export function render(outlet, options = {}) {
   }
 
   const card = host.ownerDocument.createElement('section');
-  card.className = 'mfe-card';
+  card.className = 'mf-card';
+
+  const badge = host.ownerDocument.createElement('span');
+  badge.className = 'mfe-badge';
+  badge.textContent = 'Module Federation Remote';
 
   const heading = host.ownerDocument.createElement('h2');
   heading.textContent = title;
 
-  const toolbar = host.ownerDocument.createElement('div');
-  toolbar.className = 'mfe-toolbar';
+  const descriptionEl = host.ownerDocument.createElement('p');
+  descriptionEl.className = 'mfe-description';
+  descriptionEl.textContent = description;
+
+  const taglineEl = host.ownerDocument.createElement('p');
+  taglineEl.className = 'mfe-tagline';
+  taglineEl.textContent = tagline;
+
+  const metrics = host.ownerDocument.createElement('div');
+  metrics.className = 'mf-metrics';
+  const metricRows = [
+    ['SLA', `${(Math.random() * 0.4 + 99.3).toFixed(2)}%`],
+    ['Owner', 'Platform Core'],
+    ['Eventos emitidos', '0'],
+  ];
+  let eventsValueEl = null;
+  metricRows.forEach(([label, value]) => {
+    const row = host.ownerDocument.createElement('span');
+    const strong = host.ownerDocument.createElement('strong');
+    strong.textContent = label;
+    const val = host.ownerDocument.createElement('span');
+    val.textContent = value;
+    if (label === 'Eventos emitidos') {
+      eventsValueEl = val;
+    }
+    row.append(strong, val);
+    metrics.appendChild(row);
+  });
 
   const pingBtn = host.ownerDocument.createElement('button');
   pingBtn.type = 'button';
   pingBtn.className = 'mfe-btn';
   pingBtn.textContent = 'Emitir BUS (MF)';
 
-  toolbar.appendChild(pingBtn);
-
   const logArea = host.ownerDocument.createElement('div');
   logArea.className = 'mfe-log';
   logArea.setAttribute('aria-live', 'polite');
 
-  card.appendChild(heading);
-  card.appendChild(toolbar);
+  card.append(badge, heading, descriptionEl, taglineEl, metrics, pingBtn);
   if (log) {
     card.appendChild(logArea);
   }
@@ -86,9 +115,13 @@ export function render(outlet, options = {}) {
   host.appendChild(card);
 
   const onPing = () => {
-    window.dispatchEvent(new CustomEvent('BUS', { detail: { type: 'MF-PING' } }));
+    const current = Number(eventsValueEl?.textContent || '0') + 1;
+    if (eventsValueEl) {
+      eventsValueEl.textContent = String(current);
+    }
+    window.dispatchEvent(new CustomEvent('BUS', { detail: { type: 'MF-PING', count: current } }));
     if (log && logArea) {
-      logArea.textContent = 'BUS emitido pelo Remote-A';
+      logArea.textContent = `BUS emitido pelo Remote-A - total ${current}`;
     }
   };
 
@@ -104,24 +137,19 @@ export function render(outlet, options = {}) {
   const state = { host, card, pingBtn, logArea, onPing, onBus, detach, replace };
   instances.set(host, state);
 
-  const destroy = () => {
-    if (!instances.has(host)) return;
+  return () => {
     cleanup(state);
     instances.delete(host);
   };
-
-  destroy.host = host;
-  destroy.card = card;
-
-  return destroy;
 }
 
 export function unmount(ctx = {}) {
-  const target = ctx && ctx.host instanceof Element
-    ? ctx.host
-    : ctx && ctx.outlet instanceof Element
-      ? ctx.outlet
-      : null;
+  const target =
+    ctx && ctx.host instanceof Element
+      ? ctx.host
+      : ctx && ctx.outlet instanceof Element
+        ? ctx.outlet
+        : null;
 
   if (target && instances.has(target)) {
     const state = instances.get(target);

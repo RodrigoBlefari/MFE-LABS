@@ -1,0 +1,15 @@
+{
+  "name": "mfe-vue-webcomponent",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "serve -l 9303 --cors .",
+    "build": "node ../../scripts/build-copy.mjs mfe-vue.js mfe-vue.css"
+  },
+  "devDependencies": {
+    "serve": "^14.2.3"
+  },
+  "dependencies": {
+    "vue": "^3.4.21"
+  }
+}
