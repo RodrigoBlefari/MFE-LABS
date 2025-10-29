@@ -16,6 +16,7 @@ const dashboardSlots = {
 
 let primaryTeardown = null;
 const dashboardTeardowns = new Map();
+let currentPrimaryKey = null;
 
 function setLoading(isLoading) {
   Object.values(buttons).forEach((btn) => {
@@ -29,6 +30,7 @@ async function teardownPrimary() {
     primaryTeardown = null;
   }
   primaryOutlet.innerHTML = '';
+  currentPrimaryKey = null;
 }
 
 async function clearDashboard() {
@@ -42,6 +44,9 @@ async function clearDashboard() {
   dashboard.removeAttribute('data-error');
   if (dashboardError) {
     dashboardError.textContent = '';
+  }
+  if (dashboard.dataset) {
+    delete dashboard.dataset.primary;
   }
 }
 
@@ -66,15 +71,17 @@ function normalizeTeardown(mod, candidate, getProps) {
   };
 }
 
-async function activatePrimary(loader) {
+async function activatePrimary(key, loader) {
   setLoading(true);
   try {
     await teardownPrimary();
     await clearDashboard();
     primaryTeardown = await loader();
+    currentPrimaryKey = key;
   } catch (err) {
     console.error('Falha ao ativar visualizacao individual', err);
     primaryOutlet.textContent = 'Falha ao carregar o MFE (verifique o console).';
+    currentPrimaryKey = null;
   } finally {
     setLoading(false);
   }
@@ -83,12 +90,7 @@ async function activatePrimary(loader) {
 async function activateDashboard() {
   setLoading(true);
   try {
-    await teardownPrimary();
     await clearDashboard();
-    dashboard.removeAttribute('data-error');
-    if (dashboardError) {
-      dashboardError.textContent = '';
-    }
 
     const [nfMod, mfMod, ssaMod] = await Promise.all([
       import('http://localhost:9201/mfe1.js'),
@@ -157,6 +159,11 @@ async function activateDashboard() {
     );
 
     dashboard.classList.add('dashboard-active');
+    if (currentPrimaryKey) {
+      dashboard.dataset.primary = currentPrimaryKey;
+    } else {
+      delete dashboard.dataset.primary;
+    }
   } catch (err) {
     console.error('Falha ao montar painel conjunto', err);
     if (dashboardError) {
@@ -169,7 +176,7 @@ async function activateDashboard() {
 }
 
 buttons.nf.addEventListener('click', () =>
-  activatePrimary(async () => {
+  activatePrimary('nf', async () => {
     const mod = await import('http://localhost:9201/mfe1.js');
     const result = await mod.render(primaryOutlet, {
       host: 'native-shell',
@@ -185,7 +192,7 @@ buttons.nf.addEventListener('click', () =>
 );
 
 buttons.mf.addEventListener('click', () =>
-  activatePrimary(async () => {
+  activatePrimary('mf', async () => {
     const mod = await import('http://localhost:9101/remote-a.js');
     const result = await mod.render(primaryOutlet, {
       host: 'native-shell',
@@ -201,7 +208,7 @@ buttons.mf.addEventListener('click', () =>
 );
 
 buttons.ssa.addEventListener('click', () =>
-  activatePrimary(async () => {
+  activatePrimary('ssa', async () => {
     const mod = await import('http://localhost:9001/mfe-a.js');
     if (typeof mod.bootstrap === 'function') {
       await mod.bootstrap({
