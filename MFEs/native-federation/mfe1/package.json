@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "serve -l 9201 --cors ."
+    "start": "serve -l 9201 --cors .",
+    "build": "node ../../../scripts/build-copy.mjs mfe1.js"
   },
   "devDependencies": {
     "serve": "^14.2.3"

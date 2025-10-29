@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "serve -l 9100 ."
+    "start": "serve -l 9100 .",
+    "build": "node ../scripts/build-copy.mjs index.html"
   },
   "devDependencies": {
     "serve": "^14.2.3"

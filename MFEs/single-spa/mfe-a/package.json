@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "serve -l 9001 --cors .",
-    "build": "echo 'bundle with your Angular + single-spa-angular toolchain'"
+    "build": "node ../../../scripts/build-copy.mjs mfe-a.js"
   },
   "devDependencies": {
     "serve": "^14.2.3"

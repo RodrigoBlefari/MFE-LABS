@@ -1,6 +1,6 @@
-# Microfrontends Lab — Single‑SPA, Module Federation e Native Federation (Angular‑friendly)
+# Microfrontends Lab - Single-SPA, Module Federation and Native Federation (Angular friendly)
 
-> Este pacote demonstra **três shells** e **três MFEs** fora das pastas dos shells (pasta `MFEs/`), simulando **repos separados**. Os projetos são **demos ESM** leves (sem Angular CLI) para facilitar rodar rápido e comparar **carregamento** e **comunicação**. Para produção, substitua pelos scaffolds Angular oficiais.
+> Este pacote demonstra **tres shells** e **tres MFEs** alojados em pastas independentes (pasta `MFEs/`), simulando repositorios separados. Os exemplos utilizam ESM puro para facilitar a comparacao de carregamento e comunicacao. Em cenarios produtivos substitua pelos toolchains oficiais do framework escolhido.
 
 ## Estrutura
 - `single-spa-shell-angular/` (porta 9000)
@@ -10,29 +10,51 @@
 - `MFEs/module-federation/remote-a/` (porta 9101)
 - `MFEs/native-federation/mfe1/` (porta 9201)
 
-## Rodando
-Em seis terminais (ou em ordem, desde que todos fiquem ativos):
+## Rodando em desenvolvimento
+Abra seis terminais (ou execute em sequencia, mantendo todos ativos):
 
 ```bash
-cd single-spa-shell-angular && npm i && npm start
-cd MFEs/single-spa/mfe-a && npm i && npm start
+cd single-spa-shell-angular && npm install && npm start
+cd MFEs/single-spa/mfe-a && npm install && npm start
 
-cd module-federation-shell-angular && npm i && npm start
-cd MFEs/module-federation/remote-a && npm i && npm start
+cd module-federation-shell-angular && npm install && npm start
+cd MFEs/module-federation/remote-a && npm install && npm start
 
-cd native-federation-shell-angular && npm i && npm start
-cd MFEs/native-federation/mfe1 && npm i && npm start
+cd native-federation-shell-angular && npm install && npm start
+cd MFEs/native-federation/mfe1 && npm install && npm start
 ```
 
-Abra:
-- Single‑SPA: http://localhost:9000 (link **/a** carrega o MFE‑A)
-- MF host:    http://localhost:9100 (botão carrega **Remote‑A**)
-- NF shell:   http://localhost:9200 (NF/MF/SSA botões)
+Interfaces:
+- Single-SPA shell: http://localhost:9000 (rota `#/a` carrega o MFE-A)
+- Module Federation host: http://localhost:9100 (botao carrega Remote-A)
+- Native Federation shell: http://localhost:9200 (botoes carregam NF/MF/SSA)
 
-## Deploy (boas práticas)
-- **Repos separados** por micro‑app; pipelines independentes; versionamento semântico.
-- **MF**: hospede cada remote com `remoteEntry.js` público; host referencia por URL/manifesto.
-- **NF**: use `federation.manifest.json` por ambiente; SSR iniciar com `fstart.mjs`.
-- **Single‑SPA**: root-config com import-maps; MFEs servidos via CDN.
-- **CORS**: libere só entre host↔remotes necessários. **Cache**: immutable para assets hashados; `no-store`/baixo TTL para entradas que mudam rápido.
-- **Fallbacks** e observabilidade (RUM, logs). **Contracts** claros entre times.
+## Build
+Cada projeto gera artefatos estaticos em `dist/` via um script de copia padrao. Execute sempre apos `npm install`:
+
+```bash
+cd single-spa-shell-angular && npm run build
+cd module-federation-shell-angular && npm run build
+cd native-federation-shell-angular && npm run build
+
+cd MFEs/single-spa/mfe-a && npm run build
+cd MFEs/module-federation/remote-a && npm run build
+cd MFEs/native-federation/mfe1 && npm run build
+```
+
+Os arquivos em `dist/` podem ser publicados em CDNs distintas ou agregados por pipelines dedicados de cada equipe.
+
+## Hardening de seguranca
+- Metatags CSP nos shells restringem `script-src` e `connect-src` apenas aos hosts esperados (`localhost` das MFEs) e mantem estilos inline controlados.
+- O shell Single-SPA referencia SystemJS do CDN via `integrity` (SRI) e `crossorigin="anonymous"`, reduzindo risco de supply chain comprometido.
+- Cada host garante teardown antes de um novo `mount`, evitando vazamento de listeners ou elementos que poderiam servir de vetor XSS.
+- Os remotos expõem APIs puras (`render`, `unmount`, `bootstrap/mount`) sem avaliar entradas de usuario nem expor globais desnecessarias.
+- Os scripts de build produzem pastas limpas sem tooling de desenvolvimento, facilitando varreduras e revisao de deploy.
+
+## Deploy (boas praticas)
+- Repos separados por micro app, pipelines independentes e versionamento semantico.
+- Module Federation: hospede `remoteEntry.js` (ou arquivo remoto equivalente) com cache controlado; host le URLs de manifesto por ambiente.
+- Native Federation: distribua manifestos por ambiente (`federation.manifest.json`) e garanta verificacao de integridade antes de hidratar.
+- Single-SPA: mantenha import-maps versionados; preferencialmente sirva MFEs via CDN com cache busting por hash.
+- CORS: permita apenas origens host <-> remoto necessarias; combine com HTTPS e headers `Access-Control-Allow-Origin` especificos.
+- Observabilidade: adicione health-checks, logging por MFE e contratos claros de comunicacao entre times.
