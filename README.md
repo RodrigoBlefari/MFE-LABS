@@ -51,7 +51,7 @@ Os arquivos em `dist/` podem ser publicados em CDNs distintas ou agregados por p
 
 ## Hardening de seguranca
 - CSPs removem `'unsafe-inline'` em `script-src`, restringem `style-src` aos hosts das MFEs, bloqueiam `frame-ancestors`, `object-src` e `form-action` externos.
-- Hashes SHA-256 com `'unsafe-hashes'` permitem apenas os estilos inline que o dev server (`serve`) injeta durante o desenvolvimento, evitando abrir excecoes globais.
+- Hashes SHA-256 autorizam apenas os estilos e scripts inline injetados pelo dev server (`serve`) durante desenvolvimento, evitando liberar `'unsafe-inline'`.
 - Headers defensivos via `<meta http-equiv>`: `X-Content-Type-Options=nosniff`, `Permissions-Policy` restritiva e `referrer` limitado a `same-origin`.
 - Single-SPA shell consome SystemJS com SRI + `crossorigin="anonymous"` e hosts validam dinamicamente o teardown antes de novos mounts.
 - Remotos carregam CSS proprio (sem inline), exportam APIs idempotentes (`render`, `unmount`, `bootstrap/mount`) e nunca avaliam entrada de usuario.
