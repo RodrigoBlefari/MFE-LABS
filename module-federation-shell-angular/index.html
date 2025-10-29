@@ -14,10 +14,42 @@
   <div id="host-outlet"></div>
 
   <script type="module">
-    document.getElementById('load-remote').onclick = async () => {
-      const mod = await import('http://localhost:9101/remote-a.js');
-      mod.render(document.getElementById('host-outlet'));
+    const outlet = document.getElementById('host-outlet');
+    const loadBtn = document.getElementById('load-remote');
+    let teardown = null;
+
+    loadBtn.onclick = async () => {
+      loadBtn.disabled = true;
+
+      try {
+        if (teardown) {
+          await teardown();
+          teardown = null;
+        }
+
+        const mod = await import('http://localhost:9101/remote-a.js');
+        const result = await mod.render(outlet, { host: 'module-federation-shell', name: 'remote-a' });
+        teardown = createCleanup(mod, result, () => ({ host: 'module-federation-shell', name: 'remote-a', outlet }));
+      } finally {
+        loadBtn.disabled = false;
+      }
     };
+
+    function createCleanup(mod, candidate, getProps){
+      if (typeof candidate === 'function') {
+        return async () => candidate();
+      }
+      if (typeof mod.unmount === 'function') {
+        return async () => mod.unmount(getProps?.());
+      }
+      return async () => {
+        const props = getProps?.();
+        if (props?.outlet) {
+          props.outlet.innerHTML = '';
+        }
+      };
+    }
+
     window.addEventListener('BUS', (e)=> console.log('Host MF recebeu BUS', e.detail));
   </script>
 </body>

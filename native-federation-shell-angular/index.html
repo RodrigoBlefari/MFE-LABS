@@ -17,20 +17,70 @@
   <div id="nf-outlet" style="margin-top:16px"></div>
 
   <script type="module">
-    document.getElementById('btn-nf').onclick = async () => {
+    const outlet = document.getElementById('nf-outlet');
+    const buttons = [
+      document.getElementById('btn-nf'),
+      document.getElementById('btn-mf'),
+      document.getElementById('btn-ssa'),
+    ];
+
+    let currentTeardown = null;
+
+    function setLoading(isLoading){
+      buttons.forEach(btn => btn.disabled = isLoading);
+    }
+
+    async function activate(loader){
+      setLoading(true);
+      try {
+        if (currentTeardown) {
+          await currentTeardown();
+          currentTeardown = null;
+        }
+        const teardown = await loader();
+        currentTeardown = typeof teardown === 'function' ? teardown : null;
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    function createTeardown(mod, candidate, getProps){
+      if (typeof candidate === 'function') {
+        return async () => candidate();
+      }
+      if (typeof mod?.unmount === 'function') {
+        return async () => mod.unmount(getProps?.());
+      }
+      return async () => {
+        const props = getProps?.();
+        if (props?.outlet) {
+          props.outlet.innerHTML = '';
+        }
+      };
+    }
+
+    document.getElementById('btn-nf').onclick = () => activate(async () => {
       const mod = await import('http://localhost:9201/mfe1.js');
-      mod.render(document.getElementById('nf-outlet'));
-    };
-    document.getElementById('btn-mf').onclick = async () => {
+      const result = await mod.render(outlet, { host: 'native-shell', name: 'mfe1-nf' });
+      return createTeardown(mod, result, () => ({ host: 'native-shell', name: 'mfe1-nf', outlet }));
+    }).catch(console.error);
+
+    document.getElementById('btn-mf').onclick = () => activate(async () => {
       const mod = await import('http://localhost:9101/remote-a.js');
-      mod.render(document.getElementById('nf-outlet'));
-    };
-    document.getElementById('btn-ssa').onclick = async () => {
+      const result = await mod.render(outlet, { host: 'native-shell', name: 'remote-a-mf' });
+      return createTeardown(mod, result, () => ({ host: 'native-shell', name: 'remote-a-mf', outlet }));
+    }).catch(console.error);
+
+    document.getElementById('btn-ssa').onclick = () => activate(async () => {
       const mod = await import('http://localhost:9001/mfe-a.js');
-      const outlet = document.getElementById('nf-outlet');
-      outlet.innerHTML = '';
-      mod.mount({ outlet });
-    };
+      const props = { name: '@org/mfe-a', host: 'native-shell', outlet };
+      if (typeof mod.bootstrap === 'function') {
+        await mod.bootstrap(props);
+      }
+      const mountResult = typeof mod.mount === 'function' ? await mod.mount(props) : null;
+      return createTeardown(mod, mountResult, () => props);
+    }).catch(console.error);
+
     window.addEventListener('BUS', (e)=> console.log('Shell NF recebeu BUS', e.detail));
   </script>
 </body>

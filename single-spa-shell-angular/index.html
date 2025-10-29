@@ -23,16 +23,56 @@
   <div id="outlet"></div>
 
   <script type="module">
-    function render() {
-      const outlet = document.getElementById('outlet');
-      if (location.hash.startsWith('#/a')) {
-        System.import('@org/mfe-a').then(mod => mod.mount({ outlet }));
+    const outlet = document.getElementById('outlet');
+    let activeRoute = null;
+    let activeTeardown = null;
+
+    async function ensureUnmount(){
+      if (activeTeardown) {
+        await activeTeardown();
+        activeTeardown = null;
+      }
+    }
+
+    async function render() {
+      const route = location.hash.startsWith('#/a') ? 'mfe-a' : 'home';
+      if (route === activeRoute) return;
+      await ensureUnmount();
+
+      if (route === 'mfe-a') {
+        const mod = await System.import('@org/mfe-a');
+        if (typeof mod.bootstrap === 'function') {
+          await mod.bootstrap({ name: '@org/mfe-a', host: 'single-spa-shell', outlet });
+        }
+        const mountResult = typeof mod.mount === 'function'
+          ? await mod.mount({ name: '@org/mfe-a', host: 'single-spa-shell', outlet })
+          : null;
+
+        activeTeardown = createTeardown(mod, mountResult, () => ({ name: '@org/mfe-a', host: 'single-spa-shell', outlet }));
       } else {
         outlet.innerHTML = '<p>Home do Shell Single-SPA (demo minimalista).</p>';
       }
+
+      activeRoute = route;
     }
-    window.addEventListener('hashchange', render);
-    render();
+
+    function createTeardown(mod, candidate, getProps){
+      if (typeof candidate === 'function') {
+        return async () => candidate();
+      }
+      if (typeof mod.unmount === 'function') {
+        return async () => mod.unmount(getProps?.());
+      }
+      return async () => {
+        const props = getProps?.();
+        if (props?.outlet) {
+          props.outlet.innerHTML = '';
+        }
+      };
+    }
+
+    window.addEventListener('hashchange', () => render().catch(console.error));
+    render().catch(console.error);
   </script>
 </body>
 </html>
