@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "serve -l 9303 --cors .",
-    "build": "node ../../scripts/build-copy.mjs mfe-vue.js mfe-vue.css"
+    "start": "serve -l 9001 --cors .",
+    "build": "node ./scripts/build-copy.mjs mfe-vue.js mfe-vue.css"
   },
   "devDependencies": {
     "serve": "^14.2.3"

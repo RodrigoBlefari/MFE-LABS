@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Simple build helper that copies the provided files into a dist/ folder.
- * Usage: node ../../scripts/build-copy.mjs file-a.js file-b.html
+ * Usage: node scripts/build-copy.mjs file-a.js file-b.html
  */
 import { mkdir, rm, copyFile } from 'node:fs/promises';
 import { join } from 'node:path';

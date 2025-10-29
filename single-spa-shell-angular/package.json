@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "serve -l 9000 .",
-    "build": "node ../scripts/build-copy.mjs index.html app.js styles.css"
+    "start": "serve -l 9302 --cors .",
+    "build": "node ./scripts/build-copy.mjs index.html app.js styles.css"
   },
   "devDependencies": {
     "serve": "^14.2.3",

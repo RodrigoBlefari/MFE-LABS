@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "serve -l 9301 --cors .",
-    "build": "node ../../../scripts/build-copy.mjs mfe-ng.js mfe-ng.css"
+    "build": "node ./scripts/build-copy.mjs mfe-ng.js mfe-ng.css"
   },
   "devDependencies": {
     "serve": "^14.2.3"
