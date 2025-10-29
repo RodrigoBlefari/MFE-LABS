@@ -192,18 +192,88 @@ const overviewDocumentation = `
       </ul>
     </div>
     <div class="doc-block">
-      <h3>Execucao do laboratorio</h3>
-      <pre><code class="language-bash"># Angular full
-cd MFEs/angular/mfe-ng-full
-npm install
-npm run package
-npm run serve
+      <h3>Execução a partir da raiz (build + serve)</h3>
+      <p>Os comandos abaixo assumem que você está na raiz do repositório (MFF LABS). Cada MFE sobe na porta indicada.</p>
+      <pre><code class="language-bash"># 1) Instalação (uma vez)
+npm run -w MFEs/angular/mfe-ng-full       ci || (cd MFEs/angular/mfe-ng-full && npm install)
+npm run -w MFEs/angular/mfe-ng            ci || (cd MFEs/angular/mfe-ng && npm install)
+npm run -w MFEs/module-federation/remote-a ci || (cd MFEs/module-federation/remote-a && npm install)
+npm run -w MFEs/native-federation/mfe1    ci || (cd MFEs/native-federation/mfe1 && npm install)
+npm run -w MFEs/react/mfe-react           ci || (cd MFEs/react/mfe-react && npm install)
+npm run -w MFEs/single-spa/mfe-a          ci || (cd MFEs/single-spa/mfe-a && npm install)
+npm run -w MFEs/vue/mfe-vue               ci || (cd MFEs/vue/mfe-vue && npm install)
+npm run -w native-federation-shell-angular ci || (cd native-federation-shell-angular && npm install)
 
-# Shell Native Federation
-cd native-federation-shell-angular
-npm install
-npm start</code></pre>
-      <p>Inicie tambem React, Vue, Module Federation, Single-SPA e Native Federation com seus respectivos <code>npm start</code>.</p>
+# 2) Build quando aplicável (Angular Full gera dist-webcomponent/)
+cd MFEs/angular/mfe-ng-full
+npm run package
+# artefatos em: MFEs/angular/mfe-ng-full/dist-webcomponent/
+
+# 3) Servir cada MFE na porta padrão (dev)
+# Native Federation (mfe1) - 9201
+cd MFEs/native-federation/mfe1 && npm start
+# Module Federation (remote-a) - 9101
+cd MFEs/module-federation/remote-a && npm start
+# Single-SPA (mfe-a) - 9001
+cd MFEs/single-spa/mfe-a && npm start
+# Angular Web Component (mfe-ng) - 9301
+cd MFEs/angular/mfe-ng && npm start
+# Angular Full (dist-webcomponent) - 9400
+cd MFEs/angular/mfe-ng-full && npm run serve
+# React (mfe-react) - 9302
+cd MFEs/react/mfe-react && npm start
+# Vue (mfe-vue) - 9303
+cd MFEs/vue/mfe-vue && npm start
+
+# 4) Shell Native Federation - 9200
+cd native-federation-shell-angular && npm start</code></pre>
+
+      <h4>Servir a pasta de build (dist) diretamente</h4>
+      <p>Para qualquer pasta estática (ex.: dist-webcomponent/ do Angular Full), você pode usar <code>npx serve</code> na porta exata:</p>
+      <pre><code class="language-bash">npx serve -l 9400 MFEs/angular/mfe-ng-full/dist-webcomponent</code></pre>
+    </div>
+
+    <div class="doc-block">
+      <h3>Expor publicamente em HTTPS (sem conta)</h3>
+      <p>Para compartilhar com terceiros fora da sua rede, use um túnel público. Duas opções práticas:</p>
+      <ol>
+        <li>
+          <strong>LocalTunnel</strong> (gera URL pública https, sem cadastro):
+          <pre><code class="language-bash"># Expor o shell (9200)
+npx localtunnel --port 9200 --subdomain mff-shell
+
+# Para cada MFE (rode em terminais separados; escolha subdomínios legíveis)
+npx localtunnel --port 9201 --subdomain mff-nf
+npx localtunnel --port 9101 --subdomain mff-mf
+npx localtunnel --port 9001 --subdomain mff-ssa
+npx localtunnel --port 9301 --subdomain mff-ng
+npx localtunnel --port 9400 --subdomain mff-ngfull
+npx localtunnel --port 9302 --subdomain mff-react
+npx localtunnel --port 9303 --subdomain mff-vue</code></pre>
+          <p>Observação: copie as URLs geradas e atualize temporariamente os <em>remotes</em> no shell (se necessário) e a CSP para permitir <code>https://*.loca.lt</code>.</p>
+        </li>
+        <li>
+          <strong>Cloudflared (trycloudflare)</strong> (URL https, sem login para modo rápido):
+          <pre><code class="language-bash"># Instalar (uma vez) ou use diretamente se já tiver
+# Windows (choco): choco install cloudflared
+# macOS (brew):   brew install cloudflare/cloudflare/cloudflared
+
+# Expor o shell (9200)
+cloudflared tunnel --url http://localhost:9200
+
+# Expor também os MFEs (um por terminal)
+cloudflared tunnel --url http://localhost:9201
+cloudflared tunnel --url http://localhost:9101
+cloudflared tunnel --url http://localhost:9001
+cloudflared tunnel --url http://localhost:9301
+cloudflared tunnel --url http://localhost:9400
+cloudflared tunnel --url http://localhost:9302
+cloudflared tunnel --url http://localhost:9303</code></pre>
+          <p>Atualize os remotes e inclua <code>https://*.trycloudflare.com</code> na CSP enquanto testar.</p>
+        </li>
+      </ol>
+      <p>Para evitar prompts de senha/consentimento, use subdomínios fixos no LocalTunnel e mantenha a sessão ativa; no Cloudflared, os links são públicos por padrão no modo rápido.</p>
+      <p><strong>Importante:</strong> o shell e todos os remotes devem estar acessíveis publicamente. Se o shell estiver público e os remotes não, o navegador de quem acessa não conseguirá baixar os MFEs.</p>
     </div>
   </article>
 `;
