@@ -1,45 +1,156 @@
-let teardown = null;
+const instances = new Map();
 
-export function render(outlet, options = {}){
-  if (!(outlet instanceof Element)) {
+function ensureStylesheet() {
+  if (document.querySelector('link[data-mfe1-style]')) {
+    return;
+  }
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = new URL('./mfe1.css', import.meta.url).href;
+  link.dataset.mfe1Style = 'true';
+  document.head.appendChild(link);
+}
+
+export function createOutlet({ mountPoint = document.body, append = false } = {}) {
+  const surface = document.createElement('div');
+  surface.classList.add('mfe-surface');
+  if (append && mountPoint instanceof Element) {
+    mountPoint.appendChild(surface);
+  }
+  return surface;
+}
+
+function cleanup(state) {
+  if (!state) return;
+  state.pingBtn?.removeEventListener('click', state.onPing);
+  window.removeEventListener('BUS', state.onBus);
+  if (state.replace) {
+    state.host.innerHTML = '';
+  } else if (state.card?.isConnected) {
+    state.card.remove();
+  }
+  if (state.detach && state.host?.isConnected) {
+    state.host.remove();
+  }
+}
+
+export function render(outlet, options = {}) {
+  ensureStylesheet();
+
+  if (outlet && !(outlet instanceof Element)) {
     throw new Error('MFE1 render precisa de um elemento host valido.');
   }
 
-  teardown?.();
+  const {
+    appendTo = document.body,
+    replace = true,
+    title = 'MFE1 (Native Federation demo ESM)',
+    log = true,
+    onBus,
+  } = options;
 
-  const container = document.createElement('section');
-  container.style = 'padding:8px;border:1px solid #ccc;border-radius:8px';
-  container.innerHTML = `<h2>MFE1 (Native Federation demo ESM)</h2>
-    <button id="nf-ping">Emitir BUS (NF)</button>`;
+  const hostProvided = outlet instanceof Element;
+  const host = hostProvided ? outlet : createOutlet({ mountPoint: appendTo, append: true });
+  const detach = !hostProvided;
 
-  outlet.innerHTML = '';
-  outlet.appendChild(container);
+  host.classList.add('mfe-surface');
+  if (replace) {
+    host.innerHTML = '';
+  }
 
-  const pingBtn = container.querySelector('#nf-ping');
-  const onBus = (event) => {
-    if (options.onBus) {
-      options.onBus(event.detail);
+  const card = host.ownerDocument.createElement('section');
+  card.className = 'mfe-card';
+
+  const heading = host.ownerDocument.createElement('h2');
+  heading.textContent = title;
+
+  const toolbar = host.ownerDocument.createElement('div');
+  toolbar.className = 'mfe-toolbar';
+
+  const pingBtn = host.ownerDocument.createElement('button');
+  pingBtn.type = 'button';
+  pingBtn.className = 'mfe-btn';
+  pingBtn.textContent = 'Emitir BUS (NF)';
+
+  toolbar.appendChild(pingBtn);
+
+  const logArea = host.ownerDocument.createElement('div');
+  logArea.className = 'mfe-log';
+  logArea.setAttribute('aria-live', 'polite');
+
+  card.appendChild(heading);
+  card.appendChild(toolbar);
+  if (log) {
+    card.appendChild(logArea);
+  }
+
+  host.appendChild(card);
+
+  const onPing = () => {
+    const detail = { type: 'NF-PING' };
+    window.dispatchEvent(new CustomEvent('BUS', { detail }));
+    if (typeof onBus === 'function') {
+      onBus(detail);
+    }
+    if (log && logArea) {
+      logArea.textContent = 'BUS emitido pelo MFE1';
     }
   };
-  window.addEventListener('BUS', onBus);
 
-  pingBtn.onclick = () => window.dispatchEvent(new CustomEvent('BUS', { detail: { type: 'NF-PING' } }));
-
-  teardown = () => {
-    pingBtn.onclick = null;
-    window.removeEventListener('BUS', onBus);
-    if (container.isConnected) {
-      container.remove();
+  const onBusHandler = (event) => {
+    if (event.type !== 'BUS') return;
+    if (typeof onBus === 'function') {
+      onBus(event.detail);
     }
-    if (outlet) {
-      outlet.innerHTML = '';
-    }
-    teardown = null;
+    if (!log || !logArea) return;
+    const detail = typeof event.detail === 'object' ? JSON.stringify(event.detail) : String(event.detail);
+    logArea.textContent = `BUS recebido: ${detail}`;
   };
 
-  return teardown;
+  pingBtn.addEventListener('click', onPing);
+  window.addEventListener('BUS', onBusHandler);
+
+  const state = {
+    host,
+    card,
+    pingBtn,
+    logArea,
+    onPing,
+    onBus: onBusHandler,
+    detach,
+    replace,
+  };
+
+  instances.set(host, state);
+
+  const destroy = () => {
+    if (!instances.has(host)) return;
+    cleanup(state);
+    instances.delete(host);
+  };
+
+  destroy.host = host;
+  destroy.card = card;
+
+  return destroy;
 }
 
-export function unmount() {
-  teardown?.();
+export function unmount(ctx = {}) {
+  const target = ctx && ctx.host instanceof Element
+    ? ctx.host
+    : ctx && ctx.outlet instanceof Element
+      ? ctx.outlet
+      : null;
+
+  if (target && instances.has(target)) {
+    const state = instances.get(target);
+    cleanup(state);
+    instances.delete(target);
+    return;
+  }
+
+  for (const state of instances.values()) {
+    cleanup(state);
+  }
+  instances.clear();
 }

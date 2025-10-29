@@ -1,37 +1,137 @@
-let destroyCurrent = null;
+const instances = new Map();
 
-export function render(outlet, options = {}){
-  if (!(outlet instanceof Element)) {
+function ensureStylesheet() {
+  if (document.querySelector('link[data-remote-a-style]')) {
+    return;
+  }
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = new URL('./remote-a.css', import.meta.url).href;
+  link.dataset.remoteAStyle = 'true';
+  document.head.appendChild(link);
+}
+
+export function createOutlet({ mountPoint = document.body, append = false } = {}) {
+  const surface = document.createElement('div');
+  surface.classList.add('mfe-surface');
+  if (append && mountPoint instanceof Element) {
+    mountPoint.appendChild(surface);
+  }
+  return surface;
+}
+
+function cleanup(state) {
+  if (!state) return;
+  state.pingBtn?.removeEventListener('click', state.onPing);
+  window.removeEventListener('BUS', state.onBus);
+  if (state.replace) {
+    state.host.innerHTML = '';
+  } else if (state.card?.isConnected) {
+    state.card.remove();
+  }
+  if (state.detach && state.host?.isConnected) {
+    state.host.remove();
+  }
+}
+
+export function render(outlet, options = {}) {
+  ensureStylesheet();
+
+  if (outlet && !(outlet instanceof Element)) {
     throw new Error('Remote-A render precisa de um elemento host valido.');
   }
 
-  destroyCurrent?.();
+  const {
+    appendTo = document.body,
+    replace = true,
+    title = 'Remote-A (MF demo ESM)',
+    log = true,
+  } = options;
 
-  const container = document.createElement('section');
-  container.style = 'padding:8px;border:1px solid #ccc;border-radius:8px';
-  container.innerHTML = `<h2>${options.title || 'Remote-A (MF demo ESM)'}</h2>
-    <button id="mf-ping">Emitir BUS (MF)</button>`;
+  const hostProvided = outlet instanceof Element;
+  const host = hostProvided ? outlet : createOutlet({ mountPoint: appendTo, append: true });
+  const detach = !hostProvided;
 
-  outlet.innerHTML = '';
-  outlet.appendChild(container);
+  host.classList.add('mfe-surface');
+  if (replace) {
+    host.innerHTML = '';
+  }
 
-  const pingBtn = container.querySelector('#mf-ping');
-  pingBtn.onclick = () => window.dispatchEvent(new CustomEvent('BUS', { detail: { type: 'MF-PING' } }));
+  const card = host.ownerDocument.createElement('section');
+  card.className = 'mfe-card';
 
-  destroyCurrent = () => {
-    pingBtn.onclick = null;
-    if (container.isConnected) {
-      container.remove();
+  const heading = host.ownerDocument.createElement('h2');
+  heading.textContent = title;
+
+  const toolbar = host.ownerDocument.createElement('div');
+  toolbar.className = 'mfe-toolbar';
+
+  const pingBtn = host.ownerDocument.createElement('button');
+  pingBtn.type = 'button';
+  pingBtn.className = 'mfe-btn';
+  pingBtn.textContent = 'Emitir BUS (MF)';
+
+  toolbar.appendChild(pingBtn);
+
+  const logArea = host.ownerDocument.createElement('div');
+  logArea.className = 'mfe-log';
+  logArea.setAttribute('aria-live', 'polite');
+
+  card.appendChild(heading);
+  card.appendChild(toolbar);
+  if (log) {
+    card.appendChild(logArea);
+  }
+
+  host.appendChild(card);
+
+  const onPing = () => {
+    window.dispatchEvent(new CustomEvent('BUS', { detail: { type: 'MF-PING' } }));
+    if (log && logArea) {
+      logArea.textContent = 'BUS emitido pelo Remote-A';
     }
-    if (outlet) {
-      outlet.innerHTML = '';
-    }
-    destroyCurrent = null;
   };
 
-  return destroyCurrent;
+  const onBus = (event) => {
+    if (!log || event.type !== 'BUS' || !logArea) return;
+    const detail = typeof event.detail === 'object' ? JSON.stringify(event.detail) : String(event.detail);
+    logArea.textContent = `BUS recebido: ${detail}`;
+  };
+
+  pingBtn.addEventListener('click', onPing);
+  window.addEventListener('BUS', onBus);
+
+  const state = { host, card, pingBtn, logArea, onPing, onBus, detach, replace };
+  instances.set(host, state);
+
+  const destroy = () => {
+    if (!instances.has(host)) return;
+    cleanup(state);
+    instances.delete(host);
+  };
+
+  destroy.host = host;
+  destroy.card = card;
+
+  return destroy;
 }
 
-export function unmount() {
-  destroyCurrent?.();
+export function unmount(ctx = {}) {
+  const target = ctx && ctx.host instanceof Element
+    ? ctx.host
+    : ctx && ctx.outlet instanceof Element
+      ? ctx.outlet
+      : null;
+
+  if (target && instances.has(target)) {
+    const state = instances.get(target);
+    cleanup(state);
+    instances.delete(target);
+    return;
+  }
+
+  for (const state of instances.values()) {
+    cleanup(state);
+  }
+  instances.clear();
 }

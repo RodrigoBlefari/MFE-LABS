@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "serve -l 9101 --cors .",
-    "build": "node ../../../scripts/build-copy.mjs remote-a.js"
+    "build": "node ../../../scripts/build-copy.mjs remote-a.js remote-a.css"
   },
   "devDependencies": {
     "serve": "^14.2.3"

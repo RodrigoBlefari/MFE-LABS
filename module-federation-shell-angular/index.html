@@ -1,58 +1,33 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8" />
-  <title>Module Federation Host (demo)</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' http://localhost:9101; connect-src 'self' http://localhost:9101; style-src 'self' 'unsafe-inline'; img-src 'self' data:;">
-  <meta name="referrer" content="same-origin" />
-  <style>body{font-family:system-ui,Segoe UI,Roboto,Arial;padding:16px}</style>
-</head>
-<body>
-  <h1>Module Federation Host (demo)</h1>
-  <nav>
-    <button id="load-remote">Carregar Remote-A</button>
-  </nav>
-  <div id="host-outlet"></div>
+  <head>
+    <meta charset="utf-8" />
+    <title>Module Federation Host (demo)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta
+      http-equiv="Permissions-Policy"
+      content="accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=()"
+    />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' http://localhost:9101; connect-src 'self' http://localhost:9101; style-src 'self' http://localhost:9101 'unsafe-hashes' 'sha256-QIjW/+aUzfg58HcITJNHkkCTGmLovNUIQbL+Zq2TsIE=' 'sha256-jHfeyg6bGOgJf9ss8zgGinbIkW80hpY8YViDLBmeC8A='; img-src 'self' data:; font-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';"
+    />
+    <meta name="referrer" content="same-origin" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232563eb'/%3E%3Cpath d='M18 44l12-24 8 16 4-8 8 16H18z' fill='%23fff'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <h1>Module Federation Host (demo)</h1>
+    <nav>
+      <button id="load-remote" type="button">Carregar Remote-A</button>
+    </nav>
+    <div id="host-outlet"></div>
 
-  <script type="module">
-    const outlet = document.getElementById('host-outlet');
-    const loadBtn = document.getElementById('load-remote');
-    let teardown = null;
-
-    loadBtn.onclick = async () => {
-      loadBtn.disabled = true;
-
-      try {
-        if (teardown) {
-          await teardown();
-          teardown = null;
-        }
-
-        const mod = await import('http://localhost:9101/remote-a.js');
-        const result = await mod.render(outlet, { host: 'module-federation-shell', name: 'remote-a' });
-        teardown = createCleanup(mod, result, () => ({ host: 'module-federation-shell', name: 'remote-a', outlet }));
-      } finally {
-        loadBtn.disabled = false;
-      }
-    };
-
-    function createCleanup(mod, candidate, getProps){
-      if (typeof candidate === 'function') {
-        return async () => candidate();
-      }
-      if (typeof mod.unmount === 'function') {
-        return async () => mod.unmount(getProps?.());
-      }
-      return async () => {
-        const props = getProps?.();
-        if (props?.outlet) {
-          props.outlet.innerHTML = '';
-        }
-      };
-    }
-
-    window.addEventListener('BUS', (e)=> console.log('Host MF recebeu BUS', e.detail));
-  </script>
-</body>
+    <script type="module" src="./app.js"></script>
+  </body>
 </html>
+
