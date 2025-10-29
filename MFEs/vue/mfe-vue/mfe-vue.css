@@ -189,3 +189,40 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
+
+/* ===== Design System overrides (consumindo apenas var(--ds-*) do shell) ===== */
+:host, .vue-card { --ds-accent: var(--ds-tech-vue, #42b883); }
+
+.vue-card {
+  border-radius: var(--ds-radius-xl, 26px);
+  background: linear-gradient(145deg, rgba(13, 23, 42, 0.94), rgba(13, 23, 42, 0.74));
+  color: var(--ds-color-text, #e2e8f0);
+  box-shadow: var(--ds-shadow-md, 0 30px 52px rgba(20, 83, 45, 0.42));
+  border: 1px solid var(--ds-color-border, rgba(148, 163, 184, 0.28));
+}
+.vue-card::after {
+  background: radial-gradient(circle at top right, color-mix(in srgb, var(--ds-accent, #42b883) 16%, rgba(255, 255, 255, 0.12)), transparent 62%);
+}
+
+.vue-badge {
+  background: color-mix(in srgb, var(--ds-accent, #42b883) 18%, rgba(226, 232, 240, 0.86));
+  color: #0b1020;
+  border: 1px solid color-mix(in srgb, var(--ds-accent, #42b883) 38%, rgba(148, 163, 184, 0.28));
+}
+
+.vue-actions__primary {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--ds-accent, #42b883) 80%, #1f2937), var(--ds-accent, #42b883));
+  color: #0b1020;
+  border: 1px solid color-mix(in srgb, var(--ds-accent, #42b883) 35%, rgba(148, 163, 184, 0.28));
+  box-shadow: 0 18px 36px color-mix(in srgb, var(--ds-accent, #42b883) 28%, rgba(2, 6, 23, 0.45));
+}
+.vue-actions__secondary {
+  background: rgba(148, 163, 184, 0.12);
+  color: var(--ds-color-text, #e2e8f0);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+}
+.vue-actions__primary:hover,
+.vue-actions__secondary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 32px color-mix(in srgb, var(--ds-accent, #42b883) 26%, rgba(2, 6, 23, 0.45));
+}
