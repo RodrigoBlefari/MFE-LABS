@@ -1,0 +1,25 @@
+{
+  "imports": {
+    "@angular/animations": "https://cdn.jsdelivr.net/npm/@angular/animations@17.3.0/fesm2022/animations.mjs",
+    "@angular/animations/": "https://cdn.jsdelivr.net/npm/@angular/animations@17.3.0/fesm2022/",
+    "@angular/common": "https://cdn.jsdelivr.net/npm/@angular/common@17.3.0/fesm2022/common.mjs",
+    "@angular/common/": "https://cdn.jsdelivr.net/npm/@angular/common@17.3.0/fesm2022/",
+    "@angular/compiler": "https://cdn.jsdelivr.net/npm/@angular/compiler@17.3.0/fesm2022/compiler.mjs",
+    "@angular/compiler/": "https://cdn.jsdelivr.net/npm/@angular/compiler@17.3.0/fesm2022/",
+    "@angular/core": "https://cdn.jsdelivr.net/npm/@angular/core@17.3.0/fesm2022/core.mjs",
+    "@angular/core/": "https://cdn.jsdelivr.net/npm/@angular/core@17.3.0/fesm2022/",
+    "@angular/elements": "https://cdn.jsdelivr.net/npm/@angular/elements@17.3.0/fesm2022/elements.mjs",
+    "@angular/elements/": "https://cdn.jsdelivr.net/npm/@angular/elements@17.3.0/fesm2022/",
+    "@angular/forms": "https://cdn.jsdelivr.net/npm/@angular/forms@17.3.0/fesm2022/forms.mjs",
+    "@angular/forms/": "https://cdn.jsdelivr.net/npm/@angular/forms@17.3.0/fesm2022/",
+    "@angular/platform-browser": "https://cdn.jsdelivr.net/npm/@angular/platform-browser@17.3.0/fesm2022/platform-browser.mjs",
+    "@angular/platform-browser/": "https://cdn.jsdelivr.net/npm/@angular/platform-browser@17.3.0/fesm2022/",
+    "@angular/platform-browser-dynamic": "https://cdn.jsdelivr.net/npm/@angular/platform-browser-dynamic@17.3.0/fesm2022/platform-browser-dynamic.mjs",
+    "@angular/platform-browser-dynamic/": "https://cdn.jsdelivr.net/npm/@angular/platform-browser-dynamic@17.3.0/fesm2022/",
+    "@angular/platform-browser/animations": "https://cdn.jsdelivr.net/npm/@angular/platform-browser@17.3.0/fesm2022/animations.mjs",
+    "rxjs": "https://esm.sh/rxjs@7.8.1",
+    "rxjs/": "https://esm.sh/rxjs@7.8.1/",
+    "tslib": "https://cdn.jsdelivr.net/npm/tslib@2.6.2/tslib.es6.mjs",
+    "zone.js": "https://cdn.jsdelivr.net/npm/zone.js@0.14.2/fesm2015/zone.mjs"
+  }
+}

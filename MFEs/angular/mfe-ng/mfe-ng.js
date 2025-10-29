@@ -23,6 +23,7 @@ export function createOutlet({ mountPoint = document.body, append = false } = {}
 function cleanup(state) {
   if (!state) return;
   state.pingBtn?.removeEventListener('click', state.onPing);
+  state.toggleBtn?.removeEventListener('click', state.onToggle);
   window.removeEventListener('BUS', state.onBus);
   if (state.replace) {
     state.host.innerHTML = '';
@@ -32,6 +33,13 @@ function cleanup(state) {
   if (state.detach && state.host?.isConnected) {
     state.host.remove();
   }
+}
+
+function formatMetric(value) {
+  if (typeof value !== 'number' || !Number.isFinite(value) || value <= 0) {
+    return '--';
+  }
+  return `${value.toFixed(1)} ms`;
 }
 
 export async function render(outlet, options = {}) {
@@ -48,6 +56,8 @@ export async function render(outlet, options = {}) {
     description = 'Simulacao de Web Component Angular standalone com Signals, ideal para orquestracao corporativa.',
     tagline = 'Empacotado como Custom Element e integrado via Native Federation.',
     log = true,
+    variant = 'full',
+    metrics = {},
   } = options;
 
   const hostProvided = outlet instanceof Element;
@@ -60,7 +70,7 @@ export async function render(outlet, options = {}) {
   host.classList.add('mfe-surface');
 
   const card = document.createElement('section');
-  card.className = 'angular-card';
+  card.className = `angular-card angular-card--${variant}`;
 
   const badge = document.createElement('span');
   badge.className = 'badge';
@@ -76,42 +86,102 @@ export async function render(outlet, options = {}) {
   taglineEl.className = 'tagline';
   taglineEl.textContent = tagline;
 
-  const metrics = document.createElement('dl');
-  const metricRows = [
-    ['Status', 'Operacional'],
-    ['Versao', '17.x (standalone)'],
-    ['Eventos enviados', '0'],
-  ];
-  let eventsEntry = null;
-  metricRows.forEach(([label, value]) => {
-    const dt = document.createElement('dt');
-    dt.textContent = label;
-    const dd = document.createElement('dd');
-    dd.textContent = value;
-    metrics.append(dt, dd);
-    if (label === 'Eventos enviados') {
-      eventsEntry = dd;
-    }
+  const metricsRoot = document.createElement('div');
+  metricsRoot.className = 'angular-performance';
+  const metricsMap = {};
+  [
+    ['last', 'Ultimo render'],
+    ['average', 'Media rolling'],
+    ['best', 'Melhor tempo'],
+    ['worst', 'Maior tempo'],
+    ['count', 'Montagens'],
+  ].forEach(([key, label]) => {
+    const item = document.createElement('div');
+    item.className = 'angular-performance__item';
+    const labelEl = document.createElement('span');
+    labelEl.className = 'angular-performance__label';
+    labelEl.textContent = label;
+    const valueEl = document.createElement('span');
+    valueEl.className = 'angular-performance__value';
+    valueEl.textContent = key === 'count' ? '0' : '--';
+    item.append(labelEl, valueEl);
+    metricsRoot.appendChild(item);
+    metricsMap[key] = valueEl;
   });
+
+  const updatePerformance = (data = {}) => {
+    metricsMap.last.textContent = formatMetric(data.last);
+    metricsMap.average.textContent = formatMetric(data.average);
+    metricsMap.best.textContent = formatMetric(data.best);
+    metricsMap.worst.textContent = formatMetric(data.worst);
+    metricsMap.count.textContent =
+      typeof data.count === 'number' && Number.isFinite(data.count) && data.count > 0
+        ? String(data.count)
+        : metricsMap.count.textContent || '0';
+  };
 
   const button = document.createElement('button');
   button.type = 'button';
+  button.className = 'angular-btn';
   button.textContent = 'Emitir BUS (Angular)';
+
+  const toggleBtn = document.createElement('button');
+  toggleBtn.type = 'button';
+  toggleBtn.className = 'angular-toggle';
+
+  const details = document.createElement('section');
+  details.className = 'angular-details';
+  details.innerHTML = `
+    <div class="angular-detail-group">
+      <h3>Arquitetura remota</h3>
+      <ul class="angular-detail-list">
+        <li><strong>Tecnologia:</strong> Angular 17 standalone + Signals</li>
+        <li><strong>Empacotamento:</strong> createApplication + customElement</li>
+        <li><strong>Zone.js:</strong> opcional (com fallback a signals)</li>
+      </ul>
+    </div>
+    <div class="angular-detail-group">
+      <h4>Exemplo pratico</h4>
+      <p>Dashboard de engajamento que reaproveita components do design system Angular em shells heterogeneos.</p>
+    </div>
+    <div class="angular-detail-group">
+      <h4>Integra</h4>
+      <ul class="angular-detail-list">
+        <li>Native Federation (ESM puro)</li>
+        <li>Module Federation (exposto como remote)</li>
+        <li>Legacy AngularJS via wrapper microfrontend</li>
+      </ul>
+    </div>
+  `;
+
+  const setDetailsState = (open) => {
+    details.dataset.open = open ? 'true' : 'false';
+    toggleBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    toggleBtn.textContent = open ? 'Ocultar detalhes' : 'Detalhes da arquitetura';
+  };
+  const defaultOpen = variant !== 'compact';
+  setDetailsState(defaultOpen);
 
   const logArea = document.createElement('div');
   logArea.className = 'angular-log';
   logArea.setAttribute('aria-live', 'polite');
-
-  card.append(badge, heading, descriptionEl, taglineEl, metrics, button);
-  if (log) {
-    card.appendChild(logArea);
+  if (!log) {
+    logArea.style.display = 'none';
   }
+
+  const actions = document.createElement('div');
+  actions.className = 'angular-actions';
+  actions.append(button, toggleBtn);
+
+  card.append(badge, heading, descriptionEl, taglineEl, metricsRoot, actions);
+  if (log) card.appendChild(logArea);
+  card.appendChild(details);
 
   host.appendChild(card);
 
   const onPing = () => {
-    const next = Number(eventsEntry?.textContent || '0') + 1;
-    if (eventsEntry) eventsEntry.textContent = String(next);
+    const next = Number(metricsMap.count.textContent || '0') + 1;
+    metricsMap.count.textContent = String(next);
     window.dispatchEvent(
       new CustomEvent('BUS', {
         detail: {
@@ -128,18 +198,32 @@ export async function render(outlet, options = {}) {
   const onBus = (event) => {
     if (!log || event.type !== 'BUS' || !logArea) return;
     const detail = typeof event.detail === 'object' ? JSON.stringify(event.detail) : String(event.detail);
-    logArea.textContent = `BUS recebido: ${detail}`;
+   logArea.textContent = `BUS recebido: ${detail}`;
+  };
+
+  const onToggle = () => {
+    const open = details.dataset.open !== 'true';
+    setDetailsState(open);
   };
 
   button.addEventListener('click', onPing);
+  toggleBtn.addEventListener('click', onToggle);
   window.addEventListener('BUS', onBus);
 
   const state = { host, card, pingBtn: button, onPing, onBus, detach, replace, logArea };
   instances.set(host, state);
 
-  return () => {
-    cleanup(state);
-    instances.delete(host);
+  updatePerformance(metrics);
+
+  state.toggleBtn = toggleBtn;
+  state.onToggle = onToggle;
+
+  return {
+    updateMetrics: (next) => updatePerformance(next ?? {}),
+    destroy: () => {
+      cleanup(state);
+      instances.delete(host);
+    },
   };
 }
 

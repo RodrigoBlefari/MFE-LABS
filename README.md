@@ -1,4 +1,4 @@
-# Microfrontends Lab - Single-SPA, Module Federation and Native Federation (Angular friendly)
+﻿# Microfrontends Lab - Single-SPA, Module Federation and Native Federation (Angular friendly)
 
 > Este pacote demonstra **tres shells** e **tres MFEs** organizados como projetos independentes (pasta `MFEs/`), simulando repositorios separados. Os exemplos utilizam ESM puro para facilitar comparacoes de carregamento e comunicacao. Em producao substitua pelos toolchains oficiais do framework.
 
@@ -10,8 +10,9 @@
 - `MFEs/module-federation/remote-a/` (porta 9101)
 - `MFEs/native-federation/mfe1/` (porta 9201)
 - `MFEs/angular/mfe-ng/` (porta 9301) - Angular Web Component (simulado com Web Component vanilla, mantendo contrato NF)
+- `MFEs/angular/mfe-ng-full/` (porta 9400*) - Angular CLI completo preparado para empacotar como Web Component federado
 - `MFEs/react/mfe-react/` (porta 9302) - React 18 encapsulado em Custom Element
-- `MFEs/vue/mfe-vue/` (porta 9303) - Vue 3 via `defineCustomElement` usando bundle local (`node_modules/vue/dist/vue.esm-browser.prod.js`)
+- `MFEs/vue/mfe-vue/` (porta 9303) - Vue 3 via `defineCustomElement` usando bundle local (`node_modules/vue/dist/vue.runtime.esm-browser.prod.js`)
 
 ## Rodando em desenvolvimento
 Abra nove terminais (ou execute em sequencia, mantendo todos ativos):
@@ -29,6 +30,8 @@ cd MFEs/native-federation/mfe1 && npm install && npm start
 cd MFEs/angular/mfe-ng && npm install && npm start
 cd MFEs/react/mfe-react && npm install && npm start
 cd MFEs/vue/mfe-vue && npm install && npm start
+# Angular CLI completo — empacote e sirva em 9400
+cd MFEs/angular/mfe-ng-full && npm install && npm run package && npm run serve
 ```
 
 Interfaces:
@@ -41,8 +44,10 @@ Interfaces:
 - Remotos devolvem funcoes de teardown assincrono, permitindo multiplas instancias simultaneas sem interferencia entre hosts.
 - O shell nativo traz painel principal + painel combinado. Os seletores (chips) mantem os MFEs sincronizados em tempo real, com fallback tratada em caso de erro.
 - O estado inicial apresenta todos os MFEs selecionados; falhas na carga exibem mensagem contextual em cada card mantendo os demais ativos.
-- Angular opera em modo mockado (Web Component vanilla) para evitar cadeia pesada de imports CDN, mas preserva comportamento (BUS, metricas, visual).
-- Vue utiliza `node_modules/vue/dist/vue.esm-browser.prod.js`, garantindo montagem tanto no painel individual quanto no combinado sem depender de CDN.
+- As navegacoes agora exibem telemetria: badges mostram a media de render por MFE e o painel "Telemetria de renderizacao" destaca o mais rapido, o mais lento e o numero total de coletas.
+- Cada card ganhou paleta da tecnologia correspondente, metricas reais (ultimo, media, melhor, pior) e botao de detalhes com arquitetura, versoes e exemplos praticos.
+- `MFEs/angular/mfe-ng/` continua sendo uma simulacao leve sem Angular CLI (iteracao rapida), enquanto `MFEs/angular/mfe-ng-full/` empacota o projeto real via `@angular/elements`.
+- Vue utiliza o bundle local `node_modules/vue/dist/vue.runtime.esm-browser.prod.js`, evitando CSP `unsafe-eval` e permitindo execucao offline sem CDN.
 
 ## Build
 Cada projeto gera artefatos estaticos em `dist/` via um script de copia padrao. Execute apos `npm install`:
@@ -60,6 +65,9 @@ cd MFEs/react/mfe-react && npm run build
 cd MFEs/vue/mfe-vue && npm run build
 ```
 
+- Para gerar o bundle do shell nativo execute `npm run bundle` apos `npm install` (o comando usa esbuild e produz `dist/app.bundle.js`).
+- Para entregar o Angular full, use `npm run package` em `MFEs/angular/mfe-ng-full/` e sirva `dist-webcomponent` (o script copia `main.js` e o bridge `mfe-ng-full.js`).
+
 Os arquivos em `dist/` podem ser publicados em CDNs distintas ou agregados por pipelines dedicados de cada equipe.
 
 ## Hardening de seguranca
@@ -70,6 +78,7 @@ Os arquivos em `dist/` podem ser publicados em CDNs distintas ou agregados por p
 - Remotos carregam CSS proprio (sem inline), exportam APIs idempotentes (`render`, `unmount`, `bootstrap/mount`) e nunca avaliam entrada de usuario.
 - Scripts dos hosts normalizam funcoes de cleanup assinc, limpam slots compartilhados e impedem vazamento de listeners.
 - `npm run build` copia somente artefatos finais, facilitando pipelines com scanners SAST/DAST e deploy sem tooling desnecessario.
+- `npm run bundle` (no shell nativo) usa esbuild para gerar `dist/app.bundle.js` minificado + sourcemap, reduzindo payload e melhorando tempo de carga.
 - O meta CSP do shell nativo inclui `https://cdn.jsdelivr.net`, `https://esm.sh` e `https://unpkg.com` para liberar modulos ESM; em producao, configure os headers HTTP (ex.: `frame-ancestors`) diretamente no servidor reverso para evitar alertas e controlar dominios externos.
 
 ## Deploy (boas praticas)
@@ -82,5 +91,9 @@ Os arquivos em `dist/` podem ser publicados em CDNs distintas ou agregados por p
 
 ## Roadmap imediato
 - Evoluir o card Vue (testes + integracao com design system) e acompanhar seu comportamento em producao.
-- Substituir o mock Angular por um bundle real federado quando a infraestrutura ESM estiver estabilizada.
+- Substituir o mock Angular pelo bundle do projeto `mfe-ng-full/` assim que o pipeline federado com esbuild estiver estabilizado.
 - Automatizar testes de smoke para garantir que todos os remotos respondem antes de iniciar o shell nativo.
+
+---
+
+* Porta sugerida. Ao usar `ng serve` utilize `--port 9400` ou sirva `dist-webcomponent` com `npm run serve` (aplica CORS automaticamente).

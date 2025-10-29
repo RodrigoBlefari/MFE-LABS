@@ -1,17 +1,19 @@
 .mfe-surface {
   display: block;
-  min-width: 240px;
-  margin: 8px 0;
+  min-width: 260px;
+  margin: 12px 0;
 }
 
 .ssa-card {
-  border-radius: 18px;
-  padding: 20px;
-  background: linear-gradient(135deg, #f97316, #fb923c);
-  color: #7c2d12;
-  box-shadow: 0 18px 32px rgba(249, 115, 22, 0.32);
-  border: 1px solid rgba(251, 146, 60, 0.55);
   position: relative;
+  display: grid;
+  gap: 18px;
+  border-radius: 26px;
+  padding: 26px;
+  background: linear-gradient(135deg, #f97316, #fb923c);
+  color: #1c1917;
+  box-shadow: 0 28px 52px rgba(249, 115, 22, 0.38);
+  border: 1px solid rgba(234, 88, 12, 0.46);
   overflow: hidden;
 }
 
@@ -19,76 +21,165 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at bottom left, rgba(255, 255, 255, 0.22), transparent 60%);
+  background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.25), transparent 60%);
   pointer-events: none;
 }
 
-.ssa-card h2 {
-  margin: 0 0 10px;
-  font-size: 1.2rem;
+.ssa-card--compact {
+  padding: 22px;
+  gap: 14px;
+}
+
+.ssa-card > * {
+  position: relative;
+  z-index: 1;
 }
 
 .ssa-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 12px;
+  padding: 5px 14px;
   border-radius: 999px;
-  background: rgba(124, 45, 18, 0.18);
+  background: rgba(28, 25, 23, 0.16);
+  color: rgba(28, 25, 23, 0.88);
   font-size: 0.82rem;
   font-weight: 700;
+  letter-spacing: 0.04em;
 }
 
 .ssa-description {
-  margin: 8px 0 14px;
-  line-height: 1.45;
+  margin: 4px 0;
+  line-height: 1.5;
 }
 
 .ssa-tagline {
-  margin: 6px 0 18px;
-  font-size: 0.9rem;
-  opacity: 0.85;
+  margin: 0;
+  font-size: 0.92rem;
+  opacity: 0.8;
 }
 
-.ssa-metrics {
+.ssa-performance {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.ssa-performance__item {
   display: grid;
   gap: 6px;
-  margin-bottom: 14px;
-  font-size: 0.92rem;
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(28, 25, 23, 0.12);
+  border: 1px solid rgba(28, 25, 23, 0.24);
 }
 
-.ssa-metrics span {
+.ssa-performance__label {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.72;
+}
+
+.ssa-performance__value {
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: #422006;
+}
+
+.ssa-actions {
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.mfe-btn,
+.ssa-toggle {
+  appearance: none;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
 }
 
 .mfe-btn {
-  appearance: none;
-  border: none;
-  border-radius: 10px;
-  padding: 10px 18px;
-  background: rgba(124, 45, 18, 0.92);
+  background: rgba(28, 25, 23, 0.9);
   color: #fff7ed;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.mfe-btn:focus-visible {
-  outline: 2px solid rgba(255, 247, 237, 0.7);
-  outline-offset: 2px;
+  box-shadow: 0 16px 30px rgba(28, 25, 23, 0.35);
 }
 
 .mfe-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 12px 24px rgba(124, 45, 18, 0.32);
+  box-shadow: 0 18px 36px rgba(28, 25, 23, 0.42);
+}
+
+.ssa-toggle {
+  background: rgba(28, 25, 23, 0.15);
+  color: #422006;
+  border: 1px solid rgba(234, 88, 12, 0.35);
+}
+
+.ssa-toggle:hover {
+  transform: translateY(-1px);
 }
 
 .mfe-log {
-  margin-top: 12px;
+  min-height: 1.2rem;
   font-size: 0.85rem;
-  color: #7c2d12;
-  min-height: 1.2em;
+  color: rgba(28, 25, 23, 0.92);
+  background: rgba(28, 25, 23, 0.12);
+  border-radius: 14px;
+  padding: 10px 14px;
   word-break: break-word;
-  opacity: 0.85;
+}
+
+.ssa-details {
+  display: grid;
+  gap: 16px;
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(255, 247, 237, 0.95);
+  color: #422006;
+}
+
+.ssa-details[data-open="false"] {
+  display: none;
+}
+
+.ssa-detail-group {
+  display: grid;
+  gap: 10px;
+}
+
+.ssa-detail-group h3,
+.ssa-detail-group h4 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.ssa-detail-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.ssa-detail-list li {
+  border-radius: 12px;
+  padding: 10px 14px;
+  background: rgba(28, 25, 23, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.92rem;
+}
+
+.ssa-detail-list li strong {
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }

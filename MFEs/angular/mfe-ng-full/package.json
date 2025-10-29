@@ -1,0 +1,33 @@
+{
+  "name": "mfe-ng-full",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "ng serve mfe-ng-full --port 9400",
+    "build": "ng build mfe-ng-full",
+    "package": "ng build mfe-ng-full --configuration production && node tools/package-webcomponent.mjs",
+    "serve": "node tools/serve-webcomponent.mjs"
+  },
+  "dependencies": {
+    "@angular/animations": "^17.3.0",
+    "@angular/common": "^17.3.0",
+    "@angular/compiler": "^17.3.0",
+    "@angular/core": "^17.3.0",
+    "@angular/elements": "^17.3.0",
+    "@angular/forms": "^17.3.0",
+    "@angular/platform-browser": "^17.3.0",
+    "@angular/platform-browser-dynamic": "^17.3.0",
+    "rxjs": "^7.8.1",
+    "tslib": "^2.6.2",
+    "zone.js": "^0.14.2"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^17.3.5",
+    "@angular/cli": "^17.3.5",
+    "@angular/compiler-cli": "^17.3.0",
+    "@types/jasmine": "^5.1.4",
+    "jasmine-core": "^5.1.1",
+    "karma": "^6.4.2",
+    "typescript": "^5.3.3"
+  }
+}

@@ -5,38 +5,70 @@
   <title>Native Federation Shell (demo)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-  <meta http-equiv="Permissions-Policy" content="accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=()" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' http://localhost:9001 http://localhost:9101 http://localhost:9201 http://localhost:9301 http://localhost:9302 http://localhost:9303 https://cdn.jsdelivr.net https://esm.sh https://unpkg.com 'sha256-ieoeWczDHkReVBsRBqaal5AFMlBtNjMzgwKvLqi/tSU='; connect-src 'self' http://localhost:9001 http://localhost:9101 http://localhost:9201 http://localhost:9301 http://localhost:9302 http://localhost:9303 https://cdn.jsdelivr.net https://esm.sh https://unpkg.com; style-src 'self' http://localhost:9001 http://localhost:9101 http://localhost:9201 http://localhost:9301 http://localhost:9302 http://localhost:9303 https://cdn.jsdelivr.net https://esm.sh https://unpkg.com 'unsafe-hashes' 'sha256-QIjW/+aUzfg58HcITJNHkkCTGmLovNUIQbL+Zq2TsIE=' 'sha256-jHfeyg6bGOgJf9ss8zgGinbIkW80hpY8YViDLBmeC8A='; img-src 'self' data:; font-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none';" />
+  <meta
+    http-equiv="Permissions-Policy"
+    content="accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=()"
+  />
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' http://localhost:9001 http://localhost:9101 http://localhost:9201 http://localhost:9301 http://localhost:9302 http://localhost:9303 http://localhost:9400 https://cdn.jsdelivr.net https://esm.sh https://unpkg.com 'sha256-ieoeWczDHkReVBsRBqaal5AFMlBtNjMzgwKvLqi/tSU='; connect-src 'self' http://localhost:9001 http://localhost:9101 http://localhost:9201 http://localhost:9301 http://localhost:9302 http://localhost:9303 http://localhost:9400 https://cdn.jsdelivr.net https://esm.sh https://unpkg.com; style-src 'self' http://localhost:9001 http://localhost:9101 http://localhost:9201 http://localhost:9301 http://localhost:9302 http://localhost:9303 http://localhost:9400 https://cdn.jsdelivr.net https://esm.sh https://unpkg.com 'unsafe-hashes' 'sha256-QIjW/+aUzfg58HcITJNHkkCTGmLovNUIQbL+Zq2TsIE=' 'sha256-jHfeyg6bGOgJf9ss8zgGinbIkW80hpY8YViDLBmeC8A='; img-src 'self' data:; font-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none';"
+  />
   <meta name="referrer" content="same-origin" />
   <link
     rel="icon"
     href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2300b5d8'/%3E%3Cpath d='M18 44h28L32 20z' fill='%23fff'/%3E%3C/svg%3E"
   />
   <link rel="stylesheet" href="./styles.css" />
+  <script type="importmap" src="./importmap.json"></script>
 </head>
 <body>
   <h1>Native Federation Shell (demo)</h1>
-  <p class="lead">Integra remotos Native MF, Module Federation, Single-SPA, Angular, React e Vue em um shell de orquestração resiliente.</p>
+  <p class="lead">
+    Integra remotos Native Federation, Module Federation, Single-SPA, Angular, React e Vue em um shell de orquestracao
+    resiliente.
+  </p>
   <nav class="top-nav">
-    <div class="nav-section">
+    <div class="nav-section nav-section--primary">
       <h2>Experimente individualmente</h2>
       <p class="nav-hint">Escolha um MFE para assumir o painel principal.</p>
       <div id="primary-controls" class="nav-buttons"></div>
     </div>
     <div class="nav-section nav-section--multi">
       <h2>Painel combinado</h2>
-      <p class="nav-hint">Selecione quais MFEs permanecem no painel lateral (renderização simultânea).</p>
+      <p class="nav-hint">Selecione quais MFEs permanecem no painel lateral (renderizacao simultanea).</p>
       <div id="multi-toggle" class="multi-toggle"></div>
       <div class="nav-actions">
         <button id="btn-panel" type="button" class="primary">Mostrar selecionados</button>
         <button id="btn-select-all" type="button" class="ghost">Selecionar todos</button>
-        <button id="btn-select-none" type="button" class="ghost">Limpar seleção</button>
+        <button id="btn-select-none" type="button" class="ghost">Limpar selecao</button>
       </div>
+    </div>
+    <div class="nav-section nav-section--telemetry">
+      <h2>Telemetria de renderizacao</h2>
+      <p class="nav-hint">Atualizado apos cada montagem registrada.</p>
+      <dl class="insights-list">
+        <div>
+          <dt>Mais rapido (media)</dt>
+          <dd id="insight-fastest">--</dd>
+        </div>
+        <div>
+          <dt>Mais lento (media)</dt>
+          <dd id="insight-slowest">--</dd>
+        </div>
+        <div>
+          <dt>Media global</dt>
+          <dd id="insight-average">--</dd>
+        </div>
+        <div>
+          <dt>Coletas</dt>
+          <dd id="insight-samples">0</dd>
+        </div>
+      </dl>
     </div>
   </nav>
   <main class="layout">
     <section class="panel">
-      <h2>Visualização individual</h2>
+      <h2>Visualizacao individual</h2>
       <div id="primary-outlet"></div>
     </section>
     <section class="panel">
