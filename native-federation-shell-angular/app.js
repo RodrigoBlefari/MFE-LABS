@@ -283,7 +283,7 @@ const documentationById = {
       <span class="doc-tag">Native Federation</span>
       <div class="doc-block">
         <h3>Resumo</h3>
-        <p>Remote ESM orientado a eventos, exposto em <code>http://localhost:9201/mfe1.js</code> sem bundler compartilhado.</p>
+        <p>Remote ESM orientado a eventos, exposto em <code>http://localhost:9101/mfe1.js</code> sem bundler compartilhado.</p>
       </div>
       <div class="doc-block">
         <h3>Stack tecnico</h3>
@@ -296,7 +296,7 @@ const documentationById = {
       <div class="doc-block">
         <h3>Integracao com o shell</h3>
         <ul>
-          <li>Carregado via <code>import('http://localhost:9201/mfe1.js')</code> e montado no outlet fornecido.</li>
+          <li>Carregado via <code>import('http://localhost:9101/mfe1.js')</code> e montado no outlet fornecido.</li>
           <li><code>render()</code> retorna <code>updateMetrics</code> e <code>destroy()</code>, usados pelo lifecycle unificado.</li>
           <li>Eventos <code>CustomEvent('BUS')</code> propagam telemetria para os demais MFEs.</li>
         </ul>
@@ -316,7 +316,7 @@ const documentationById = {
       <span class="doc-tag">Module Federation</span>
       <div class="doc-block">
         <h3>Resumo</h3>
-        <p>Remote webpack 5 em <code>http://localhost:9101/remote-a.js</code> convertido em ES Module pelo bridge Native Federation.</p>
+        <p>Remote webpack 5 em <code>http://localhost:9301/remote-a.js</code> convertido em ES Module pelo bridge Native Federation.</p>
       </div>
       <div class="doc-block">
         <h3>Stack tecnico</h3>
@@ -347,7 +347,7 @@ npm start</code></pre>
       <span class="doc-tag">Single-SPA</span>
       <div class="doc-block">
         <h3>Resumo</h3>
-        <p>Adapter Single-SPA em <code>http://localhost:9001/mfe-a.js</code>, provendo <code>bootstrap</code>, <code>mount</code> e <code>unmount</code>.</p>
+        <p>Adapter Single-SPA em <code>http://localhost:9302/mfe-a.js</code>, provendo <code>bootstrap</code>, <code>mount</code> e <code>unmount</code>.</p>
       </div>
       <div class="doc-block">
         <h3>Stack tecnico</h3>
@@ -372,7 +372,7 @@ npm start</code></pre>
       <span class="doc-tag">Angular Elements</span>
       <div class="doc-block">
         <h3>Resumo</h3>
-        <p>Angular standalone + Signals convertido em Web Component (<code>mfe-ng</code> em <code>http://localhost:9301/mfe-ng.js</code>).</p>
+        <p>Angular standalone + Signals convertido em Web Component (<code>mfe-ng</code> em <code>http://localhost:9310/mfe-ng.js</code>).</p>
       </div>
       <div class="doc-block">
         <h3>Stack tecnico</h3>
@@ -429,7 +429,7 @@ npm run serve</code></pre>
       <span class="doc-tag">React 18</span>
       <div class="doc-block">
         <h3>Resumo</h3>
-        <p>Observability widget em React 18 convertido em Custom Element (<code>mfe-react</code> em <code>http://localhost:9302/mfe-react.js</code>).</p>
+        <p>Observability widget em React 18 convertido em Custom Element (<code>mfe-react</code> em <code>http://localhost:9201/mfe-react.js</code>).</p>
       </div>
       <div class="doc-block">
         <h3>Stack tecnico</h3>
@@ -842,10 +842,10 @@ const registry = [
     accentAlt: '#34d399',
     description: 'Remote ESM nativo orientado a eventos com pipeline zero-bundler.',
     tagline: 'CustomEvent + contratos simples: integra Single-SPA e Module Federation sem acoplamento.',
-    remote: 'http://localhost:9201/mfe1.js',
+    remote: 'http://localhost:9101/mfe1.js',
     mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('nf') } = {}) => {
       const variant = compact ? 'compact' : 'full';
-      const mod = await import('http://localhost:9201/mfe1.js');
+      const mod = await import('http://localhost:9101/mfe1.js');
       const result = await mod.render(outlet, {
         host: 'native-shell',
         name: 'mfe1-nf',
@@ -875,10 +875,10 @@ const registry = [
     accentAlt: '#8ed6fb',
     description: 'Remote webpack 5 exposto como ESM para catalogos omnichannel regulados.',
     tagline: 'Bridge MF + Native Federation com compartilhamento controlado de dependências.',
-    remote: 'http://localhost:9101/remote-a.js',
+    remote: 'http://localhost:9301/remote-a.js',
     mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('mf') } = {}) => {
       const variant = compact ? 'compact' : 'full';
-      const mod = await import('http://localhost:9101/remote-a.js');
+      const mod = await import('http://localhost:9301/remote-a.js');
       const result = await mod.render(outlet, {
         host: 'native-shell',
         name: 'remote-a-mf',
@@ -908,10 +908,10 @@ const registry = [
     accentAlt: '#fb923c',
     description: 'Lifecycle bootstrap/mount/unmount pronto para modernizar shells legados.',
     tagline: 'Adapter ESM que publica BUS e convive com MF/NF sem retrabalho.',
-    remote: 'http://localhost:9001/mfe-a.js',
+    remote: 'http://localhost:9302/mfe-a.js',
     mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('ssa') } = {}) => {
       const variant = compact ? 'compact' : 'full';
-      const mod = await import('http://localhost:9001/mfe-a.js');
+      const mod = await import('http://localhost:9302/mfe-a.js');
       const baseProps = {
         name: '@org/mfe-a',
         host: 'native-shell',
@@ -942,10 +942,10 @@ const registry = [
     accentAlt: '#f87171',
     description: 'Angular standalone + Signals empacotado como Custom Element leve.',
     tagline: 'createApplication + @angular/elements com telemetria nativa.',
-    remote: 'http://localhost:9301/mfe-ng.js',
+    remote: 'http://localhost:9310/mfe-ng.js',
     mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('ng') } = {}) => {
       const variant = compact ? 'compact' : 'full';
-      const mod = await import('http://localhost:9301/mfe-ng.js');
+      const mod = await import('http://localhost:9310/mfe-ng.js');
       const result = await mod.render(outlet, {
         replace: true,
         variant,
@@ -994,10 +994,10 @@ const registry = [
     accentAlt: '#38bdf8',
     description: 'React 18 encapsulado como Custom Element para painéis de observabilidade.',
     tagline: 'createRoot + Web Component com isolamento e telemetria de renderizacao.',
-    remote: 'http://localhost:9302/mfe-react.js',
+    remote: 'http://localhost:9201/mfe-react.js',
     mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('react') } = {}) => {
       const variant = compact ? 'compact' : 'full';
-      const mod = await import('http://localhost:9302/mfe-react.js');
+      const mod = await import('http://localhost:9201/mfe-react.js');
       const result = await mod.render(outlet, {
         replace: true,
         log: !compact,
@@ -1026,10 +1026,10 @@ const registry = [
     accentAlt: '#22c55e',
     description: 'Vue 3 defineCustomElement otimizado para portais híbridos.',
     tagline: 'Composition API + Custom Element com BUS integrado e métricas reais.',
-    remote: 'http://localhost:9303/mfe-vue.js',
+    remote: 'http://localhost:9001/mfe-vue.js',
     mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('vue') } = {}) => {
       const variant = compact ? 'compact' : 'full';
-      const mod = await import('http://localhost:9303/mfe-vue.js');
+      const mod = await import('http://localhost:9001/mfe-vue.js');
       const result = await mod.render(outlet, {
         replace: true,
         variant,

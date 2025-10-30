@@ -160,12 +160,11 @@ cd MFEs/module-federation/remote-a && npm start
 # Single-SPA (mfe-a) - 9001
 cd MFEs/single-spa/mfe-a && npm start
 
-# Angular Web Component (mfe-ng) - 9301
+# Angular Web Component (mfe-ng) - 9310
 cd MFEs/angular/mfe-ng && npm start
 
 # Angular Full (dist-webcomponent) - 9400
 cd MFEs/angular/mfe-ng-full && npm run serve
-
 # React (mfe-react) - 9302
 cd MFEs/react/mfe-react && npm start
 
@@ -204,9 +203,10 @@ npx localtunnel --port 9200 --subdomain mff-shell
 npx localtunnel --port 9201 --subdomain mff-nf
 npx localtunnel --port 9101 --subdomain mff-mf
 npx localtunnel --port 9001 --subdomain mff-ssa
-npx localtunnel --port 9301 --subdomain mff-ng
+npx localtunnel --port 9310 --subdomain mff-ng
 npx localtunnel --port 9400 --subdomain mff-ngfull
-npx localtunnel --port 9302 --subdomain mff-react
+npx localtunnel --port 9302 --subdo
+main mff-react
 npx localtunnel --port 9303 --subdomain mff-vue
 ```
 
@@ -228,7 +228,7 @@ cloudflared tunnel --url http://localhost:9200
 cloudflared tunnel --url http://localhost:9201
 cloudflared tunnel --url http://localhost:9101
 cloudflared tunnel --url http://localhost:9001
-cloudflared tunnel --url http://localhost:9301
+cloudflared tunnel --url http://localhost:9310
 cloudflared tunnel --url http://localhost:9400
 cloudflared tunnel --url http://localhost:9302
 cloudflared tunnel --url http://localhost:9303

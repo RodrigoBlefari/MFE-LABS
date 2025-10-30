@@ -9,7 +9,7 @@ async function loadRemote() {
     await teardown?.();
     teardown = null;
 
-    const mod = await import('http://localhost:9101/remote-a.js');
+    const mod = await import('http://localhost:9301/remote-a.js');
     const result = await mod.render(outlet, {
       host: 'module-federation-shell',
       name: 'remote-a',
