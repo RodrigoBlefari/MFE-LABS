@@ -3,8 +3,8 @@
  * Simple build helper that copies the provided files into a dist/ folder.
  * Usage: node scripts/build-copy.mjs file-a.js file-b.html
  */
-import { mkdir, rm, copyFile } from 'node:fs/promises';
-import { join } from 'node:path';
+import { mkdir, rm, copyFile, cp, lstat } from 'node:fs/promises';
+import { join, dirname } from 'node:path';
 
 async function main() {
   const args = process.argv.slice(2);
@@ -19,8 +19,16 @@ async function main() {
   await mkdir(distDir, { recursive: true });
 
   for (const relative of args) {
-    const destination = join(distDir, relative.split('/').pop());
-    await copyFile(relative, destination);
+    const source = relative;
+    const destination = join(distDir, relative);
+
+    const info = await lstat(source);
+    if (info.isDirectory()) {
+      await cp(source, destination, { recursive: true });
+    } else {
+      await mkdir(dirname(destination), { recursive: true });
+      await copyFile(source, destination);
+    }
   }
 
   console.log(`Copied ${args.length} file(s) to ${distDir}/`);

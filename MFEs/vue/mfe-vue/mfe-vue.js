@@ -1,9 +1,19 @@
-import { defineCustomElement, h, ref, computed, watch, onMounted, getCurrentInstance } from './node_modules/vue/dist/vue.runtime.esm-browser.prod.js';
+import {
+  defineCustomElement,
+  h,
+  ref,
+  computed,
+  watch,
+  onMounted,
+  getCurrentInstance,
+} from 'https://cdn.jsdelivr.net/npm/vue@3.4.21/dist/vue.runtime.esm-browser.prod.js';
+import { ensureDesignTokens } from 'http://localhost:9100/design-system/loader.js';
 
 const instances = new Map();
 let elementDefined = false;
 
 function ensureStylesheet() {
+  ensureDesignTokens();
   if (document.querySelector('link[data-vue-mfe-style]')) {
     return;
   }
@@ -337,3 +347,5 @@ export function unmount(ctx = {}) {
   }
   instances.clear();
 }
+
+
