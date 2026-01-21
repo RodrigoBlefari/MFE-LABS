@@ -1,4 +1,6 @@
-﻿# MFF LABS • Native Federation Lab (ESM + Design System + Telemetria)
+﻿![Exemplo](exemplo.jpg)
+
+# MFF LABS • Native Federation Lab (ESM + Design System + Telemetria)
 
 Este laboratório demonstra como orquestrar múltiplos Micro Front‑Ends (MFEs) de stacks diferentes (Angular, React, Vue, Module Federation, Single‑SPA e ESM nativo) usando Native Federation com ES Modules, import maps, CSP rigorosa e telemetria unificada. 
 
