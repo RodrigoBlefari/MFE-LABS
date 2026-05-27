@@ -9,6 +9,29 @@ import {
 } from 'https://cdn.jsdelivr.net/npm/vue@3.4.21/dist/vue.runtime.esm-browser.prod.js';
 import { ensureDesignTokens } from 'http://localhost:9100/design-system/loader.js';
 
+let heavyDepsPromise = null;
+const HEAVY_DEP_URLS = [
+  'https://esm.sh/lodash@4.17.21',
+  'https://esm.sh/moment@2.30.1',
+  'https://esm.sh/dayjs@1.11.13',
+  'https://esm.sh/date-fns@4.1.0',
+  'https://esm.sh/ramda@0.30.1',
+  'https://esm.sh/mathjs@13.2.3',
+  'https://esm.sh/three@0.168.0',
+  'https://esm.sh/chart.js@4.4.4/auto',
+  'https://esm.sh/echarts@5.5.1',
+  'https://esm.sh/xlsx@0.18.5',
+];
+async function preloadHeavyDeps() {
+  if (!heavyDepsPromise) {
+    heavyDepsPromise = Promise.all(HEAVY_DEP_URLS.map((url) => import(url))).catch((err) => {
+      heavyDepsPromise = null;
+      throw err;
+    });
+  }
+  return heavyDepsPromise;
+}
+
 const instances = new Map();
 let elementDefined = false;
 
@@ -275,6 +298,7 @@ function defineVueElement() {
 
 export async function render(outlet, options = {}) {
   ensureStylesheet();
+  void preloadHeavyDeps();
   defineVueElement();
 
   if (outlet && !(outlet instanceof Element)) {
@@ -347,5 +371,6 @@ export function unmount(ctx = {}) {
   }
   instances.clear();
 }
+
 
 

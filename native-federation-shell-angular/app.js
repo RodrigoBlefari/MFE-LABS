@@ -86,6 +86,16 @@ const layoutClasses = {
   vue: 'slot--vue',
 };
 
+const dependencyPolicyByMfe = {
+  nf: 'Shared máximo (Native)',
+  mf: 'Shared parcial (bridge)',
+  ssa: 'Isolado (sem shared)',
+  ng: 'Shared parcial (Angular 15)',
+  'ng-full': 'Shared máximo (Angular 20 NF)',
+  react: 'Shared parcial',
+  vue: 'Shared parcial',
+};
+
 // Medição e cache do tamanho dos bundles remotos
 const bundleSizes = new Map();
 async function fetchBundleSize(url) {
@@ -1087,6 +1097,7 @@ const registry = [
     description: 'Remote ESM nativo orientado a eventos com pipeline zero-bundler.',
     tagline: 'CustomEvent + contratos simples: integra Single-SPA e Module Federation sem acoplamento.',
     remote: 'http://localhost:9101/mfe1.js',
+    depPolicy: dependencyPolicyByMfe.nf,
     mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('nf'), __preloadedModule = null } = {}) => {
       const variant = compact ? 'compact' : 'full';
       const mod = __preloadedModule || (await import(getRemoteUrl('nf')));
@@ -1120,6 +1131,7 @@ const registry = [
     description: 'Remote webpack 5 exposto como ESM para catalogos omnichannel regulados.',
     tagline: 'Bridge MF + Native Federation com compartilhamento controlado de dependências.',
     remote: 'http://localhost:9301/remote-a.js',
+    depPolicy: dependencyPolicyByMfe.mf,
     mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('mf'), __preloadedModule = null } = {}) => {
       const variant = compact ? 'compact' : 'full';
       const mod = __preloadedModule || (await import(getRemoteUrl('mf')));
@@ -1153,6 +1165,7 @@ const registry = [
     description: 'Lifecycle bootstrap/mount/unmount em Angular 15 pronto para modernizar shells legados.',
     tagline: 'Adapter ESM Angular 15 que publica BUS e convive com MF/NF sem retrabalho.',
     remote: 'http://localhost:9302/mfe-a.js',
+    depPolicy: dependencyPolicyByMfe.ssa,
     mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('ssa'), __preloadedModule = null } = {}) => {
       const variant = compact ? 'compact' : 'full';
       const mod = __preloadedModule || (await import(getRemoteUrl('ssa')));
@@ -1187,6 +1200,7 @@ const registry = [
     description: 'Angular 15 empacotado como Custom Element leve para Native Federation.',
     tagline: 'Angular 15 + @angular/elements com telemetria nativa.',
     remote: 'http://localhost:9310/mfe-ng.js',
+    depPolicy: dependencyPolicyByMfe.ng,
     mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('ng'), __preloadedModule = null } = {}) => {
       const variant = compact ? 'compact' : 'full';
       const mod = __preloadedModule || (await import(getRemoteUrl('ng')));
@@ -1217,6 +1231,7 @@ const registry = [
     description: 'Aplicacao Angular CLI completa disponibilizada como Web Component federado.',
     tagline: 'CLI standalone + Angular Elements pronta para canais regulados.',
     remote: 'http://localhost:9400/mfe-ng-full.js',
+    depPolicy: dependencyPolicyByMfe['ng-full'],
     mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('ng-full'), __preloadedModule = null } = {}) => {
       const mod = __preloadedModule || (await import(getRemoteUrl('ng-full')));
       const result = await mod.render(outlet, {
@@ -1239,6 +1254,7 @@ const registry = [
     description: 'React 18 encapsulado como Custom Element para painéis de observabilidade.',
     tagline: 'createRoot + Web Component com isolamento e telemetria de renderizacao.',
     remote: 'http://localhost:9201/mfe-react.js',
+    depPolicy: dependencyPolicyByMfe.react,
     mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('react'), __preloadedModule = null } = {}) => {
       const variant = compact ? 'compact' : 'full';
       const mod = __preloadedModule || (await import(getRemoteUrl('react')));
@@ -1271,6 +1287,7 @@ const registry = [
     description: 'Vue 3 defineCustomElement otimizado para portais híbridos.',
     tagline: 'Composition API + Custom Element com BUS integrado e métricas reais.',
     remote: 'http://localhost:9001/mfe-vue.js',
+    depPolicy: dependencyPolicyByMfe.vue,
     mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('vue'), __preloadedModule = null } = {}) => {
       const variant = compact ? 'compact' : 'full';
       const mod = __preloadedModule || (await import(getRemoteUrl('vue')));
@@ -1477,6 +1494,9 @@ slot.dataset.mfe = id;
       title.textContent = mfe.label;
       const actions = document.createElement('div');
       actions.className = 'slot-actions';
+      const depBadge = document.createElement('span');
+      depBadge.className = 'slot-version ds-badge ds-badge--muted';
+      depBadge.textContent = mfe.depPolicy || 'Policy n/a';
 const sizeBadge = document.createElement('span');
 sizeBadge.className = 'slot-bundle ds-badge ds-badge--accent';
       sizeBadge.textContent = '...';
@@ -1506,6 +1526,7 @@ docBtn.addEventListener('click', () => openModal(mfe.label, getDocHtmlFor(id)));
 registerInteractive(docBtn);
 
 actions.appendChild(sizeBadge);
+actions.appendChild(depBadge);
 const versionBadge = document.createElement('span');
 versionBadge.className = 'slot-version ds-badge ds-badge--muted';
 versionBadge.textContent = '--';

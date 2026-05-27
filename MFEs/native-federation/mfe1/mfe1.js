@@ -1,4 +1,28 @@
 const instances = new Map();
+let heavyDepsPromise = null;
+
+const HEAVY_DEP_URLS = [
+  'https://esm.sh/lodash@4.17.21',
+  'https://esm.sh/moment@2.30.1',
+  'https://esm.sh/dayjs@1.11.13',
+  'https://esm.sh/date-fns@4.1.0',
+  'https://esm.sh/ramda@0.30.1',
+  'https://esm.sh/mathjs@13.2.3',
+  'https://esm.sh/three@0.168.0',
+  'https://esm.sh/chart.js@4.4.4/auto',
+  'https://esm.sh/echarts@5.5.1',
+  'https://esm.sh/xlsx@0.18.5',
+];
+
+async function preloadHeavyDeps() {
+  if (!heavyDepsPromise) {
+    heavyDepsPromise = Promise.all(HEAVY_DEP_URLS.map((url) => import(url))).catch((err) => {
+      heavyDepsPromise = null;
+      throw err;
+    });
+  }
+  return heavyDepsPromise;
+}
 
 function ensureStylesheet() {
   if (document.querySelector('link[data-mfe1-style]')) {
@@ -44,6 +68,7 @@ function formatMetric(value) {
 
 export function render(outlet, options = {}) {
   ensureStylesheet();
+  void preloadHeavyDeps();
 
   if (outlet && !(outlet instanceof Element)) {
     throw new Error('MFE1 render precisa de um elemento host valido.');
