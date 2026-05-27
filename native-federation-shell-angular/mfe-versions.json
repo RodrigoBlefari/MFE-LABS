@@ -1,0 +1,9 @@
+{
+  "ng": "Angular 17.3.0",
+  "ng-full": "Angular 20.2.0",
+  "mf": "Module Federation (webpack)",
+  "nf": "Module Federation (webpack)",
+  "react": "React 18.2.0",
+  "ssa": "Single-SPA",
+  "vue": "Vue 3.4.21"
+}

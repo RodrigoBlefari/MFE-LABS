@@ -2,32 +2,36 @@
   "name": "mfe-ng-full",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "scripts": {
-    "start": "ng serve mfe-ng-full --port 9400",
+    "start": "npm run package && npm run serve",
+    "start:dev": "ng serve mfe-ng-full --port 9400",
     "build": "ng build mfe-ng-full",
     "package": "ng build mfe-ng-full --configuration production && node tools/package-webcomponent.mjs",
     "serve": "node tools/serve-webcomponent.mjs"
   },
   "dependencies": {
-    "@angular/animations": "^17.3.0",
-    "@angular/common": "^17.3.0",
-    "@angular/compiler": "^17.3.0",
-    "@angular/core": "^17.3.0",
-    "@angular/elements": "^17.3.0",
-    "@angular/forms": "^17.3.0",
-    "@angular/platform-browser": "^17.3.0",
-    "@angular/platform-browser-dynamic": "^17.3.0",
+    "@angular/animations": "^20.2.0",
+    "@angular/common": "^20.2.0",
+    "@angular/compiler": "^20.2.0",
+    "@angular/core": "^20.2.0",
+    "@angular/elements": "^20.2.0",
+    "@angular/forms": "^20.2.0",
+    "@angular/platform-browser": "^20.2.0",
+    "@angular/platform-browser-dynamic": "^20.2.0",
     "rxjs": "^7.8.1",
     "tslib": "^2.6.2",
-    "zone.js": "^0.14.2"
+    "zone.js": "^0.15.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^17.3.5",
-    "@angular/cli": "^17.3.5",
-    "@angular/compiler-cli": "^17.3.0",
+    "@angular-devkit/build-angular": "^20.2.1",
+    "@angular/cli": "^20.2.1",
+    "@angular/compiler-cli": "^20.2.0",
     "@types/jasmine": "^5.1.4",
     "jasmine-core": "^5.1.1",
     "karma": "^6.4.2",
-    "typescript": "^5.3.3"
+    "typescript": "~5.9.2"
   }
 }

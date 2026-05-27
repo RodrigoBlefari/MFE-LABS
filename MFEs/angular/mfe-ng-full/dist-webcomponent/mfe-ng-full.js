@@ -16,10 +16,19 @@ async function ensureBundle(baseUrl) {
   if (!bundleRegistry.has(normalized)) {
     bundleRegistry.set(
       normalized,
-      import(/* @vite-ignore */ `${normalized}main.js`).catch((err) => {
+      (async () => {
+        const candidates = ['main.js', 'browser/main.js'];
+        let lastError;
+        for (const file of candidates) {
+          try {
+            return await import(/* @vite-ignore */ `${normalized}${file}`);
+          } catch (err) {
+            lastError = err;
+          }
+        }
         bundleRegistry.delete(normalized);
-        throw err;
-      }),
+        throw lastError;
+      })(),
     );
   }
   return bundleRegistry.get(normalized);
@@ -47,6 +56,7 @@ export async function render(outlet, options = {}) {
   const baseUrl = options.baseUrl ?? 'http://localhost:9400/';
   ensureStylesheet(baseUrl);
   await ensureBundle(baseUrl);
+  await customElements.whenDefined('angular-full-mfe-card');
 
   const variant = options.variant ?? 'full';
   const metrics = options.metrics ?? {};

@@ -69,6 +69,34 @@ function formatBytes(bytes) {
   return `${mb.toFixed(2)} MB`;
 }
 
+// Tenta extrair uma string de versão a partir do conteúdo renderizado pelo MFE
+function findVersionFromSurface(surface) {
+  try {
+    if (!surface) return null;
+    // Procura elementos <strong> que contenham 'vers' (versão/versao)
+    const strongs = surface.querySelectorAll && surface.querySelectorAll('strong');
+    if (strongs && strongs.length) {
+      for (const s of strongs) {
+        const txt = (s.textContent || '').trim().toLowerCase();
+        if (txt.startsWith('vers')) {
+          const parent = s.parentElement;
+          if (parent) {
+            const full = (parent.textContent || '').replace(s.textContent || '', '').trim();
+            if (full) return full;
+          }
+        }
+      }
+    }
+    // Fallback: busca por padrão textual no innerText
+    const all = (surface.innerText || '').replace(/\r/g, '');
+    const m = all.match(/vers(?:ão|ao)?[:\s]*([^\n]+)/i);
+    if (m && m[1]) return m[1].trim();
+  } catch (e) {
+    // ignore
+  }
+  return null;
+}
+
 const overviewDocumentation = `
   <article class="doc-article">
     <span class="doc-tag">Manifesto</span>
@@ -394,7 +422,7 @@ npm start</code></pre>
   `,
   'ng-full': `
     <article class="doc-article">
-      <span class="doc-tag">Angular 17 CLI</span>
+      <span class="doc-tag">Angular 20 CLI</span>
       <div class="doc-block">
         <h3>Resumo</h3>
         <p>Aplicacao Angular CLI completa empacotada como Web Component em <code>dist-webcomponent</code> (servida em <code>http://localhost:9400</code>).</p>
@@ -779,8 +807,10 @@ function updateInsightsTable() {
       );
       const worst = toMetricLabel(metrics?.worst);
       const count = String(metrics?.count ?? 0);
+      const version = reg?.version || '--';
       return `<tr data-mfe="${id}">
         <td>${label}</td>
+        <td>${version}</td>
         <td>${avg}</td>
         <td>${best}</td>
         <td>${worst}</td>
@@ -825,6 +855,7 @@ function updateInsightsTable() {
   if (insightsTableFoot) {
     insightsTableFoot.innerHTML = `
       <td>Resumo</td>
+      <td>--</td>
       <td>${globalAvg}</td>
       <td>${globalBest}</td>
       <td>${globalWorst}</td>
@@ -1265,6 +1296,10 @@ docBtn.addEventListener('click', () => openModal(mfe.label, getDocHtmlFor(id)));
 registerInteractive(docBtn);
 
 actions.appendChild(sizeBadge);
+const versionBadge = document.createElement('span');
+versionBadge.className = 'slot-version ds-badge ds-badge--muted';
+versionBadge.textContent = '--';
+actions.appendChild(versionBadge);
 actions.appendChild(busBtn);
 actions.appendChild(docBtn);
 header.appendChild(title);
@@ -1306,7 +1341,7 @@ const countEl = document.createElement('span');
 countEl.className = 'ds-badge';
 countEl.innerHTML = `<strong>Amostras:</strong> ${String(snapshot.count)}`;
 metricsBar.append(avgEl, bestEl, worstEl, countEl);
-layoutSlots.set(id, { metricsEls: { avgEl, bestEl, worstEl, countEl } });
+layoutSlots.set(id, { metricsEls: { avgEl, bestEl, worstEl, countEl }, versionEl: versionBadge });
 
 slot.appendChild(metricsBar);
 slot.appendChild(body);
@@ -1326,6 +1361,23 @@ pageGrid.appendChild(slot);
         applyTelemetryBadges(id, metrics);
         slot.classList.add('is-active');
         hasUpdates = true;
+        // Tenta descobrir versão: primeiro por propriedade registrada, depois extraindo do DOM do surface
+        try {
+          let version = registryMap.get(id)?.version;
+          if (!version || version === '--') {
+            const found = findVersionFromSurface(surface);
+            version = found || version || '--';
+            if (version && registryMap.get(id)) registryMap.get(id).version = version;
+          }
+          if (version) {
+            const ls = layoutSlots.get(id);
+            if (ls && ls.versionEl) ls.versionEl.textContent = version;
+          }
+          // Atualiza ranking caso a versão tenha sido descoberta
+          updateInsightsTable();
+        } catch (e) {
+          // ignore
+        }
       } catch (err) {
         console.error(`Falha ao carregar ${mfe.label} no painel combinado`, err);
         const errorMsg = document.createElement('p');
@@ -1398,7 +1450,28 @@ function buildMenus() {
   });
 }
 
-function init() {
+async function loadMfeVersions() {
+  try {
+    const res = await fetch('./mfe-versions.json');
+    if (!res.ok) return;
+    const map = await res.json();
+    console.info('mfe-versions.json loaded', map);
+    Object.keys(map).forEach((id) => {
+      const reg = registryMap.get(id);
+      if (reg) {
+        console.info(`Assigning version for MFE id=${id}: ${map[id]}`);
+        reg.version = map[id];
+      } else {
+        console.warn(`mfe-versions.json contains id=${id} that is not in registryMap`);
+      }
+    });
+  } catch (e) {
+    console.warn('Failed loading mfe-versions.json', e);
+  }
+}
+
+async function init() {
+  await loadMfeVersions();
   buildMenus();
   updatePrimaryButtons();
   updateChips();
