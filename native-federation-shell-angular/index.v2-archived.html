@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Native Federation Shell</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="Permissions-Policy" content="accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=()" />
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' http://localhost:9001 http://localhost:9101 http://localhost:9201 http://localhost:9301 http://localhost:9302 http://localhost:9303 http://localhost:9310 http://localhost:9400 https://cdn.jsdelivr.net https://esm.sh https://unpkg.com; connect-src 'self' http://localhost:9001 http://localhost:9101 http://localhost:9201 http://localhost:9301 http://localhost:9302 http://localhost:9303 http://localhost:9310 http://localhost:9400 https://cdn.jsdelivr.net https://esm.sh https://unpkg.com; style-src 'self' 'unsafe-inline' http://localhost:9001 http://localhost:9101 http://localhost:9201 http://localhost:9301 http://localhost:9302 http://localhost:9303 http://localhost:9310 http://localhost:9400 https://cdn.jsdelivr.net https://esm.sh https://unpkg.com; img-src 'self' data:; font-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none';"
+  />
+  <meta name="referrer" content="same-origin" />
+  <link rel="stylesheet" href="./design-system.css" />
+  <link rel="stylesheet" href="./styles.css" />
+  <script type="importmap" src="./importmap.json"></script>
+</head>
+<body>
+  <div id="modal-backdrop" class="modal-backdrop" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button type="button" class="modal-close" data-close-modal aria-label="Fechar modal">×</button>
+      <header class="modal-header">
+        <h2 id="modal-title"></h2>
+      </header>
+      <div class="modal-body" id="modal-content"></div>
+    </div>
+  </div>
+
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">MFE-LABS · Shell Oficial</p>
+      <h1>Home Native Federation (reconstruída)</h1>
+      <p class="subtitle">Layout novo, focado em clareza visual, operação rápida e integração por BUS.</p>
+    </div>
+    <div class="topbar-actions">
+      <button id="btn-open-overview" class="btn btn-primary" type="button">Visão geral</button>
+      <button id="btn-clear-stage" class="btn" type="button">Limpar palco</button>
+    </div>
+  </header>
+
+  <main class="shell-grid">
+    <section class="workspace">
+      <article class="panel stage-panel">
+        <header>
+          <p class="panel-kicker">Palco principal</p>
+          <h2 id="stage-title">Selecione um MFE para montar</h2>
+          <p id="stage-subtitle">O shell monta 1 por vez aqui para debug e demonstrações focadas.</p>
+        </header>
+        <div id="stage-outlet" class="stage-outlet"></div>
+        <p id="stage-status" class="stage-status" aria-live="polite">Nenhum MFE ativo no palco.</p>
+      </article>
+
+      <article class="panel">
+        <header class="panel-head-inline">
+          <div>
+            <p class="panel-kicker">Vitrine</p>
+            <h2>MFEs selecionados em paralelo</h2>
+          </div>
+          <div class="toolbar">
+            <button id="btn-select-all" class="btn" type="button">Selecionar todos</button>
+            <button id="btn-select-none" class="btn" type="button">Limpar seleção</button>
+            <span id="selected-count" class="badge">0 selecionados</span>
+          </div>
+        </header>
+        <div id="cards-grid" class="cards-grid"></div>
+        <div id="gallery-grid" class="gallery-grid"></div>
+      </article>
+    </section>
+
+    <aside class="sidebar">
+      <article class="panel compact">
+        <p class="panel-kicker">Ações rápidas</p>
+        <h3>Navegação por MFE</h3>
+        <div id="quick-nav" class="quick-nav"></div>
+      </article>
+
+      <article class="panel compact">
+        <p class="panel-kicker">Telemetria</p>
+        <h3>Tempo de montagem</h3>
+        <div class="table-wrap">
+          <table class="metrics-table">
+            <thead>
+              <tr>
+                <th>MFE</th>
+                <th>Média</th>
+                <th>Último</th>
+                <th>Melhor</th>
+                <th>Pior</th>
+                <th>Amostras</th>
+              </tr>
+            </thead>
+            <tbody id="telemetry-body"></tbody>
+          </table>
+        </div>
+      </article>
+    </aside>
+  </main>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

@@ -1,8 +1,8 @@
 <!doctype html>
-<html>
+<html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <title>Native Federation Shell (demo)</title>
+  <title>Native Federation Shell</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   <meta
@@ -11,13 +11,9 @@
   />
   <meta
     http-equiv="Content-Security-Policy"
-    content="default-src 'self'; script-src 'self' http://localhost:9001 http://localhost:9101 http://localhost:9201 http://localhost:9301 http://localhost:9302 http://localhost:9303 http://localhost:9310 http://localhost:9400 https://cdn.jsdelivr.net https://esm.sh https://unpkg.com 'sha256-ieoeWczDHkReVBsRBqaal5AFMlBtNjMzgwKvLqi/tSU='; connect-src 'self' http://localhost:9001 http://localhost:9101 http://localhost:9201 http://localhost:9301 http://localhost:9302 http://localhost:9303 http://localhost:9310 http://localhost:9400 https://cdn.jsdelivr.net https://esm.sh https://unpkg.com; style-src 'self' http://localhost:9001 http://localhost:9101 http://localhost:9201 http://localhost:9301 http://localhost:9302 http://localhost:9303 http://localhost:9310 http://localhost:9400 https://cdn.jsdelivr.net https://esm.sh https://unpkg.com 'unsafe-hashes' 'sha256-QIjW/+aUzfg58HcITJNHkkCTGmLovNUIQbL+Zq2TsIE=' 'sha256-jHfeyg6bGOgJf9ss8zgGinbIkW80hpY8YViDLBmeC8A='; img-src 'self' data:; font-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none';"
+    content="default-src 'self'; script-src 'self' http://localhost:9001 http://localhost:9101 http://localhost:9201 http://localhost:9301 http://localhost:9302 http://localhost:9303 http://localhost:9310 http://localhost:9400 https://cdn.jsdelivr.net https://esm.sh https://unpkg.com; connect-src 'self' http://localhost:9001 http://localhost:9101 http://localhost:9201 http://localhost:9301 http://localhost:9302 http://localhost:9303 http://localhost:9310 http://localhost:9400 https://cdn.jsdelivr.net https://esm.sh https://unpkg.com; style-src 'self' http://localhost:9001 http://localhost:9101 http://localhost:9201 http://localhost:9301 http://localhost:9302 http://localhost:9303 http://localhost:9310 http://localhost:9400 https://cdn.jsdelivr.net https://esm.sh https://unpkg.com; img-src 'self' data:; font-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none';"
   />
   <meta name="referrer" content="same-origin" />
-  <link
-    rel="icon"
-    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2300b5d8'/%3E%3Cpath d='M18 44h28L32 20z' fill='%23fff'/%3E%3C/svg%3E"
-  />
   <link rel="stylesheet" href="./design-system.css" />
   <link rel="stylesheet" href="./styles.css" />
   <script type="importmap" src="./importmap.json"></script>
@@ -25,162 +21,97 @@
 <body>
   <div id="modal-backdrop" class="modal-backdrop" hidden>
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-      <button type="button" class="modal-close" data-close-modal aria-label="Fechar">
-        ×
-      </button>
+      <button type="button" class="modal-close" data-close-modal aria-label="Fechar">×</button>
       <header class="modal-header">
-        <h2 id="modal-title"></h2>
+        <h2 id="modal-title">Detalhes</h2>
       </header>
-      <div class="modal-body" id="modal-content"></div>
+      <div id="modal-content" class="modal-body"></div>
     </div>
   </div>
 
-  <header class="hero">
-    <div class="hero-content">
-      <span class="hero-badge">Native Federation Lab</span>
-      <h1>Experiência Orquestrada Multicanal</h1>
-      <p>
-        Esta página demonstra como blocos feitos em tecnologias diferentes trabalham juntos sem amarração.
-        Você pode ligar e desligar cada bloco com segurança, observar o que acontece e continuar usando o restante normalmente.
-      </p>
-      <div class="hero-actions">
-        <button type="button" class="primary" data-doc-overview>Manifesto Native Federation</button>
-        <button type="button" class="ghost" id="btn-scroll-controls">Ir para os controles</button>
+  <div class="shell-wrap">
+    <header class="shell-header panel">
+      <div>
+        <p class="kicker">Native Federation Shell</p>
+        <h1>Home limpa e organizada</h1>
+        <p class="muted">Web-first, compacta e estável. Sem auto-carga pesada no boot.</p>
       </div>
-    </div>
-    <div class="hero-highlight">
-      <ul>
-        <li>Times independentes, sem efeito cascata entre blocos</li>
-        <li>Entrar e sair de tela sem sujeira (desmontagem segura)</li>
-        <li>Atualizar cada parte sem derrubar o resto da página</li>
-        <li>BUS: avisos simples para entender e integrar comportamentos</li>
-      </ul>
-    </div>
-  </header>
-
-  <main class="shell-main">
-    <section class="layout-playground" aria-label="Layout federado">
-      <div class="page-preview" id="page-preview">
-        <div class="page-grid" id="page-grid"></div>
-        <p class="page-error" id="page-preview-error" aria-live="polite"></p>
+      <div class="header-actions">
+        <button id="btn-open-overview" class="btn btn-primary" type="button">Visão geral</button>
+        <button id="btn-open-bus" class="btn" type="button">Eventos BUS (<span id="bus-count">0</span>)</button>
+        <button id="btn-bus-test" class="btn" type="button">Emitir BUS teste</button>
+        <button id="btn-clear-stage" class="btn" type="button">Limpar palco</button>
       </div>
-      <section class="primary-stage" id="primary-stage" aria-label="Palco individual">
-        <header class="stage-header">
-          <span class="stage-badge">Laboratório Individual</span>
-          <h2 id="primary-title">Selecione um MFE</h2>
-          <p id="primary-summary">
-            Monte qualquer micro front-end no palco central para investigar interações, BUS e telemetria em isolamento.
-          </p>
-        </header>
-        <div id="primary-outlet" class="stage-outlet"></div>
-        <p class="stage-footnote">
-          O shell propaga métricas, garante desmontagem com <code>unmount()</code> e sincroniza o BUS entre MFEs.
-        </p>
-      </section>
-    </section>
+    </header>
 
-    <aside class="control-panel" id="control-panel">
-      <section class="panel-card docs-card">
-        <h2>Documentação do experimento</h2>
-        <p>
-          Entenda a arquitetura Native Federation com esbuild, políticas de segurança, contratos de lifecycle e as
-          integrações entre frameworks.
-        </p>
-        <button type="button" class="primary" data-doc-overview>Abrir visão geral</button>
-        <p class="doc-hint">Cada bloco do layout possui um atalho para a documentação detalhada do respectivo MFE.</p>
-      </section>
-
-      <section class="panel-card layout-card">
-        <h2>Compor o esqueleto</h2>
-        <p>Selecione quais MFEs precisam aparecer no mock de página. O layout reage em tempo real.</p>
-        <div id="multi-toggle" class="multi-toggle"></div>
-        <div class="panel-actions">
-          <button id="btn-panel" type="button" class="primary">Atualizar layout</button>
-          <button id="btn-select-all" type="button" class="ghost">Selecionar todos</button>
-          <button id="btn-select-none" type="button" class="ghost">Limpar seleção</button>
-        </div>
-      </section>
-
-      <section class="panel-card primary-card">
-        <h2>Palco isolado</h2>
-        <p>Escolha um MFE para assumir o palco central. Ideal para depuração, demos focadas e testes de integrações.</p>
-        <div id="primary-controls" class="nav-buttons"></div>
-      </section>
-
-      <section class="panel-card insights-card">
-        <h2>Telemetria de renderização</h2>
-        <dl class="insights-list">
-          <div>
-            <dt>Mais rápido (média)</dt>
-            <dd id="insight-fastest">--</dd>
-          </div>
-          <div>
-            <dt>Mais lento (média)</dt>
-            <dd id="insight-slowest">--</dd>
-          </div>
-          <div>
-            <dt>Média global</dt>
-            <dd id="insight-average">--</dd>
-          </div>
-          <div data-wide="true">
-            <dt>Melhor pico</dt>
-            <dd id="insight-best">--</dd>
-          </div>
-          <div data-wide="true">
-            <dt>P95 (mount)</dt>
-            <dd id="insight-p95">--</dd>
-          </div>
-          <div>
-            <dt>Montagens observadas</dt>
-            <dd id="insight-samples">0</dd>
-          </div>
-        </dl>
-
-        <table class="insights-table" aria-label="Ranking de MFEs por média">
+    <section class="panel telemetry-panel">
+      <p class="kicker">Telemetria completa</p>
+      <h2>Performance & Bundle</h2>
+      <div class="table-wrap">
+        <table class="metrics-table">
           <thead>
             <tr>
               <th>MFE</th>
-              <th>Versão</th>
               <th>Média</th>
               <th>Melhor</th>
               <th>Pior</th>
-              <th>Mediana</th>
-              <th>P95</th>
               <th>Amostras</th>
-              <th>Fetch</th>
-              <th>Eval</th>
-              <th>Mount</th>
               <th>Bundle</th>
             </tr>
           </thead>
-          <tbody id="insights-table-body"></tbody>
-          <tfoot>
-            <tr id="insights-table-foot">
-              <td>Resumo</td>
-              <td>--</td>
-              <td>--</td>
-              <td>--</td>
-              <td>--</td>
-              <td>--</td>
-              <td>--</td>
-              <td>0</td>
-              <td>--</td>
-              <td>--</td>
-              <td>--</td>
-              <td>--</td>
-            </tr>
-          </tfoot>
+          <tbody id="telemetry-body"></tbody>
         </table>
-      </section>
-    </aside>
-  </main>
+      </div>
+    </section>
 
-  <footer class="shell-footer">
-    <p>
-      Native Federation Shell • ES Modules, esbuild pipelines, CSP rigorosa, lifecycle unificado e métricas em tempo real
-      para canais regulados.
-    </p>
-  </footer>
+    <main class="shell-layout">
+      <section class="panel main-stage">
+        <header class="section-head">
+          <div>
+            <p class="kicker">Palco principal</p>
+            <h2 id="stage-title">Nenhum MFE ativo</h2>
+            <p id="stage-subtitle" class="muted">Escolha um card para montar no palco.</p>
+          </div>
+        </header>
+        <div id="stage-outlet" class="stage-outlet"></div>
+        <p id="stage-status" class="stage-status" aria-live="polite">Pronto para montar.</p>
+      </section>
+
+      <aside class="panel side-column">
+        <section>
+          <p class="kicker">Atalhos</p>
+          <h3>Navegação rápida</h3>
+          <div id="quick-nav" class="quick-nav"></div>
+        </section>
+      </aside>
+    </main>
+
+    <section class="panel catalog-panel">
+      <header class="catalog-head">
+        <div>
+          <p class="kicker">Catálogo</p>
+          <h2>MFEs disponíveis</h2>
+        </div>
+        <div class="catalog-actions">
+          <button id="btn-select-all" class="btn" type="button">Selecionar todos</button>
+          <button id="btn-select-none" class="btn" type="button">Limpar seleção</button>
+          <button id="btn-load-preview" class="btn btn-primary" type="button">Carregar previews</button>
+          <button id="btn-clear-preview" class="btn" type="button">Limpar previews</button>
+          <span id="selected-count" class="pill">0 selecionado(s)</span>
+        </div>
+      </header>
+
+      <div id="cards-grid" class="cards-grid"></div>
+
+      <div class="preview-head">
+        <h3>Previews em paralelo</h3>
+        <p class="muted">Carregados apenas quando você clicar em “Carregar previews”.</p>
+      </div>
+      <div id="preview-grid" class="preview-grid">
+        <p class="preview-empty">Nenhum preview carregado.</p>
+      </div>
+    </section>
+  </div>
 
   <script type="module" src="./app.js"></script>
 </body>

@@ -1,39 +1,41 @@
-const pageGrid = document.getElementById('page-grid');
-const pagePreview = document.getElementById('page-preview');
-const pagePreviewError = document.getElementById('page-preview-error');
-const primaryOutlet = document.getElementById('primary-outlet');
-const primaryTitle = document.getElementById('primary-title');
-const primarySummary = document.getElementById('primary-summary');
-const primaryControls = document.getElementById('primary-controls');
-const multiToggle = document.getElementById('multi-toggle');
-const btnPanel = document.getElementById('btn-panel');
-const btnSelectAll = document.getElementById('btn-select-all');
-const btnSelectNone = document.getElementById('btn-select-none');
-const insightFastest = document.getElementById('insight-fastest');
-const insightSlowest = document.getElementById('insight-slowest');
-const insightAverage = document.getElementById('insight-average');
-const insightSamples = document.getElementById('insight-samples');
-const insightBestPeak = document.getElementById('insight-best');
-const insightP95 = document.getElementById('insight-p95');
-const insightsTableBody = document.getElementById('insights-table-body');
-const insightsTableFoot = document.getElementById('insights-table-foot');
-const modalBackdrop = document.getElementById('modal-backdrop');
-const modalTitle = document.getElementById('modal-title');
-const modalContent = document.getElementById('modal-content');
-const closeModalButton = document.querySelector('[data-close-modal]');
-const docOverviewButtons = document.querySelectorAll('[data-doc-overview]');
-const btnScrollControls = document.getElementById('btn-scroll-controls');
-const controlPanel = document.getElementById('control-panel');
-const stageHeader = document.querySelector('.stage-header');
-let primaryDocButton = null;
-let primaryBusButton = null;
+const els = {
+  cardsGrid: document.getElementById('cards-grid'),
+  quickNav: document.getElementById('quick-nav'),
+  telemetryBody: document.getElementById('telemetry-body'),
+  previewGrid: document.getElementById('preview-grid'),
+  selectedCount: document.getElementById('selected-count'),
+  busCount: document.getElementById('bus-count'),
+
+  stageTitle: document.getElementById('stage-title'),
+  stageSubtitle: document.getElementById('stage-subtitle'),
+  stageOutlet: document.getElementById('stage-outlet'),
+  stageStatus: document.getElementById('stage-status'),
+  sectionHead: document.querySelector('.section-head'),
+
+  btnOpenOverview: document.getElementById('btn-open-overview'),
+  btnOpenBus: document.getElementById('btn-open-bus'),
+  btnBusTest: document.getElementById('btn-bus-test'),
+  btnClearStage: document.getElementById('btn-clear-stage'),
+  btnSelectAll: document.getElementById('btn-select-all'),
+  btnSelectNone: document.getElementById('btn-select-none'),
+  btnLoadPreview: document.getElementById('btn-load-preview'),
+  btnClearPreview: document.getElementById('btn-clear-preview'),
+
+  modalBackdrop: document.getElementById('modal-backdrop'),
+  modalTitle: document.getElementById('modal-title'),
+  modalContent: document.getElementById('modal-content'),
+  modalClose: document.querySelector('[data-close-modal]'),
+};
+
+// Diagnóstico de bundling
+window.__bundleDebug = {};
 
 const REMOTE_MANIFEST_ENV =
   new URLSearchParams(window.location.search).get('env') ||
   window.localStorage.getItem('mfe-env') ||
   'dev';
 
-const remoteManifestCandidates = {
+const manifestCandidates = {
   dev: './remotes.dev.json',
   hml: './remotes.hml.json',
   prod: './remotes.prod.json',
@@ -51,1691 +53,547 @@ const defaultRemotes = {
 
 let runtimeRemotes = { ...defaultRemotes };
 
-function getRemoteUrl(id) {
-  return runtimeRemotes[id] || defaultRemotes[id];
-}
-
-async function loadRemoteManifest() {
-  const file = remoteManifestCandidates[REMOTE_MANIFEST_ENV] || remoteManifestCandidates.dev;
-  try {
-    const res = await fetch(file);
-    if (!res.ok) return;
-    const payload = await res.json();
-    if (payload && payload.remotes && typeof payload.remotes === 'object') {
-      runtimeRemotes = { ...defaultRemotes, ...payload.remotes };
-      window.localStorage.setItem('mfe-env', payload.env || REMOTE_MANIFEST_ENV);
-      console.info('[remotes] loaded manifest', file, runtimeRemotes);
-    }
-  } catch (err) {
-    console.warn('[remotes] failed loading manifest, using defaults', err);
-  }
-}
-
-const primaryButtons = new Map();
-const chipButtons = new Map();
-const interactiveElements = new Set();
-const metricsStore = new Map();
-const layoutSlots = new Map();
-const layoutClasses = {
-  nf: 'slot--nf',
-  mf: 'slot--mf',
-  ssa: 'slot--ssa',
-  ng: 'slot--ng',
-  'ng-full': 'slot--ng-full',
-  react: 'slot--react',
-  vue: 'slot--vue',
-};
-
-const dependencyPolicyByMfe = {
-  nf: 'Shared máximo (Native)',
-  mf: 'Shared parcial (bridge)',
-  ssa: 'Isolado (sem shared)',
-  ng: 'Shared parcial (Angular 15)',
-  'ng-full': 'Shared máximo (Angular 20 NF)',
-  react: 'Shared parcial',
-  vue: 'Shared parcial',
-};
-
-// Medição e cache do tamanho dos bundles remotos
-const bundleSizes = new Map();
-async function fetchBundleSize(url) {
-  try {
-    // Tenta HEAD primeiro para pegar Content-Length
-    const head = await fetch(url, { method: 'HEAD' });
-    let len = parseInt(head.headers.get('content-length') || '0', 10);
-    if (!len || Number.isNaN(len)) {
-      // Fallback: GET e mede o ArrayBuffer
-      const res = await fetch(url);
-      const buf = await res.arrayBuffer();
-      len = buf.byteLength;
-    }
-    bundleSizes.set(url, len);
-    return len;
-  } catch {
-    return 0;
-  }
-}
-function formatBytes(bytes) {
-  if (!bytes || bytes <= 0) return '--';
-  const kb = bytes / 1024;
-  if (kb < 1024) return `${kb.toFixed(1)} KB`;
-  const mb = kb / 1024;
-  return `${mb.toFixed(2)} MB`;
-}
-
-// Tenta extrair uma string de versão a partir do conteúdo renderizado pelo MFE
-function findVersionFromSurface(surface) {
-  try {
-    if (!surface) return null;
-    // Procura elementos <strong> que contenham 'vers' (versão/versao)
-    const strongs = surface.querySelectorAll && surface.querySelectorAll('strong');
-    if (strongs && strongs.length) {
-      for (const s of strongs) {
-        const txt = (s.textContent || '').trim().toLowerCase();
-        if (txt.startsWith('vers')) {
-          const parent = s.parentElement;
-          if (parent) {
-            const full = (parent.textContent || '').replace(s.textContent || '', '').trim();
-            if (full) return full;
-          }
-        }
-      }
-    }
-    // Fallback: busca por padrão textual no innerText
-    const all = (surface.innerText || '').replace(/\r/g, '');
-    const m = all.match(/vers(?:ão|ao)?[:\s]*([^\n]+)/i);
-    if (m && m[1]) return m[1].trim();
-  } catch (e) {
-    // ignore
-  }
-  return null;
-}
-
-const overviewDocumentation = `
-  <article class="doc-article">
-    <span class="doc-tag">Manifesto</span>
-    <div class="doc-block">
-      <h3>Missao</h3>
-      <p>
-        Este laboratorio demonstra como Native Federation entrega micro front-ends multi-stack sem bundler compartilhado,
-        orquestrando Angular, React, Vue, Module Federation, Single-SPA e remotos ESM com pipelines esbuild.
-      </p>
-      <ul>
-        <li>Carregamento dinamico via <code>import()</code> sobre ES Modules versionados.</li>
-        <li>Telemetria de montagem (tempo, media, pior/melhor) registrada pelo shell.</li>
-        <li>Lifecycle padronizado com <code>mount()</code>, <code>updateMetrics()</code> e <code>unmount()</code>.</li>
-      </ul>
-    </div>
-    <div class="doc-block">
-      <h3>Arquitetura &amp; pipeline</h3>
-      <div class="doc-grid">
-        <div>
-          <h4>Shell Native Federation</h4>
-          <ul>
-            <li>ESM sem bundler, servindo <code>app.js</code> e <code>styles.css</code> diretamente.</li>
-            <li>Import map para dependencias Angular e servidores com CORS controlado.</li>
-            <li>CSP rigida, headers <code>X-Content-Type-Options</code> e Permission-Policy minima.</li>
-          </ul>
-        </div>
-        <div>
-          <h4>MFEs</h4>
-          <ul>
-            <li>Angular CLI 20 (esbuild) para <code>mfe-ng-full</code> e Angular 15 para remotos Native Federation/Single-SPA.</li>
-            <li>Vue 3 <code>defineCustomElement</code>, React 18 <code>createRoot</code>, Module Federation remoto e Single-SPA.</li>
-            <li>Servicos estaticos expostos com <code>npm start</code>/<code>npm run serve</code> liberando apenas o host.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="doc-block">
-      <h3>Seguranca</h3>
-      <ul>
-        <li><code>Content-Security-Policy</code> restringindo <code>script-src</code>, <code>style-src</code> e <code>connect-src</code>.</li>
-        <li>Servidores controlam <code>Access-Control-Allow-Origin</code> e Cross-Origin-Resource-Policy apenas para o shell.</li>
-        <li>Desmontagem garantida via <code>unmount()</code> + limpeza do DOM, evitando memory leaks.</li>
-      </ul>
-    </div>
-    <div class="doc-block">
-      <h3>Boas praticas</h3>
-      <ul>
-        <li>Telemetria compartilhada com armazenamento de metricas por ID.</li>
-        <li>Controles com <code>focus-visible</code> e regioes <code>aria-live</code> para acessibilidade.</li>
-        <li>Documentacao embarcada para operacao, observabilidade e seguranca.</li>
-      </ul>
-    </div>
-    <div class="doc-block">
-      <h3>Estrutura de pastas</h3>
-      <pre><code>MFF LABS/
-|-- native-federation-shell-angular/
-|   |-- app.js
-|   |-- index.html
-|   |-- styles.css
-|   \\-- importmap.json
-|-- MFEs/
-|   |-- angular/
-|   |   |-- mfe-ng/
-|   |   \\-- mfe-ng-full/
-|   |-- module-federation/remote-a/
-|   |-- native-federation/mfe1/
-|   |-- react/mfe-react/
-|   |-- single-spa/mfe-a/
-|   \\-- vue/mfe-vue/
-\\-- shared/
-</code></pre>
-    </div>
-    <div class="doc-block">
-      <h3>Design System compartilhado</h3>
-      <p>
-        O shell publica um conjunto de tokens de design acessíveis por todos os blocos (inclusive em Shadow DOM),
-        evitando estilos duplicados e garantindo aparência consistente. Os MFEs devem consumir apenas
-        as variáveis CSS abaixo (sem acoplar ao CSS do shell).
-      </p>
-      <pre><code class="language-css">/* Tokens principais */
-:root {
-  --ds-color-bg;
-  --ds-color-surface; --ds-color-surface-strong; --ds-color-surface-soft;
-  --ds-color-border; --ds-color-text; --ds-color-text-muted;
-  --ds-tech-nf; --ds-tech-mf; --ds-tech-ssa; --ds-tech-ng; --ds-tech-ng-full; --ds-tech-react; --ds-tech-vue;
-  --ds-radius-sm; --ds-radius-md; --ds-radius-lg; --ds-radius-xl;
-  --ds-shadow-sm; --ds-shadow-md; --ds-shadow-lg;
-  --ds-font-family; --ds-font-mono;
-  --ds-space-2; --ds-space-3; --ds-space-4; --ds-space-5; --ds-space-6;
-  --ds-btn-height; --ds-btn-radius;
-  --ds-accent; /* cor dinâmica por MFE, definida pelo shell ou pelo próprio bloco */
-}</code></pre>
-      <p>Mapa de cores por tecnologia (definidos no DS):</p>
-      <ul>
-        <li>NF: <code>--ds-tech-nf</code> (verde/teal)</li>
-        <li>MF: <code>--ds-tech-mf</code> (azul webpack)</li>
-        <li>Single‑SPA: <code>--ds-tech-ssa</code> (laranja)</li>
-        <li>Angular / Angular Full: <code>--ds-tech-ng</code></li>
-        <li>React: <code>--ds-tech-react</code> · Vue: <code>--ds-tech-vue</code></li>
-      </ul>
-      <p>Como aplicar no MFE (sem dependência de classes do shell):</p>
-      <pre><code class="language-css">/* Dentro do CSS do MFE */
-:host, .meu-card { --ds-accent: var(--ds-tech-react); }
-.meu-card {
-  border-radius: var(--ds-radius-xl);
-  background: linear-gradient(145deg, rgba(13,23,42,.94), rgba(13,23,42,.74));
-  color: var(--ds-color-text);
-  border: 1px solid var(--ds-color-border);
-  box-shadow: var(--ds-shadow-md);
-}
-.meu-botao-primario {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--ds-accent) 80%, #1f2937), var(--ds-accent));
-  color: #0b1020;
-  border: 1px solid color-mix(in srgb, var(--ds-accent) 35%, rgba(148,163,184,.28));
-}</code></pre>
-      <p>Boas práticas:</p>
-      <ul>
-        <li>Use apenas <strong>var(--ds-*)</strong> dentro do MFE; não importe CSS do shell.</li>
-        <li>Opcional: ajuste <code>--ds-accent</code> para variação local (ex.: temas internos).</li>
-        <li>Mantenha a lógica do MFE separada de estilo; o DS cuida da aparência compartilhada.</li>
-      </ul>
-    </div>
-    <div class="doc-block">
-      <h3>Execução a partir da raiz (build + serve)</h3>
-      <p>Os comandos abaixo assumem que você está na raiz do repositório (MFF LABS). Cada MFE sobe na porta indicada.</p>
-      <pre><code class="language-bash"># 1) Instalação (uma vez)
-npm run -w MFEs/angular/mfe-ng-full       ci || (cd MFEs/angular/mfe-ng-full && npm install)
-npm run -w MFEs/angular/mfe-ng            ci || (cd MFEs/angular/mfe-ng && npm install)
-npm run -w MFEs/module-federation/remote-a ci || (cd MFEs/module-federation/remote-a && npm install)
-npm run -w MFEs/native-federation/mfe1    ci || (cd MFEs/native-federation/mfe1 && npm install)
-npm run -w MFEs/react/mfe-react           ci || (cd MFEs/react/mfe-react && npm install)
-npm run -w MFEs/single-spa/mfe-a          ci || (cd MFEs/single-spa/mfe-a && npm install)
-npm run -w MFEs/vue/mfe-vue               ci || (cd MFEs/vue/mfe-vue && npm install)
-npm run -w native-federation-shell-angular ci || (cd native-federation-shell-angular && npm install)
-
-# 2) Build quando aplicável (Angular Full gera dist-webcomponent/)
-cd MFEs/angular/mfe-ng-full
-npm run package
-# artefatos em: MFEs/angular/mfe-ng-full/dist-webcomponent/
-
-# 3) Servir cada MFE na porta padrão (dev)
-# Native Federation (mfe1) - 9201
-cd MFEs/native-federation/mfe1 && npm start
-# Module Federation (remote-a) - 9101
-cd MFEs/module-federation/remote-a && npm start
-# Single-SPA (mfe-a) - 9001
-cd MFEs/single-spa/mfe-a && npm start
-# Angular Web Component (mfe-ng) - 9301
-cd MFEs/angular/mfe-ng && npm start
-# Angular Full (dist-webcomponent) - 9400
-cd MFEs/angular/mfe-ng-full && npm run serve
-# React (mfe-react) - 9302
-cd MFEs/react/mfe-react && npm start
-# Vue (mfe-vue) - 9303
-cd MFEs/vue/mfe-vue && npm start
-
-# 4) Shell Native Federation - 9200
-cd native-federation-shell-angular && npm start</code></pre>
-
-      <h4>Servir a pasta de build (dist) diretamente</h4>
-      <p>Para qualquer pasta estática (ex.: dist-webcomponent/ do Angular Full), você pode usar <code>npx serve</code> na porta exata:</p>
-      <pre><code class="language-bash">npx serve -l 9400 MFEs/angular/mfe-ng-full/dist-webcomponent</code></pre>
-    </div>
-
-    <div class="doc-block">
-      <h3>Expor publicamente em HTTPS (sem conta)</h3>
-      <p>Para compartilhar com terceiros fora da sua rede, use um túnel público. Duas opções práticas:</p>
-      <ol>
-        <li>
-          <strong>LocalTunnel</strong> (gera URL pública https, sem cadastro):
-          <pre><code class="language-bash"># Expor o shell (9200)
-npx localtunnel --port 9200 --subdomain mff-shell
-
-# Para cada MFE (rode em terminais separados; escolha subdomínios legíveis)
-npx localtunnel --port 9201 --subdomain mff-nf
-npx localtunnel --port 9101 --subdomain mff-mf
-npx localtunnel --port 9001 --subdomain mff-ssa
-npx localtunnel --port 9301 --subdomain mff-ng
-npx localtunnel --port 9400 --subdomain mff-ngfull
-npx localtunnel --port 9302 --subdomain mff-react
-npx localtunnel --port 9303 --subdomain mff-vue</code></pre>
-          <p>Observação: copie as URLs geradas e atualize temporariamente os <em>remotes</em> no shell (se necessário) e a CSP para permitir <code>https://*.loca.lt</code>.</p>
-        </li>
-        <li>
-          <strong>Cloudflared (trycloudflare)</strong> (URL https, sem login para modo rápido):
-          <pre><code class="language-bash"># Instalar (uma vez) ou use diretamente se já tiver
-# Windows (choco): choco install cloudflared
-# macOS (brew):   brew install cloudflare/cloudflare/cloudflared
-
-# Expor o shell (9200)
-cloudflared tunnel --url http://localhost:9200
-
-# Expor também os MFEs (um por terminal)
-cloudflared tunnel --url http://localhost:9201
-cloudflared tunnel --url http://localhost:9101
-cloudflared tunnel --url http://localhost:9001
-cloudflared tunnel --url http://localhost:9301
-cloudflared tunnel --url http://localhost:9400
-cloudflared tunnel --url http://localhost:9302
-cloudflared tunnel --url http://localhost:9303</code></pre>
-          <p>Atualize os remotes e inclua <code>https://*.trycloudflare.com</code> na CSP enquanto testar.</p>
-        </li>
-      </ol>
-      <p>Para evitar prompts de senha/consentimento, use subdomínios fixos no LocalTunnel e mantenha a sessão ativa; no Cloudflared, os links são públicos por padrão no modo rápido.</p>
-      <p><strong>Importante:</strong> o shell e todos os remotes devem estar acessíveis publicamente. Se o shell estiver público e os remotes não, o navegador de quem acessa não conseguirá baixar os MFEs.</p>
-    </div>
-  </article>
-`;
-const documentationById = {
-  nf: `
-    <article class="doc-article">
-      <span class="doc-tag">Native Federation</span>
-      <div class="doc-block">
-        <h3>Resumo</h3>
-        <p>Remote ESM orientado a eventos, exposto em <code>http://localhost:9101/mfe1.js</code> sem bundler compartilhado.</p>
-      </div>
-      <div class="doc-block">
-        <h3>Stack tecnico</h3>
-        <ul>
-          <li>ES Modules puros servidos a partir de <code>MFEs/native-federation/mfe1/</code>.</li>
-          <li>CSS desacoplado (<code>mfe1.css</code>) injetado durante o <code>render()</code>.</li>
-          <li>Servidor local com <code>npm start</code> (serve --cors) liberando apenas <code>http://localhost:9200</code>.</li>
-        </ul>
-      </div>
-      <div class="doc-block">
-        <h3>Integracao com o shell</h3>
-        <ul>
-          <li>Carregado via <code>import('http://localhost:9101/mfe1.js')</code> e montado no outlet fornecido.</li>
-          <li><code>render()</code> retorna <code>updateMetrics</code> e <code>destroy()</code>, usados pelo lifecycle unificado.</li>
-          <li>Eventos <code>CustomEvent('BUS')</code> propagam telemetria para os demais MFEs.</li>
-        </ul>
-      </div>
-      <div class="doc-block">
-        <h3>Checklist de seguranca</h3>
-        <ul>
-          <li>Entrega apenas <code>application/javascript</code> e <code>text/css</code>.</li>
-          <li>Sem dependencias globais - comunicacao via ES Modules e BUS.</li>
-          <li>Desmontagem remove listeners e o no raiz, evitando vazamentos.</li>
-        </ul>
-      </div>
-    </article>
-  `,
-  mf: `
-    <article class="doc-article">
-      <span class="doc-tag">Module Federation</span>
-      <div class="doc-block">
-        <h3>Resumo</h3>
-        <p>Remote webpack 5 em <code>http://localhost:9301/remote-a.js</code> convertido em ES Module pelo bridge Native Federation.</p>
-      </div>
-      <div class="doc-block">
-        <h3>Stack tecnico</h3>
-        <ul>
-          <li>Projeto em <code>MFEs/module-federation/remote-a/</code> com exposes ESM.</li>
-          <li>Empacotado com webpack 5 + Module Federation, compartilhando dependencias de forma controlada.</li>
-          <li>Servidor <code>npm start</code> habilita CORS apenas para o shell.</li>
-        </ul>
-      </div>
-      <div class="doc-block">
-        <h3>Integracao com o shell</h3>
-        <ul>
-          <li>Bridge converte <code>remote-a.js</code> em modulo nativo consumido com <code>import()</code>.</li>
-          <li>O remote expoe <code>render()</code> e <code>unmount()</code> reaproveitando o runtime de Module Federation.</li>
-          <li>Shell injeta metricas e garante desmontagem antes de uma nova montagem.</li>
-        </ul>
-      </div>
-      <div class="doc-block">
-        <h3>Operacao</h3>
-        <pre><code class="language-bash">cd MFEs/module-federation/remote-a
-npm install
-npm start</code></pre>
-      </div>
-    </article>
-  `,
-  ssa: `
-    <article class="doc-article">
-      <span class="doc-tag">Single-SPA</span>
-      <div class="doc-block">
-        <h3>Resumo</h3>
-        <p>Adapter Single-SPA em <code>http://localhost:9302/mfe-a.js</code>, baseado em Angular 15 e provendo <code>bootstrap</code>, <code>mount</code> e <code>unmount</code>.</p>
-      </div>
-      <div class="doc-block">
-        <h3>Stack tecnico</h3>
-        <ul>
-          <li>Fonte em <code>MFEs/single-spa/mfe-a/</code> com Angular 15 e contratos Single-SPA.</li>
-          <li>Exporta tambem <code>render()</code> adaptado para Native Federation.</li>
-          <li>Scripts: <code>npm install</code> e <code>npm start</code> (porta 9001).</li>
-        </ul>
-      </div>
-      <div class="doc-block">
-        <h3>Integracao com o shell</h3>
-        <ul>
-          <li>Shell chama <code>bootstrap()</code> uma unica vez e reutiliza <code>mount()</code>/<code>unmount()</code>.</li>
-          <li>Metrica de render e convertida e enviada de volta via <code>updateMetrics()</code>.</li>
-          <li>Permite conviver com orquestracao Single-SPA legada durante a migracao.</li>
-        </ul>
-      </div>
-    </article>
-  `,
-  ng: `
-    <article class="doc-article">
-      <span class="doc-tag">Angular Elements</span>
-      <div class="doc-block">
-        <h3>Resumo</h3>
-        <p>Angular 15 convertido em Web Component para Native Federation (<code>mfe-ng</code> em <code>http://localhost:9310/mfe-ng.js</code>).</p>
-      </div>
-      <div class="doc-block">
-        <h3>Stack tecnico</h3>
-        <ul>
-          <li>Fonte em <code>MFEs/angular/mfe-ng/</code> com Angular 15, <code>@angular/elements</code> e integração Native Federation.</li>
-          <li>Signals para metricas, estilos encapsulados e bundle esbuild.</li>
-          <li>Servido via <code>npm start</code> (porta 9301).</li>
-        </ul>
-      </div>
-      <div class="doc-block">
-        <h3>Integracao com o shell</h3>
-        <ul>
-          <li>Registrado como <code>&lt;angular-webcomponent&gt;</code> e controlado via props <code>variant</code>/<code>metrics</code>.</li>
-          <li><code>updateMetrics</code> usa Signals para refletir telemetria instantaneamente.</li>
-          <li><code>unmount()</code> remove o custom element e listeners customizados.</li>
-        </ul>
-      </div>
-    </article>
-  `,
-  'ng-full': `
-    <article class="doc-article">
-      <span class="doc-tag">Angular 20 CLI</span>
-      <div class="doc-block">
-        <h3>Resumo</h3>
-        <p>Aplicacao Angular CLI completa empacotada como Web Component em <code>dist-webcomponent</code> (servida em <code>http://localhost:9400</code>).</p>
-      </div>
-      <div class="doc-block">
-        <h3>Stack tecnico</h3>
-        <ul>
-          <li>Projeto em <code>MFEs/angular/mfe-ng-full/</code> usando <code>@angular-devkit/build-angular:application</code> (esbuild).</li>
-          <li>Script <code>npm run package</code> construi e copia artefatos para <code>dist-webcomponent</code>.</li>
-          <li>Servidor dedicado <code>npm run serve</code> aplica CORS e Cross-Origin-Resource-Policy.</li>
-        </ul>
-      </div>
-      <div class="doc-block">
-        <h3>Integracao com o shell</h3>
-        <ul>
-          <li>Bridge <code>mfe-ng-full.js</code> injeta <code>styles.css</code> e carrega <code>main.js</code>.</li>
-          <li>Dependencias Angular sao embarcadas (sem <code>externalDependencies</code>) para evitar falhas de resolucao.</li>
-          <li><code>destroy()</code> garante limpeza do custom element.</li>
-        </ul>
-      </div>
-      <div class="doc-block">
-        <h3>Operacao</h3>
-        <pre><code class="language-bash">cd MFEs/angular/mfe-ng-full
-npm install
-npm run package
-npm run serve</code></pre>
-      </div>
-    </article>
-  `,
-  react: `
-    <article class="doc-article">
-      <span class="doc-tag">React 18</span>
-      <div class="doc-block">
-        <h3>Resumo</h3>
-        <p>Observability widget em React 18 convertido em Custom Element (<code>mfe-react</code> em <code>http://localhost:9201/mfe-react.js</code>).</p>
-      </div>
-      <div class="doc-block">
-        <h3>Stack tecnico</h3>
-        <ul>
-          <li>Fonte em <code>MFEs/react/mfe-react/</code> com <code>ReactDOM.createRoot</code>.</li>
-          <li>Telemetria reportada via props <code>updateMetrics</code>.</li>
-          <li>Servidor local <code>npm start</code> (porta 9302) com <code>serve --cors</code>.</li>
-        </ul>
-      </div>
-      <div class="doc-block">
-        <h3>Integracao com o shell</h3>
-        <ul>
-          <li>Custom Element aceita <code>variant</code>, <code>metrics</code> e cor.</li>
-          <li>Eventos BUS (<code>REACT-PING</code>) comunicam-se com o ecossistema.</li>
-          <li><code>destroy()</code> chama <code>root.unmount()</code>, limpando listeners.</li>
-        </ul>
-      </div>
-    </article>
-  `,
-  vue: `
-    <article class="doc-article">
-      <span class="doc-tag">Vue 3</span>
-      <div class="doc-block">
-        <h3>Resumo</h3>
-        <p>Componente Vue 3 <code>defineCustomElement</code> estilizado com gradiente proprio (<code>mfe-vue.js</code> em <code>http://localhost:9303</code>).</p>
-      </div>
-      <div class="doc-block">
-        <h3>Stack tecnico</h3>
-        <ul>
-          <li>Codigo em <code>MFEs/vue/mfe-vue/</code> usando Composition API e CSS dedicado.</li>
-          <li>Exporta <code>render()</code> e <code>unmount()</code> compativeis com Native Federation.</li>
-          <li>Servidor local <code>npm start</code> (porta 9303) com CORS habilitado.</li>
-        </ul>
-      </div>
-      <div class="doc-block">
-        <h3>Integracao com o shell</h3>
-        <ul>
-          <li>Slot sincroniza <code>metrics</code> por props reativas.</li>
-          <li>Estilos carregados uma unica vez (bridge evita duplicidade no <code>&lt;head&gt;</code>).</li>
-          <li>Eventos BUS (<code>VUE-PING</code>) alimentam o painel combinado.</li>
-        </ul>
-      </div>
-    </article>
-  `,
-};
-function getBusIntroHtml() {
-  return `
-    <div class="doc-block">
-      <h3>O que é o BUS?</h3>
-      <p>
-        BUS é um “fio de comunicação” simples entre os blocos da página. Em vez de um bloco
-        “chamar” o outro diretamente, ele apenas avisa: “aconteceu X”. Quem quiser, escuta e reage.
-        Isso evita dependências fortes entre equipes e deixa tudo mais seguro e organizado.
-      </p>
-      <ul>
-        <li>Sem ligações diretas: os blocos só enviam avisos curtos.</li>
-        <li>Fácil de entender: cada aviso tem um pequeno conteúdo e um “de quem veio”.</li>
-        <li>Seguro para crescer: times diferentes podem evoluir sem quebrar os outros.</li>
-      </ul>
-    </div>
-  `;
-}
-
-function getBusLogHtml(id) {
-  const items = (window.__busLogs || []).filter((e) => {
-    const d = e?.detail || {};
-    const tag = `${d.id || d.name || d.mfe || d.source || ''}`.toLowerCase();
-    return !id || tag.includes(id.toLowerCase());
-  }).slice(-12);
-  const list = items.length
-    ? items.map((e) => {
-        const src = e?.detail?.id || e?.detail?.name || e?.detail?.mfe || e?.detail?.source || 'desconhecido';
-        const data = JSON.stringify(e.detail, null, 2);
-        return `<li><strong>${e.at}</strong> • ${src}<pre><code>${data}</code></pre></li>`;
-      }).join('')
-    : '<li>Nenhum aviso recebido ainda.</li>';
-  return `
-    <article class="doc-article">
-      <span class="doc-tag">BUS</span>
-      ${getBusIntroHtml()}
-      <div class="doc-block">
-        <h3>Últimos avisos recebidos</h3>
-        <ul style="margin:0;display:grid;gap:10px;padding-left:18px;">${list}</ul>
-        <p style="margin-top:12px;color:var(--text-muted)">Dica: clique no botão “BUS” do card para ver os avisos deste bloco.</p>
-      </div>
-    </article>
-  `;
-}
-
-function enrichDocHtml(id, html) {
-  const friendlyIntroById = {
-    nf: 'Bloco leve que mostra como conectar partes da página sem amarrar times. Ele emite avisos simples que qualquer outro bloco pode escutar.',
-    mf: 'Bloco empacotado por outra equipe que chega pronto. Aqui ele se comporta como qualquer outro, sem travar a página.',
-    ssa: 'Bloco que já existia em páginas mais antigas. Aqui ele entra e sai sem atrapalhar quem usa o novo modelo.',
-    ng: 'Bloco feito em Angular, encaixado como uma peça independente que pode entrar e sair da tela com segurança.',
-    'ng-full': 'Aplicação Angular completa, entregue como um único bloco. Serve para casos mais robustos sem perder a integração.',
-    react: 'Bloco feito em React, focado em visualização e dados. Ele mostra como integrar sem amarrar tudo num só projeto.',
-    vue: 'Bloco feito em Vue, com botões e exemplos prontos. Conversa com os demais por avisos simples (BUS).',
-    overview: 'Esta página demonstra como diversas peças visuais podem trabalhar juntas, sem ficarem dependentes umas das outras.'
-  };
-
-  const vantagensNF = `
-    <div class="doc-block">
-      <h3>Por que usar com Native Federation?</h3>
-      <ul>
-        <li>Times trabalham de forma independente, sem efeito cascata.</li>
-        <li>Entrada/saída segura: o bloco entra, mostra e sai sem deixar sujeira.</li>
-        <li>Entrega rápida: cada pedaço pode ser atualizado sem desligar o resto.</li>
-        <li>Simples de observar: avisos (BUS) contam o que está acontecendo.</li>
-      </ul>
-    </div>
-  `;
-
-  const resumoLeigo = `
-    <div class="doc-block">
-      <h3>Em poucas palavras</h3>
-      <p>${friendlyIntroById[id] || friendlyIntroById.overview}</p>
-    </div>
-  `;
-
-  const busAjuda = `
-    <div class="doc-block">
-      <h3>Como este bloco conversa com os demais (BUS)</h3>
-      <p>Ele pode avisar “aconteceu X” e os outros blocos decidem se precisam reagir.
-      Você pode ver os avisos recebidos clicando no botão “BUS”.</p>
-    </div>
-  `;
-
-  return `
-    <article class="doc-article">
-      <span class="doc-tag">${id === 'overview' ? 'Visão geral' : 'Documentação do bloco'}</span>
-      ${resumoLeigo}
-      ${html || ''}
-      ${vantagensNF}
-      ${getBusIntroHtml()}
-      ${busAjuda}
-    </article>
-  `;
-}
-
-function getDocHtmlFor(id) {
-  if (id === 'overview') return enrichDocHtml('overview', overviewDocumentation);
-  return enrichDocHtml(id, documentationById[id] || '');
-}
-let lastFocusedElement = null;
-
-function openModal(title, html) {
-  try {
-    lastFocusedElement = document.activeElement;
-  } catch {}
-  if (modalTitle) modalTitle.textContent = title || '';
-  if (modalContent) modalContent.innerHTML = html || '';
-  if (modalBackdrop) {
-    modalBackdrop.hidden = false;
-  }
-  document.body.classList.add('modal-open');
-  setTimeout(() => {
-    (closeModalButton || modalBackdrop)?.focus?.();
-  }, 0);
-}
-
-function closeModal() {
-  if (modalBackdrop) {
-    modalBackdrop.hidden = true;
-  }
-  document.body.classList.remove('modal-open');
-  if (modalTitle) modalTitle.textContent = '';
-  if (modalContent) modalContent.innerHTML = '';
-  try {
-    if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
-      lastFocusedElement.focus();
-    }
-  } catch {}
-}
-
-
-function createMetricsSeed() {
-  return {
-    warmupDone: false,
-    warmupCount: 0,
-    samples: [],
-    count: 0,
-    total: 0,
-    last: 0,
-    average: 0,
-    best: Number.POSITIVE_INFINITY,
-    worst: 0,
-    median: 0,
-    p95: 0,
-    phases: {
-      fetch: { total: 0, avg: 0, last: 0 },
-      eval: { total: 0, avg: 0, last: 0 },
-      mount: { total: 0, avg: 0, last: 0 },
-    },
-    transfer: {
-      bytes: 0,
-      duration: 0,
-      count: 0,
-      avgDuration: 0,
-    },
-  };
-}
-
-function percentile(values, p) {
-  if (!Array.isArray(values) || values.length === 0) return 0;
-  const sorted = values.slice().sort((a, b) => a - b);
-  const idx = Math.min(sorted.length - 1, Math.max(0, Math.ceil((p / 100) * sorted.length) - 1));
-  return sorted[idx];
-}
-
-function median(values) {
-  if (!Array.isArray(values) || values.length === 0) return 0;
-  const sorted = values.slice().sort((a, b) => a - b);
-  const mid = Math.floor(sorted.length / 2);
-  return sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
-}
-
-function readResourceTiming(remoteUrl, t0, t1) {
-  try {
-    const entries = performance
-      .getEntriesByType('resource')
-      .filter((e) =>
-        e.name === remoteUrl &&
-        typeof e.startTime === 'number' &&
-        typeof e.responseEnd === 'number' &&
-        e.startTime >= t0 - 5 &&
-        e.responseEnd <= t1 + 5,
-      );
-    if (!entries.length) return null;
-    const latest = entries[entries.length - 1];
-    return {
-      bytes: Number(latest.transferSize || latest.encodedBodySize || 0),
-      duration: Number(latest.duration || 0),
-    };
-  } catch {
-    return null;
-  }
-}
-
-async function mountWithBenchmark(mfe, outlet, options = {}) {
-  const remoteUrl = getRemoteUrl(mfe.id);
-  const fetchStart = performance.now();
-  const mod = await import(remoteUrl);
-  const fetchEnd = performance.now();
-
-  const mountStart = performance.now();
-  const lifecycleCandidate =
-    (await mfe.mount(outlet, {
-      ...options,
-      __preloadedModule: mod,
-    })) ?? createLifecycle(null, null, null);
-  const mountEnd = performance.now();
-
-  const total = mountEnd - fetchStart;
-  const fetchPhase = Math.max(0, fetchEnd - fetchStart);
-  const mountPhase = Math.max(0, mountEnd - mountStart);
-  const evalPhase = Math.max(0, total - fetchPhase - mountPhase);
-  const transfer = readResourceTiming(remoteUrl, fetchStart, mountEnd);
-
-  return {
-    lifecycle: lifecycleCandidate,
-    metricsInput: {
-      total,
-      phases: { fetch: fetchPhase, eval: evalPhase, mount: mountPhase },
-      transfer,
-    },
-  };
-}
-
-function getMetricsSnapshot(id) {
-  const entry = metricsStore.get(id);
-  if (!entry) {
-    return {
-      count: 0,
-      total: 0,
-      last: 0,
-      average: 0,
-      best: 0,
-      worst: 0,
-      median: 0,
-      p95: 0,
-      phases: {
-        fetch: { avg: 0, last: 0 },
-        eval: { avg: 0, last: 0 },
-        mount: { avg: 0, last: 0 },
-      },
-    };
-  }
-  return {
-    count: entry.count,
-    total: entry.total,
-    last: entry.last,
-    average: entry.average,
-    best: entry.best === Number.POSITIVE_INFINITY ? 0 : entry.best,
-    worst: entry.worst,
-    median: entry.median,
-    p95: entry.p95,
-    phases: {
-      fetch: { avg: entry.phases.fetch.avg, last: entry.phases.fetch.last },
-      eval: { avg: entry.phases.eval.avg, last: entry.phases.eval.last },
-      mount: { avg: entry.phases.mount.avg, last: entry.phases.mount.last },
-    },
-  };
-}
-
-function recordMetrics(id, input) {
-  const duration = typeof input === 'number' ? input : Number(input?.total || 0);
-  const phases = typeof input === 'object' && input?.phases ? input.phases : { fetch: 0, eval: 0, mount: duration };
-  const transfer = typeof input === 'object' ? input?.transfer : null;
-  const entry = metricsStore.get(id) ?? createMetricsSeed();
-
-  if (!entry.warmupDone) {
-    entry.warmupDone = true;
-    entry.warmupCount = 1;
-  }
-
-  const previousCount = entry.count;
-  entry.count = previousCount + 1;
-  entry.total += duration;
-  entry.last = duration;
-  entry.best = previousCount === 0 ? duration : Math.min(entry.best, duration);
-  entry.worst = previousCount === 0 ? duration : Math.max(entry.worst, duration);
-  entry.average = entry.total / entry.count;
-
-  entry.samples.push(duration);
-  if (entry.samples.length > 200) entry.samples.shift();
-  entry.median = median(entry.samples);
-  entry.p95 = percentile(entry.samples, 95);
-
-  entry.phases.fetch.total += Number(phases.fetch || 0);
-  entry.phases.fetch.last = Number(phases.fetch || 0);
-  entry.phases.fetch.avg = entry.phases.fetch.total / entry.count;
-  entry.phases.eval.total += Number(phases.eval || 0);
-  entry.phases.eval.last = Number(phases.eval || 0);
-  entry.phases.eval.avg = entry.phases.eval.total / entry.count;
-  entry.phases.mount.total += Number(phases.mount || duration);
-  entry.phases.mount.last = Number(phases.mount || duration);
-  entry.phases.mount.avg = entry.phases.mount.total / entry.count;
-
-  if (transfer && (transfer.bytes > 0 || transfer.duration > 0)) {
-    entry.transfer.bytes += Number(transfer.bytes || 0);
-    entry.transfer.duration += Number(transfer.duration || 0);
-    entry.transfer.count += 1;
-    entry.transfer.avgDuration = entry.transfer.duration / entry.transfer.count;
-  }
-
-  metricsStore.set(id, entry);
-  return {
-    count: entry.count,
-    total: entry.total,
-    last: entry.last,
-    average: entry.average,
-    best: entry.best,
-    worst: entry.worst,
-    median: entry.median,
-    p95: entry.p95,
-    phases: {
-      fetch: { avg: entry.phases.fetch.avg, last: entry.phases.fetch.last },
-      eval: { avg: entry.phases.eval.avg, last: entry.phases.eval.last },
-      mount: { avg: entry.phases.mount.avg, last: entry.phases.mount.last },
-    },
-  };
-}
-
-function toMetricLabel(value) {
-  if (typeof value !== 'number' || !Number.isFinite(value) || value <= 0) {
-    return '--';
-  }
-  return `${value.toFixed(1)} ms`;
-}
-
-function applyTelemetryBadges(id, metrics) {
-  const btn = primaryButtons.get(id);
-  if (btn) {
-    if (metrics.count > 0) {
-      btn.dataset.metric = toMetricLabel(metrics.average);
-      btn.title = `Media: ${toMetricLabel(metrics.average)} | Ultimo: ${toMetricLabel(metrics.last)}`;
-    } else {
-      btn.removeAttribute('data-metric');
-      btn.removeAttribute('title');
-    }
-  }
-  const chip = chipButtons.get(id);
-  if (chip) {
-    if (metrics.count > 0) {
-      chip.title = `Ultimo: ${toMetricLabel(metrics.last)} | Melhor: ${toMetricLabel(metrics.best)}`;
-    } else {
-      chip.removeAttribute('title');
-    }
-  }
-
-  // Atualiza a barra de métricas do card (DS) se existir
-  const ls = layoutSlots.get(id);
-  if (ls && ls.metricsEls) {
-    ls.metricsEls.avgEl.innerHTML = `<strong>Média:</strong> ${toMetricLabel(metrics.average)}`;
-    ls.metricsEls.bestEl.innerHTML = `<strong>Melhor:</strong> ${toMetricLabel(metrics.best)}`;
-    ls.metricsEls.worstEl.innerHTML = `<strong>Pior:</strong> ${toMetricLabel(metrics.worst)}`;
-    ls.metricsEls.countEl.innerHTML = `<strong>Amostras:</strong> ${String(metrics.count)}`;
-  }
-}
-
-function updateInsights() {
-  if (!insightFastest || !insightSlowest || !insightAverage || !insightSamples || !insightBestPeak || !insightP95) {
-    return;
-  }
-
-  const entries = registry
-    .map((mfe) => ({
-      id: mfe.id,
-      label: mfe.label,
-      metrics: metricsStore.get(mfe.id),
-    }))
-    .filter((entry) => entry.metrics && entry.metrics.count > 0);
-
-  if (entries.length === 0) {
-    insightFastest.textContent = '--';
-    insightSlowest.textContent = '--';
-    insightAverage.textContent = '--';
-    insightSamples.textContent = '0';
-    return;
-  }
-
-  const fastest = entries.reduce((best, current) =>
-    current.metrics.average < best.metrics.average ? current : best,
-  );
-  const slowest = entries.reduce((worst, current) =>
-    current.metrics.average > worst.metrics.average ? current : worst,
-  );
-  const totalSamples = entries.reduce((sum, entry) => sum + entry.metrics.count, 0);
-  const totalTime = entries.reduce((sum, entry) => sum + entry.metrics.total, 0);
-  const globalAverage = totalTime / totalSamples;
-  const globalBest = entries.reduce((best, entry) => {
-    const b = entry.metrics.best ?? Number.POSITIVE_INFINITY;
-    return b > 0 && b < best ? b : best;
-  }, Number.POSITIVE_INFINITY);
-  const globalP95 = percentile(
-    entries.flatMap((entry) => (entry.metrics?.samples || []).slice(-100)),
-    95,
-  );
-
-  insightFastest.textContent = `${fastest.label} · ${toMetricLabel(fastest.metrics.average)}`;
-  insightSlowest.textContent = `${slowest.label} · ${toMetricLabel(slowest.metrics.average)}`;
-  insightAverage.textContent = toMetricLabel(globalAverage);
-  insightBestPeak.textContent = toMetricLabel(globalBest === Number.POSITIVE_INFINITY ? 0 : globalBest);
-  insightP95.textContent = toMetricLabel(globalP95);
-  insightSamples.textContent = String(totalSamples);
-
-  updateInsightsTable();
-}
-
-function updateInsightsTable() {
-  if (!insightsTableBody) return;
-
-  // Constrói lista completa (todos MFEs), mesmo sem métricas ainda
-  const full = registry.map((mfe) => {
-    const m = metricsStore.get(mfe.id);
-    return {
-      id: mfe.id,
-      label: mfe.label,
-      metrics: m ?? {
-        count: 0,
-        total: 0,
-        last: 0,
-        average: 0,
-        best: Number.POSITIVE_INFINITY,
-        worst: 0,
-      },
-    };
-  });
-
-  // Ranking por média (sem dados vão para o final)
-  const rows = full
-    .slice()
-    .sort((a, b) => {
-      const avga = a.metrics?.count > 0 ? a.metrics.average : Number.POSITIVE_INFINITY;
-      const avgb = b.metrics?.count > 0 ? b.metrics.average : Number.POSITIVE_INFINITY;
-      return avga - avgb;
-    })
-    .map(({ id, label, metrics }) => {
-      const reg = registryMap.get(id);
-      const remote = reg?.remote;
-      const bundle =
-        remote && bundleSizes.has(remote) ? formatBytes(bundleSizes.get(remote)) : '--';
-      const avg = toMetricLabel(metrics?.average);
-      const best = toMetricLabel(
-        metrics?.best === Number.POSITIVE_INFINITY ? 0 : metrics?.best,
-      );
-      const worst = toMetricLabel(metrics?.worst);
-      const medianValue = toMetricLabel(metrics?.median);
-      const p95Value = toMetricLabel(metrics?.p95);
-      const count = String(metrics?.count ?? 0);
-      const fetchAvg = toMetricLabel(metrics?.phases?.fetch?.avg);
-      const evalAvg = toMetricLabel(metrics?.phases?.eval?.avg);
-      const mountAvg = toMetricLabel(metrics?.phases?.mount?.avg);
-      const version = reg?.version || '--';
-      return `<tr data-mfe="${id}">
-        <td>${label}</td>
-        <td>${version}</td>
-        <td>${avg}</td>
-        <td>${best}</td>
-        <td>${worst}</td>
-        <td>${medianValue}</td>
-        <td>${p95Value}</td>
-        <td>${count}</td>
-        <td>${fetchAvg}</td>
-        <td>${evalAvg}</td>
-        <td>${mountAvg}</td>
-        <td>${bundle}</td>
-      </tr>`;
-    })
-    .join('');
-
-  insightsTableBody.innerHTML =
-    rows || `<tr><td colspan="12" style="text-align:center;opacity:.7">Nenhum dado ainda.</td></tr>`;
-
-  // Agregados globais para o rodapé
-  const withData = full.filter((e) => e.metrics && e.metrics.count > 0);
-  let globalAvg = '--';
-  let globalBest = '--';
-  let globalWorst = '--';
-  let globalMedian = '--';
-  let globalP95 = '--';
-  let samples = '0';
-  let fetchAvg = '--';
-  let evalAvg = '--';
-  let mountAvg = '--';
-  if (withData.length > 0) {
-    const totalSamples = withData.reduce((s, e) => s + e.metrics.count, 0);
-    const totalTime = withData.reduce((s, e) => s + e.metrics.total, 0);
-    const best = withData.reduce((b, e) => {
-      const v = e.metrics.best ?? Number.POSITIVE_INFINITY;
-      return v > 0 && v < b ? v : b;
-    }, Number.POSITIVE_INFINITY);
-    const worst = withData.reduce((w, e) => Math.max(w, e.metrics.worst ?? 0), 0);
-    globalAvg = toMetricLabel(totalTime / totalSamples);
-    globalBest = toMetricLabel(best === Number.POSITIVE_INFINITY ? 0 : best);
-    globalWorst = toMetricLabel(worst);
-    const samplePool = withData.flatMap((e) => (e.metrics.samples || []).slice(-100));
-    globalMedian = toMetricLabel(median(samplePool));
-    globalP95 = toMetricLabel(percentile(samplePool, 95));
-    const fetchTotal = withData.reduce((s, e) => s + (e.metrics?.phases?.fetch?.total || 0), 0);
-    const evalTotal = withData.reduce((s, e) => s + (e.metrics?.phases?.eval?.total || 0), 0);
-    const mountTotal = withData.reduce((s, e) => s + (e.metrics?.phases?.mount?.total || 0), 0);
-    fetchAvg = toMetricLabel(fetchTotal / totalSamples);
-    evalAvg = toMetricLabel(evalTotal / totalSamples);
-    mountAvg = toMetricLabel(mountTotal / totalSamples);
-    samples = String(totalSamples);
-  }
-
-  // Média de bundle (apenas tamanhos já medidos)
-  const measured = registry
-    .map((r) => bundleSizes.get(r.remote))
-    .filter((n) => typeof n === 'number' && n > 0);
-  const avgBundle =
-    measured.length > 0
-      ? formatBytes(measured.reduce((a, b) => a + b, 0) / measured.length)
-      : '--';
-
-  if (insightsTableFoot) {
-    insightsTableFoot.innerHTML = `
-      <td>Resumo</td>
-      <td>--</td>
-      <td>${globalAvg}</td>
-      <td>${globalBest}</td>
-      <td>${globalWorst}</td>
-      <td>${globalMedian}</td>
-      <td>${globalP95}</td>
-      <td>${samples}</td>
-      <td>${fetchAvg}</td>
-      <td>${evalAvg}</td>
-      <td>${mountAvg}</td>
-      <td>${avgBundle}</td>
-    `;
-  }
-}
+const IMPORT_TIMEOUT_MS = 7000;
+const MOUNT_TIMEOUT_MS = 9000;
+const DESTROY_TIMEOUT_MS = 4000;
 
 const registry = [
   {
     id: 'nf',
-    label: 'Vanilla JS + Native Federation',
-    accent: '#10b981',
-    accentAlt: '#34d399',
-    description: 'Remote ESM nativo orientado a eventos com pipeline zero-bundler.',
-    tagline: 'CustomEvent + contratos simples: integra Single-SPA e Module Federation sem acoplamento.',
-    remote: 'http://localhost:9101/mfe1.js',
-    depPolicy: dependencyPolicyByMfe.nf,
-    mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('nf'), __preloadedModule = null } = {}) => {
-      const variant = compact ? 'compact' : 'full';
-      const mod = __preloadedModule || (await import(getRemoteUrl('nf')));
-      const result = await mod.render(outlet, {
-        host: 'native-shell',
-        name: 'mfe1-nf',
-        replace: true,
-        log: !compact,
-        variant,
-        metrics,
-        title: compact ? 'Native Federation (NF)' : 'Native Federation - Event Stream',
-        description: compact
-          ? 'MFE ESM nativo emitindo eventos unificados.'
-          : 'MFE ESM direto, ideal para times que desejam aderir a federacao sem empacotadores pesados.',
-        tagline: compact
-          ? 'CustomEvent API sem acoplamento.'
-          : 'Emitido via CustomEvent - integracao agnostica com Module/Single-SPA.',
-      });
-      return createLifecycle(mod, result, () => ({
-        host: 'native-shell',
-        name: 'mfe1-nf',
-        outlet,
-      }));
-    },
+    label: 'Native Federation',
+    tagline: 'ESM puro e contrato simples',
+    doc: 'MFE base usando módulos ES nativos e BUS para troca de eventos.',
   },
   {
     id: 'mf',
-    label: 'React + Module Federation',
-    accent: '#1c78c0',
-    accentAlt: '#8ed6fb',
-    description: 'Remote webpack 5 exposto como ESM para catalogos omnichannel regulados.',
-    tagline: 'Bridge MF + Native Federation com compartilhamento controlado de dependências.',
-    remote: 'http://localhost:9301/remote-a.js',
-    depPolicy: dependencyPolicyByMfe.mf,
-    mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('mf'), __preloadedModule = null } = {}) => {
-      const variant = compact ? 'compact' : 'full';
-      const mod = __preloadedModule || (await import(getRemoteUrl('mf')));
-      const result = await mod.render(outlet, {
-        host: 'native-shell',
-        name: 'remote-a-mf',
-        replace: true,
-        log: !compact,
-        variant,
-        metrics,
-        title: compact ? 'Remote-A (MF)' : 'Remote-A - Module Federation',
-        description: compact
-          ? 'Remote Federation integrado ao catalogo corporativo.'
-          : 'Remote webpack exposto como ESM, pensado para catalogos financeiros e dashboards omnichannel.',
-        tagline: compact
-          ? 'webpack module federation remoto.'
-          : 'Bridge MF + Native Federation - carregado sob demanda com isolamento leve.',
-      });
-      return createLifecycle(mod, result, () => ({
-        host: 'native-shell',
-        name: 'remote-a-mf',
-        outlet,
-      }));
-    },
+    label: 'Module Federation',
+    tagline: 'Remote webpack com bridge',
+    doc: 'Remote empacotado com webpack, consumido no shell via import dinâmico.',
   },
   {
     id: 'ssa',
-    label: 'Angular 15 + Single-SPA',
-    accent: '#f97316',
-    accentAlt: '#fb923c',
-    description: 'Lifecycle bootstrap/mount/unmount em Angular 15 pronto para modernizar shells legados.',
-    tagline: 'Adapter ESM Angular 15 que publica BUS e convive com MF/NF sem retrabalho.',
-    remote: 'http://localhost:9302/mfe-a.js',
-    depPolicy: dependencyPolicyByMfe.ssa,
-    mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('ssa'), __preloadedModule = null } = {}) => {
-      const variant = compact ? 'compact' : 'full';
-      const mod = __preloadedModule || (await import(getRemoteUrl('ssa')));
-      const baseProps = {
-        name: '@org/mfe-a',
-        host: 'native-shell',
-        outlet,
-        replace: true,
-        log: !compact,
-        variant,
-        metrics,
-        title: compact ? 'Single-SPA Widget' : 'Single-SPA - Orchestration Tile',
-        description: compact
-          ? 'Widget Single-SPA em Angular 15 pronto para shells legados.'
-          : 'Widget Single-SPA em Angular 15 embalado como modulo ESM, ideal para shells legados evoluirem gradualmente.',
-        tagline: compact
-          ? 'Contrato mount/unmount padrao Single-SPA.'
-          : 'Expose mount/unmount e deixe o shell decidir quem convive em tela.',
-      };
-      if (typeof mod.bootstrap === 'function') {
-        await mod.bootstrap(baseProps);
-      }
-      const mountResult = typeof mod.mount === 'function' ? await mod.mount(baseProps) : null;
-      return createLifecycle(mod, mountResult, () => baseProps);
-    },
+    label: 'Single-SPA',
+    tagline: 'Adapter de lifecycle legado',
+    doc: 'Compatibiliza bootstrap/mount/unmount com o shell atual.',
   },
   {
     id: 'ng',
-    label: 'Angular 15 + Native Federation',
-    accent: '#dd0031',
-    accentAlt: '#f87171',
-    description: 'Angular 15 empacotado como Custom Element leve para Native Federation.',
-    tagline: 'Angular 15 + @angular/elements com telemetria nativa.',
-    remote: 'http://localhost:9310/mfe-ng.js',
-    depPolicy: dependencyPolicyByMfe.ng,
-    mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('ng'), __preloadedModule = null } = {}) => {
-      const variant = compact ? 'compact' : 'full';
-      const mod = __preloadedModule || (await import(getRemoteUrl('ng')));
-      const result = await mod.render(outlet, {
-        replace: true,
-        variant,
-        metrics,
-        title: compact ? 'Angular Widget' : 'Angular Engagement Dashboard',
-        description: compact
-          ? 'Angular 15 registrado via createCustomElement.'
-          : 'Web Component Angular 15 para Native Federation, ideal para orquestracao corporativa.',
-        tagline: compact
-          ? 'Signals + emissao de BUS.'
-          : 'Empacotado com createApplication + @angular/elements.',
-      });
-      return createLifecycle(mod, result, () => ({
-        host: 'native-shell',
-        name: 'angular-webcomponent',
-        outlet,
-      }));
-    },
+    label: 'Angular 15 Element',
+    tagline: 'Custom element leve',
+    doc: 'Web component Angular com ciclo de vida controlado.',
   },
   {
     id: 'ng-full',
-    label: 'Angular 20 + Native Federation',
-    accent: '#dd0031',
-    accentAlt: '#fca5a5',
-    description: 'Aplicacao Angular CLI completa disponibilizada como Web Component federado.',
-    tagline: 'CLI standalone + Angular Elements pronta para canais regulados.',
-    remote: 'http://localhost:9400/mfe-ng-full.js',
-    depPolicy: dependencyPolicyByMfe['ng-full'],
-    mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('ng-full'), __preloadedModule = null } = {}) => {
-      const mod = __preloadedModule || (await import(getRemoteUrl('ng-full')));
-      const result = await mod.render(outlet, {
-        baseUrl: 'http://localhost:9400/',
-        variant: compact ? 'compact' : 'full',
-        metrics,
-      });
-      return createLifecycle(mod, result, () => ({
-        host: 'native-shell',
-        name: 'angular-full-webcomponent',
-        outlet,
-      }));
-    },
+    label: 'Angular 20 Full',
+    tagline: 'Aplicação Angular completa',
+    doc: 'Build completo servido em porta dedicada e integrado por bridge.',
   },
   {
     id: 'react',
-    label: 'React + Native Federation',
-    accent: '#61dafb',
-    accentAlt: '#38bdf8',
-    description: 'React 18 encapsulado como Custom Element para painéis de observabilidade.',
-    tagline: 'createRoot + Web Component com isolamento e telemetria de renderizacao.',
-    remote: 'http://localhost:9201/mfe-react.js',
-    depPolicy: dependencyPolicyByMfe.react,
-    mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('react'), __preloadedModule = null } = {}) => {
-      const variant = compact ? 'compact' : 'full';
-      const mod = __preloadedModule || (await import(getRemoteUrl('react')));
-      const result = await mod.render(outlet, {
-        replace: true,
-        log: !compact,
-        variant,
-        metrics,
-        title: compact ? 'React Widget' : 'React Observability Widget',
-        description: compact
-          ? 'ReactDOM.createRoot encapsulado em Custom Element.'
-          : 'React 18 rodando como Web Component, ideal para integracoes Nx com Module Federation.',
-        tagline: compact
-          ? 'Stateful e compatvel com orquestracao Native.'
-          : 'Criado com ReactDOM.createRoot + Custom Elements para isolamento leve.',
-        color: '#0ea5e9',
-      });
-      return createLifecycle(mod, result, () => ({
-        host: 'native-shell',
-        name: 'react-webcomponent',
-        outlet,
-      }));
-    },
+    label: 'React 18',
+    tagline: 'Widget isolado de observabilidade',
+    doc: 'Componente React com integração desacoplada no shell.',
   },
   {
     id: 'vue',
-    label: 'Vue + Native Federation',
-    accent: '#42b883',
-    accentAlt: '#22c55e',
-    description: 'Vue 3 defineCustomElement otimizado para portais híbridos.',
-    tagline: 'Composition API + Custom Element com BUS integrado e métricas reais.',
-    remote: 'http://localhost:9001/mfe-vue.js',
-    depPolicy: dependencyPolicyByMfe.vue,
-    mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('vue'), __preloadedModule = null } = {}) => {
-      const variant = compact ? 'compact' : 'full';
-      const mod = __preloadedModule || (await import(getRemoteUrl('vue')));
-      const result = await mod.render(outlet, {
-        replace: true,
-        variant,
-        metrics,
-        title: compact ? 'Vue Widget' : 'Vue Operational Insights',
-        description: compact
-          ? 'Vue Custom Element com Composition API.'
-          : 'Vue 3 rodando como Custom Element, perfeito para integracoes heterogeneas.',
-        tagline: compact
-          ? 'defineCustomElement + emissao de BUS.'
-          : 'defineCustomElement + Composition API para maxima flexibilidade.',
-      });
-      return createLifecycle(mod, result, () => ({
-        host: 'native-shell',
-        name: 'vue-webcomponent',
-        outlet,
-      }));
-    },
+    label: 'Vue 3',
+    tagline: 'Custom element com BUS',
+    doc: 'Componente Vue com comunicação por evento e montagem segura.',
   },
 ];
 
-const registryMap = new Map(registry.map((m) => [m.id, m]));
+const selectedSet = new Set(registry.map((r) => r.id));
+const telemetry = new Map();
+const previewLifecycles = new Map();
 
-let primaryKey = registry[0].id;
-let primaryLifecycle = null;
-const combinedLifecycles = new Map();
-const selectedSet = new Set(registry.map((m) => m.id));
+let activeStage = { id: null, lifecycle: null };
+let previewLoadToken = 0;
 
-function registerInteractive(el) {
-  interactiveElements.add(el);
+window.__busLogs = window.__busLogs || [];
+
+function getRemoteUrl(id) {
+  return runtimeRemotes[id] || defaultRemotes[id];
 }
 
-function setLoading(isLoading) {
-  interactiveElements.forEach((el) => {
-    el.disabled = isLoading;
-    if (isLoading) {
-      el.classList.add('is-loading');
-    } else {
-      el.classList.remove('is-loading');
-    }
+function withTimeout(promise, ms, ctx) {
+  let timer = null;
+  const timeoutPromise = new Promise((_, reject) => {
+    timer = setTimeout(() => reject(new Error(`Timeout (${ms}ms) em ${ctx}`)), ms);
   });
+  return Promise.race([promise, timeoutPromise]).finally(() => clearTimeout(timer));
 }
 
-function createLifecycle(mod, candidate, getProps) {
-  const updateMetrics =
-    candidate && typeof candidate.updateMetrics === 'function'
-      ? (metrics) => {
-          try {
-            candidate.updateMetrics(metrics);
-          } catch (err) {
-            console.error('Falha ao atualizar metricas do MFE', err);
-          }
-        }
-      : () => {};
+function formatMs(value) {
+  return Number.isFinite(value) && value > 0 ? `${value.toFixed(1)} ms` : '--';
+}
 
-  const fallback = async () => {
-    const props = getProps?.();
-    if (props?.outlet instanceof Element) {
-      props.outlet.innerHTML = '';
+function updateBusCount() {
+  if (!els.busCount) return;
+  els.busCount.textContent = String((window.__busLogs || []).length);
+}
+
+function trackBus(event) {
+  window.__busLogs.push({
+    at: new Date().toLocaleTimeString('pt-BR'),
+    detail: event?.detail || {},
+  });
+  if (window.__busLogs.length > 80) window.__busLogs.shift();
+  updateBusCount();
+}
+
+function toBusHtml() {
+  const logs = (window.__busLogs || []).slice(-20).reverse();
+  if (!logs.length) {
+    return '<p>Nenhum evento BUS registrado.</p>';
+  }
+  return `
+    <ul>
+      ${logs
+        .map(
+          (l) => `<li><strong>${l.at}</strong><pre><code>${JSON.stringify(l.detail, null, 2)}</code></pre></li>`,
+        )
+        .join('')}
+    </ul>
+  `;
+}
+
+function openModal(title, html) {
+  if (!els.modalBackdrop || !els.modalTitle || !els.modalContent) return;
+  els.modalTitle.textContent = title || 'Detalhes';
+  els.modalContent.innerHTML = html || '';
+  els.modalBackdrop.hidden = false;
+  document.body.classList.add('modal-open');
+}
+
+function closeModal() {
+  if (!els.modalBackdrop || !els.modalTitle || !els.modalContent) return;
+  els.modalBackdrop.hidden = true;
+  els.modalTitle.textContent = 'Detalhes';
+  els.modalContent.innerHTML = '';
+  document.body.classList.remove('modal-open');
+}
+
+function renderSelectedCount() {
+  if (!els.selectedCount) return;
+  els.selectedCount.textContent = `${selectedSet.size} selecionado(s)`;
+}
+
+function updateTelemetry(id, duration, bundleSize = 0) {
+  const current = telemetry.get(id) || { count: 0, total: 0, last: 0, best: Infinity, worst: 0, bundle: bundleSize };
+  current.count += 1;
+  current.total += duration;
+  current.last = duration;
+  current.best = Math.min(current.best, duration);
+  current.worst = Math.max(current.worst, duration);
+  if (bundleSize > 0) current.bundle = bundleSize;
+  telemetry.set(id, current);
+  renderTelemetry();
+}
+
+function formatKb(bytes) {
+  return bytes > 0 ? `${(bytes / 1024).toFixed(1)} KB` : '--';
+}
+
+function renderTelemetry() {
+  if (!els.telemetryBody) return;
+  
+  const allEntries = registry.map((mfe) => {
+    const entry = telemetry.get(mfe.id);
+    const avg = entry?.count ? entry.total / entry.count : 0;
+    return { mfe, entry, avg };
+  });
+  
+  const globalAvg = allEntries.reduce((sum, e) => sum + (e.avg || 0), 0) / allEntries.length || 0;
+  const globalBest = Math.min(...allEntries.map(e => e.entry?.best || Infinity).filter(v => v !== Infinity));
+  const globalWorst = Math.max(...allEntries.map(e => e.entry?.worst || 0));
+  const totalBundle = allEntries.reduce((sum, e) => sum + (e.entry?.bundle || 0), 0);
+  const totalMounts = allEntries.reduce((sum, e) => sum + (e.entry?.count || 0), 0);
+  
+  els.telemetryBody.innerHTML = registry
+    .map((mfe) => {
+      const entry = telemetry.get(mfe.id);
+      const avg = entry?.count ? entry.total / entry.count : 0;
+      const klass = avg > 1200 ? 'warn' : avg > 800 ? 'caution' : 'ok';
+      return `
+        <tr>
+          <td><strong>${mfe.label}</strong></td>
+          <td class="${klass}">${formatMs(avg)}</td>
+          <td>${formatMs(entry?.best || 0)}</td>
+          <td>${formatMs(entry?.worst || 0)}</td>
+          <td>${entry?.count || 0}</td>
+          <td>${formatKb(entry?.bundle || 0)}</td>
+        </tr>
+      `;
+    })
+    .join('') + `
+      <tr class="telemetry-summary">
+        <td><strong>Resumo</strong></td>
+        <td class="${globalAvg > 1200 ? 'warn' : globalAvg > 800 ? 'caution' : 'ok'}">${formatMs(globalAvg)}</td>
+        <td>${formatMs(globalBest === Infinity ? 0 : globalBest)}</td>
+        <td>${formatMs(globalWorst)}</td>
+        <td>${totalMounts}</td>
+        <td>${formatKb(totalBundle)}</td>
+      </tr>
+    `;
+}
+
+function normalizeLifecycle(mod, candidate, props) {
+  if (typeof candidate === 'function') return { destroy: async () => candidate() };
+  if (candidate && typeof candidate.destroy === 'function') return { destroy: async () => candidate.destroy() };
+  if (candidate && typeof candidate.teardown === 'function') return { destroy: async () => candidate.teardown() };
+  if (typeof mod.unmount === 'function') return { destroy: async () => mod.unmount(props) };
+  return { destroy: async () => { if (props?.outlet) props.outlet.innerHTML = ''; } };
+}
+
+async function mountRemote(mfe, outlet) {
+  const url = getRemoteUrl(mfe.id);
+  const started = performance.now();
+
+  let bundleSize = 0;
+  try {
+    // Tenta obter size via fetch HEAD primeiro
+    let headRes = await fetch(url, { method: 'HEAD' });
+    let cl = headRes.headers.get('content-length');
+    if (cl) {
+      bundleSize = parseInt(cl, 10);
+    } else {
+      // Se HEAD não retornar, faz GET completo e mede blob
+      const getRes = await fetch(url);
+      if (getRes.ok) {
+        cl = getRes.headers.get('content-length');
+        if (cl) {
+          bundleSize = parseInt(cl, 10);
+        } else {
+          const blob = await getRes.blob();
+          bundleSize = blob.size;
+        }
+      }
     }
+    console.log(`[shell] bundle ${mfe.id}: ${bundleSize} bytes`);
+  } catch (err) {
+    console.warn(`[shell] falha ao obter tamanho do bundle ${mfe.id}`, err);
+  }
+
+  const mod = await withTimeout(import(url), IMPORT_TIMEOUT_MS, `import ${mfe.id}`);
+  const props = {
+    host: 'native-federation-shell',
+    name: mfe.id,
+    id: mfe.id,
+    outlet,
+    replace: true,
   };
 
-  if (typeof candidate === 'function') {
-    return { teardown: async () => candidate(), updateMetrics };
+  let candidate = null;
+  if (typeof mod.render === 'function') {
+    candidate = await withTimeout(mod.render(outlet, props), MOUNT_TIMEOUT_MS, `render ${mfe.id}`);
+  } else if (typeof mod.mount === 'function') {
+    if (typeof mod.bootstrap === 'function') {
+      await withTimeout(mod.bootstrap(props), MOUNT_TIMEOUT_MS, `bootstrap ${mfe.id}`);
+    }
+    candidate = await withTimeout(mod.mount(props), MOUNT_TIMEOUT_MS, `mount ${mfe.id}`);
+  } else if (typeof mod.default === 'function') {
+    candidate = await withTimeout(mod.default(outlet, props), MOUNT_TIMEOUT_MS, `default ${mfe.id}`);
   }
 
-  if (candidate && typeof candidate.destroy === 'function') {
-    return { teardown: async () => candidate.destroy(), updateMetrics };
-  }
-
-  if (candidate && typeof candidate.teardown === 'function') {
-    return { teardown: async () => candidate.teardown(), updateMetrics };
-  }
-
-  if (mod && typeof mod.unmount === 'function') {
-    return { teardown: async () => mod.unmount(getProps?.()), updateMetrics };
-  }
-
-  return { teardown: fallback, updateMetrics };
+  const duration = performance.now() - started;
+  updateTelemetry(mfe.id, duration, bundleSize);
+  return normalizeLifecycle(mod, candidate, props);
 }
 
-async function teardownPrimary() {
-  if (primaryLifecycle?.teardown) {
+async function clearStage() {
+  if (activeStage.lifecycle?.destroy) {
     try {
-      await primaryLifecycle.teardown();
+      await withTimeout(activeStage.lifecycle.destroy(), DESTROY_TIMEOUT_MS, `destroy stage ${activeStage.id || ''}`);
     } catch (err) {
-      console.error('Falha ao desmontar primario', err);
+      console.warn('[shell] falha ao destruir stage', err);
     }
-    primaryLifecycle = null;
   }
-  primaryOutlet.innerHTML = '';
+  activeStage = { id: null, lifecycle: null };
+  if (els.stageOutlet) els.stageOutlet.innerHTML = '';
+  if (els.stageTitle) els.stageTitle.textContent = 'Nenhum MFE ativo';
+  if (els.stageSubtitle) els.stageSubtitle.textContent = 'Escolha um card para montar no palco.';
+  if (els.stageStatus) els.stageStatus.textContent = 'Pronto para montar.';
 }
 
-async function clearCombined() {
-  const tasks = Array.from(combinedLifecycles.values()).map((lifecycle) =>
-    Promise.resolve()
-      .then(() => lifecycle?.teardown && lifecycle.teardown())
-      .catch((err) => console.error('Falha ao desmontar combinado', err)),
-  );
-  combinedLifecycles.clear();
-  await Promise.all(tasks);
-  pageGrid.innerHTML = '';
-  pagePreviewError.textContent = '';
-  pagePreviewError.removeAttribute('data-visible');
-  pagePreview?.removeAttribute('data-error');
+function toggleStageCollapse() {
+  if (!els.stageOutlet) return;
+  els.stageOutlet.classList.toggle('collapsed');
 }
 
-function updatePrimaryButtons() {
-  primaryButtons.forEach((btn, id) => {
-    btn.classList.toggle('active', id === primaryKey);
-  });
-}
+async function activateStage(id) {
+  const mfe = registry.find((r) => r.id === id);
+  if (!mfe || !els.stageOutlet) return;
 
-function updateChips() {
-  chipButtons.forEach((chip, id) => {
-    chip.classList.toggle('selected', selectedSet.has(id));
-  });
-}
-
-async function mountPrimary(key) {
-  const mfe = registryMap.get(key);
-  if (!mfe) return;
-  primaryKey = key;
-  updatePrimaryButtons();
-
-  // Atualiza cabeçalho do palco central e botão de docs
-  if (primaryTitle) primaryTitle.textContent = mfe.label;
-  if (primarySummary) primarySummary.textContent = mfe.description;
-  if (stageHeader && !primaryDocButton) {
-    primaryDocButton = document.createElement('button');
-    primaryDocButton.type = 'button';
-    primaryDocButton.className = 'ghost';
-    primaryDocButton.textContent = 'Documentação do MFE';
-    registerInteractive(primaryDocButton);
-    stageHeader.appendChild(primaryDocButton);
-  }
-  if (stageHeader && !primaryBusButton) {
-    primaryBusButton = document.createElement('button');
-    primaryBusButton.type = 'button';
-    primaryBusButton.className = 'ghost';
-    primaryBusButton.textContent = 'BUS';
-    registerInteractive(primaryBusButton);
-    stageHeader.appendChild(primaryBusButton);
-  }
-  if (primaryDocButton) {
-    primaryDocButton.onclick = () => openModal(mfe.label, getDocHtmlFor(mfe.id));
-  }
-  if (primaryBusButton) {
-    primaryBusButton.onclick = () => openModal(`BUS · ${mfe.label}`, getBusLogHtml(mfe.id));
+  await clearStage();
+  if (els.stageTitle) els.stageTitle.textContent = `${mfe.label} ativo no palco`;
+  if (els.stageSubtitle) els.stageSubtitle.textContent = mfe.tagline;
+  if (els.stageStatus) els.stageStatus.textContent = `Carregando ${mfe.label}...`;
+  
+  // Expande o outlet ao carregar novo MFE
+  if (els.stageOutlet.classList.contains('collapsed')) {
+    els.stageOutlet.classList.remove('collapsed');
   }
 
-  // Aplicar acento do DS no palco principal
-  const primaryStageEl = document.getElementById('primary-stage');
-  primaryStageEl?.setAttribute('data-mfe', mfe.id);
-
-  setLoading(true);
   try {
-    await teardownPrimary();
-    const { lifecycle, metricsInput } = await mountWithBenchmark(mfe, primaryOutlet, {
-      compact: false,
-      metrics: getMetricsSnapshot(mfe.id),
+    const lifecycle = await mountRemote(mfe, els.stageOutlet);
+    activeStage = { id: mfe.id, lifecycle };
+    if (els.stageStatus) els.stageStatus.textContent = `${mfe.label} montado com sucesso.`;
+  } catch (error) {
+    console.error(`[shell] erro stage ${mfe.id}`, error);
+    if (els.stageStatus) els.stageStatus.textContent = `${mfe.label} falhou (erro/timeout).`;
+  }
+}
+
+async function clearPreviews() {
+  previewLoadToken += 1;
+
+  const destroys = [...previewLifecycles.entries()].map(async ([id, lifecycle]) => {
+    try {
+      await withTimeout(lifecycle?.destroy?.(), DESTROY_TIMEOUT_MS, `destroy preview ${id}`);
+    } catch (err) {
+      console.warn(`[shell] falha destroy preview ${id}`, err);
+    }
+  });
+  await Promise.allSettled(destroys);
+  previewLifecycles.clear();
+
+  if (els.previewGrid) {
+    els.previewGrid.innerHTML = '<p class="preview-empty">Nenhum preview carregado.</p>';
+  }
+}
+
+async function loadPreviews() {
+  if (!els.previewGrid) return;
+  previewLoadToken += 1;
+  const token = previewLoadToken;
+
+  await clearPreviews();
+  if (token !== previewLoadToken) return;
+
+  const selected = registry.filter((mfe) => selectedSet.has(mfe.id));
+  if (!selected.length) {
+    els.previewGrid.innerHTML = '<p class="preview-empty">Selecione ao menos 1 MFE.</p>';
+    return;
+  }
+
+  els.previewGrid.innerHTML = '';
+
+  const renderMap = new Map();
+  selected.forEach((mfe) => {
+    const card = document.createElement('article');
+    card.className = 'preview-card';
+    card.innerHTML = `
+      <div class="preview-title">
+        <strong>${mfe.label}</strong>
+        <span class="preview-status loading" data-status="${mfe.id}">Carregando</span>
+      </div>
+      <div id="preview-outlet-${mfe.id}" class="preview-outlet"></div>
+    `;
+    els.previewGrid.appendChild(card);
+    renderMap.set(mfe.id, {
+      outlet: card.querySelector(`#preview-outlet-${mfe.id}`),
+      status: card.querySelector(`[data-status="${mfe.id}"]`),
     });
-    primaryLifecycle = lifecycle;
-    const metrics = recordMetrics(mfe.id, metricsInput);
-    primaryLifecycle.updateMetrics?.(metrics);
-    applyTelemetryBadges(mfe.id, metrics);
-    updateInsights();
-  } catch (err) {
-    console.error(`Falha ao carregar ${mfe.label} no painel principal`, err);
-    primaryOutlet.innerHTML =
-      '<p class="slot-placeholder"><strong>Erro:</strong> Não foi possível carregar este MFE. Consulte o console.</p>';
-  } finally {
-    setLoading(false);
-    updatePrimaryButtons();
-  }
-}
+  });
 
-async function renderCombinedPanel() {
-  setLoading(true);
-  try {
-    await clearCombined();
-    if (selectedSet.size === 0) {
-      const empty = document.createElement('p');
-      empty.className = 'empty-state';
-      empty.textContent = 'Nenhum MFE selecionado. Escolha itens no seletor para preencher o painel.';
-      pageGrid.appendChild(empty);
-      return;
-    }
-
-    let hasUpdates = false;
-    const tasks = Array.from(selectedSet).map(async (id) => {
-      const mfe = registryMap.get(id);
-const slot = document.createElement('div');
-slot.className = `page-slot ds-card ${layoutClasses[id] || ''}`;
-slot.dataset.mfe = id;
-
-      // Header
-      const header = document.createElement('header');
-      const title = document.createElement('span');
-      title.className = 'slot-title';
-      title.textContent = mfe.label;
-      const actions = document.createElement('div');
-      actions.className = 'slot-actions';
-      const depBadge = document.createElement('span');
-      depBadge.className = 'slot-version ds-badge ds-badge--muted';
-      depBadge.textContent = mfe.depPolicy || 'Policy n/a';
-const sizeBadge = document.createElement('span');
-sizeBadge.className = 'slot-bundle ds-badge ds-badge--accent';
-      sizeBadge.textContent = '...';
-      if (bundleSizes.has(mfe.remote)) {
-        sizeBadge.textContent = formatBytes(bundleSizes.get(mfe.remote));
-      } else {
-        void fetchBundleSize(mfe.remote)
-          .then((len) => {
-            sizeBadge.textContent = formatBytes(len);
-            // Recalcula ranking/rodapé quando tamanho chegar
-            updateInsightsTable();
-          })
-          .catch(() => (sizeBadge.textContent = '--'));
-      }
-const busBtn = document.createElement('button');
-busBtn.type = 'button';
-busBtn.className = 'slot-doc ds-button ds-button--ghost';
-busBtn.textContent = 'BUS';
-busBtn.addEventListener('click', () => openModal(`BUS · ${mfe.label}`, getBusLogHtml(id)));
-registerInteractive(busBtn);
-
-const docBtn = document.createElement('button');
-docBtn.type = 'button';
-docBtn.className = 'slot-doc ds-button ds-button--ghost';
-docBtn.textContent = 'Documentação';
-docBtn.addEventListener('click', () => openModal(mfe.label, getDocHtmlFor(id)));
-registerInteractive(docBtn);
-
-actions.appendChild(sizeBadge);
-actions.appendChild(depBadge);
-const versionBadge = document.createElement('span');
-versionBadge.className = 'slot-version ds-badge ds-badge--muted';
-versionBadge.textContent = '--';
-actions.appendChild(versionBadge);
-actions.appendChild(busBtn);
-actions.appendChild(docBtn);
-header.appendChild(title);
-header.appendChild(actions);
-
-      // Tagline
-      const tagline = document.createElement('p');
-      tagline.className = 'slot-tagline';
-      tagline.textContent = mfe.tagline;
-
-      // Body
-      const body = document.createElement('div');
-      body.className = 'slot-body';
-      const placeholder = document.createElement('p');
-      placeholder.className = 'slot-placeholder';
-      placeholder.textContent = 'Renderização compacta. O conteúdo aparecerá aqui.';
-      const surface = document.createElement('div');
-      surface.className = 'slot-surface';
-
-body.appendChild(placeholder);
-body.appendChild(surface);
-slot.appendChild(header);
-slot.appendChild(tagline);
-
-// Barra unificada de métricas do card (Design System)
-const metricsBar = document.createElement('div');
-metricsBar.className = 'ds-metrics';
-const snapshot = getMetricsSnapshot(id);
-const avgEl = document.createElement('span');
-avgEl.className = 'ds-badge';
-avgEl.innerHTML = `<strong>Média:</strong> ${toMetricLabel(snapshot.average)}`;
-const bestEl = document.createElement('span');
-bestEl.className = 'ds-badge';
-bestEl.innerHTML = `<strong>Melhor:</strong> ${toMetricLabel(snapshot.best)}`;
-const worstEl = document.createElement('span');
-worstEl.className = 'ds-badge';
-worstEl.innerHTML = `<strong>Pior:</strong> ${toMetricLabel(snapshot.worst)}`;
-const countEl = document.createElement('span');
-countEl.className = 'ds-badge';
-countEl.innerHTML = `<strong>Amostras:</strong> ${String(snapshot.count)}`;
-metricsBar.append(avgEl, bestEl, worstEl, countEl);
-layoutSlots.set(id, { metricsEls: { avgEl, bestEl, worstEl, countEl }, versionEl: versionBadge });
-
-slot.appendChild(metricsBar);
-slot.appendChild(body);
-pageGrid.appendChild(slot);
-
+  await Promise.allSettled(
+    selected.map(async (mfe) => {
+      if (token !== previewLoadToken) return;
+      const ui = renderMap.get(mfe.id);
+      if (!ui?.outlet || !ui?.status) return;
       try {
-        const { lifecycle, metricsInput } = await mountWithBenchmark(mfe, surface, {
-          compact: true,
-          metrics: getMetricsSnapshot(id),
-        });
-        combinedLifecycles.set(id, lifecycle);
-        const metrics = recordMetrics(id, metricsInput);
-        lifecycle.updateMetrics?.(metrics);
-        applyTelemetryBadges(id, metrics);
-        slot.classList.add('is-active');
-        hasUpdates = true;
-        // Tenta descobrir versão: primeiro por propriedade registrada, depois extraindo do DOM do surface
-        try {
-          let version = registryMap.get(id)?.version;
-          if (!version || version === '--') {
-            const found = findVersionFromSurface(surface);
-            version = found || version || '--';
-            if (version && registryMap.get(id)) registryMap.get(id).version = version;
-          }
-          if (version) {
-            const ls = layoutSlots.get(id);
-            if (ls && ls.versionEl) ls.versionEl.textContent = version;
-          }
-          // Atualiza ranking caso a versão tenha sido descoberta
-          updateInsightsTable();
-        } catch (e) {
-          // ignore
-        }
-      } catch (err) {
-        console.error(`Falha ao carregar ${mfe.label} no painel combinado`, err);
-        const errorMsg = document.createElement('p');
-        errorMsg.className = 'slot-placeholder';
-        errorMsg.innerHTML = `<strong>${mfe.label}</strong><br/>Não foi possível carregar este MFE agora.`;
-        body.appendChild(errorMsg);
+        const lifecycle = await mountRemote(mfe, ui.outlet);
+        previewLifecycles.set(mfe.id, lifecycle);
+        ui.status.textContent = 'OK';
+        ui.status.className = 'preview-status ok';
+      } catch (error) {
+        console.error(`[shell] erro preview ${mfe.id}`, error);
+        ui.outlet.innerHTML = '<p class="muted">Falha/timeout ao montar.</p>';
+        ui.status.textContent = 'Erro';
+        ui.status.className = 'preview-status error';
       }
-    });
-
-    await Promise.all(tasks);
-    if (hasUpdates) {
-      updateInsights();
-    }
-
-    if (combinedLifecycles.size !== selectedSet.size) {
-      pagePreview?.setAttribute('data-error', 'true');
-      pagePreviewError.textContent = 'Alguns MFEs não responderam. Recarregue ou verifique os serviços.';
-      pagePreviewError.setAttribute('data-visible', 'true');
-    }
-  } finally {
-    setLoading(false);
-  }
+    }),
+  );
 }
 
-function toggleSelection(id) {
-  if (selectedSet.has(id)) {
-    selectedSet.delete(id);
-  } else {
-    selectedSet.add(id);
-  }
-  updateChips();
-  void renderCombinedPanel();
-}
-
-function buildMenus() {
+function renderQuickNav() {
+  if (!els.quickNav) return;
+  els.quickNav.innerHTML = '';
   registry.forEach((mfe) => {
-    const primaryBtn = document.createElement('button');
-    primaryBtn.type = 'button';
-    primaryBtn.className = 'nav-button';
-    primaryBtn.textContent = mfe.label;
-    primaryBtn.dataset.mfe = mfe.id;
-    primaryBtn.addEventListener('click', () => void mountPrimary(mfe.id));
-    primaryControls.appendChild(primaryBtn);
-    primaryButtons.set(mfe.id, primaryBtn);
-    registerInteractive(primaryBtn);
-
-    const chip = document.createElement('button');
-    chip.type = 'button';
-    chip.className = 'multi-chip';
-    chip.textContent = mfe.label;
-    chip.dataset.mfe = mfe.id;
-    chip.addEventListener('click', () => toggleSelection(mfe.id));
-    multiToggle.appendChild(chip);
-    chipButtons.set(mfe.id, chip);
-    registerInteractive(chip);
-  });
-
-  [btnPanel, btnSelectAll, btnSelectNone].forEach((btn) => registerInteractive(btn));
-
-  btnPanel.addEventListener('click', () => void renderCombinedPanel());
-  btnSelectAll.addEventListener('click', () => {
-    registry.forEach((mfe) => selectedSet.add(mfe.id));
-    updateChips();
-    void renderCombinedPanel();
-  });
-  btnSelectNone.addEventListener('click', () => {
-    selectedSet.clear();
-    updateChips();
-    void renderCombinedPanel();
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn';
+    btn.textContent = mfe.label;
+    btn.addEventListener('click', () => {
+      void activateStage(mfe.id);
+    });
+    els.quickNav.appendChild(btn);
   });
 }
 
-async function loadMfeVersions() {
-  try {
-    const res = await fetch('./mfe-versions.json');
-    if (!res.ok) return;
-    const map = await res.json();
-    console.info('mfe-versions.json loaded', map);
-    Object.keys(map).forEach((id) => {
-      const reg = registryMap.get(id);
-      if (reg) {
-        console.info(`Assigning version for MFE id=${id}: ${map[id]}`);
-        reg.version = map[id];
-      } else {
-        console.warn(`mfe-versions.json contains id=${id} that is not in registryMap`);
-      }
+function renderCards() {
+  if (!els.cardsGrid) return;
+  els.cardsGrid.innerHTML = '';
+
+  registry.forEach((mfe) => {
+    const card = document.createElement('article');
+    card.className = 'mfe-card';
+    card.innerHTML = `
+      <div class="mfe-card-head">
+        <div>
+          <h3 class="mfe-card-title">${mfe.label}</h3>
+          <p class="mfe-card-description">${mfe.tagline}</p>
+        </div>
+        <label class="checkline">
+          <input type="checkbox" ${selectedSet.has(mfe.id) ? 'checked' : ''} />
+          Preview
+        </label>
+      </div>
+      <div class="mfe-card-actions">
+        <button type="button" class="btn btn-primary" data-action="stage">Abrir no palco</button>
+        <button type="button" class="btn" data-action="docs">Docs</button>
+        <button type="button" class="btn" data-action="bus">BUS</button>
+      </div>
+    `;
+
+    const checkbox = card.querySelector('input[type="checkbox"]');
+    checkbox?.addEventListener('change', () => {
+      if (checkbox.checked) selectedSet.add(mfe.id);
+      else selectedSet.delete(mfe.id);
+      renderSelectedCount();
     });
-  } catch (e) {
-    console.warn('Failed loading mfe-versions.json', e);
+
+    card.querySelector('[data-action="stage"]')?.addEventListener('click', () => {
+      void activateStage(mfe.id);
+    });
+
+    card.querySelector('[data-action="docs"]')?.addEventListener('click', () => {
+      openModal(
+        `Docs · ${mfe.label}`,
+        `
+          <h3>${mfe.label}</h3>
+          <p>${mfe.doc}</p>
+          <h3>Remote atual</h3>
+          <pre><code>${getRemoteUrl(mfe.id)}</code></pre>
+        `,
+      );
+    });
+
+    card.querySelector('[data-action="bus"]')?.addEventListener('click', () => {
+      openModal(`BUS · ${mfe.label}`, toBusHtml());
+    });
+
+    els.cardsGrid.appendChild(card);
+  });
+}
+
+async function loadManifest() {
+  const file = manifestCandidates[REMOTE_MANIFEST_ENV] || manifestCandidates.dev;
+  try {
+    const res = await fetch(file);
+    if (!res.ok) return;
+    const payload = await res.json();
+    if (payload?.remotes && typeof payload.remotes === 'object') {
+      runtimeRemotes = { ...defaultRemotes, ...payload.remotes };
+      window.localStorage.setItem('mfe-env', payload.env || REMOTE_MANIFEST_ENV);
+    }
+  } catch (error) {
+    console.warn('[shell] manifest indisponível, usando defaults', error);
   }
+}
+
+function wireEvents() {
+  window.addEventListener('BUS', trackBus);
+
+  els.sectionHead?.addEventListener('click', () => {
+    toggleStageCollapse();
+  });
+
+  els.btnOpenOverview?.addEventListener('click', () => {
+    openModal(
+      'Visão geral do shell',
+      `
+        <h3>Objetivo</h3>
+        <p>Organizar os MFEs com foco, previsibilidade e baixo acoplamento.</p>
+        <h3>Decisões desta versão</h3>
+        <ul>
+          <li>Sem auto-carga pesada no boot.</li>
+          <li>Previews sob demanda (clique em “Carregar previews”).</li>
+          <li>Timeout e fallback por remote.</li>
+          <li>Modal e BUS preservados.</li>
+        </ul>
+      `,
+    );
+  });
+
+  els.btnOpenBus?.addEventListener('click', () => {
+    openModal('Eventos BUS', toBusHtml());
+  });
+
+  els.btnBusTest?.addEventListener('click', () => {
+    window.dispatchEvent(
+      new CustomEvent('BUS', {
+        detail: {
+          id: 'shell',
+          name: 'SHELL-PING',
+          at: new Date().toISOString(),
+        },
+      }),
+    );
+  });
+
+  els.btnClearStage?.addEventListener('click', () => {
+    void clearStage();
+  });
+
+  els.btnSelectAll?.addEventListener('click', () => {
+    registry.forEach((m) => selectedSet.add(m.id));
+    renderCards();
+    renderSelectedCount();
+  });
+
+  els.btnSelectNone?.addEventListener('click', () => {
+    selectedSet.clear();
+    renderCards();
+    renderSelectedCount();
+  });
+
+  els.btnLoadPreview?.addEventListener('click', () => {
+    void loadPreviews();
+  });
+
+  els.btnClearPreview?.addEventListener('click', () => {
+    void clearPreviews();
+  });
+
+  els.modalClose?.addEventListener('click', closeModal);
+
+  els.modalBackdrop?.addEventListener('click', (event) => {
+    if (event.target === els.modalBackdrop) {
+      closeModal();
+    }
+  });
+
+  window.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !els.modalBackdrop?.hidden) {
+      closeModal();
+    }
+  });
 }
 
 async function init() {
-  await loadRemoteManifest();
-  registry.forEach((mfe) => {
-    mfe.remote = getRemoteUrl(mfe.id);
-  });
-  await loadMfeVersions();
-  buildMenus();
-  updatePrimaryButtons();
-  updateChips();
-  updateInsights();
-
-  // Listeners de BUS/telemetria
-  window.__busLogs = window.__busLogs || [];
-  window.addEventListener('BUS', (event) => {
-    const entry = { at: new Date().toLocaleTimeString(), detail: event.detail };
-    window.__busLogs.push(entry);
-    if (window.__busLogs.length > 50) window.__busLogs.shift();
-    console.log('Shell NF recebeu BUS', event.detail);
-  });
-
-  // Modal: overview + fechar + backdrop + ESC
-  docOverviewButtons.forEach((btn) =>
-    btn.addEventListener('click', () => openModal('Manifesto Native Federation', getDocHtmlFor('overview'))),
-  );
-  closeModalButton?.addEventListener('click', closeModal);
-  modalBackdrop?.addEventListener('click', (e) => {
-    if (e.target === modalBackdrop) closeModal();
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !modalBackdrop.hidden) closeModal();
-  });
-
-  // Scroll para painel de controles
-  btnScrollControls?.addEventListener('click', () => {
-    controlPanel?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
-
-  void mountPrimary(primaryKey).then(() => renderCombinedPanel());
+  await loadManifest();
+  wireEvents();
+  renderTelemetry();
+  renderQuickNav();
+  renderCards();
+  renderSelectedCount();
+  updateBusCount();
 }
 
-init();
+init().catch((error) => {
+  console.error('[shell] init error', error);
+  if (els.stageStatus) {
+    els.stageStatus.textContent = 'Falha ao inicializar shell.';
+  }
+});

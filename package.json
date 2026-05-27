@@ -1,0 +1,42 @@
+{
+  "name": "mfe-labs",
+  "version": "2.0.0",
+  "description": "MFE Federation Simulation Lab - Real-world bundle metrics with Native/Module/Single-SPA federation",
+  "private": true,
+  "scripts": {
+    "start": "BUILD_FIRST=1 bash ./run-native-shell.sh",
+    "start:dev": "BUILD_FIRST=0 bash ./run-native-shell.sh",
+    "start:versions-only": "GENERATE_ONLY=1 bash ./run-native-shell.sh",
+    "build:all": "npm run build:mfes && npm run build:shell",
+    "build:mfes": "for dir in MFEs/*/*; do [ -d \"$dir\" ] && (cd \"$dir\" && npm run build 2>/dev/null || true); done",
+    "build:shell": "cd native-federation-shell-angular && npm run build 2>/dev/null || echo 'Shell build not available'",
+    "stop": "bash ./.run-scripts/stop-all.sh",
+    "logs": "tail -f .run-logs/*.log",
+    "logs:shell": "tail -f .run-logs/shell.log",
+    "logs:mfes": "tail -f .run-logs/mfe*.log",
+    "clean": "npm run clean:mfes && npm run clean:shell",
+    "clean:mfes": "for dir in MFEs/*/*; do [ -d \"$dir\" ] && (cd \"$dir\" && rm -rf node_modules dist .angular 2>/dev/null || true); done",
+    "clean:shell": "cd native-federation-shell-angular && rm -rf node_modules .angular 2>/dev/null || true",
+    "validate:deps": "node .run-scripts/validate-shared-deps.js",
+    "validate:governance": "node .run-scripts/validate-remote-governance.js --env=dev --check-live=false",
+    "health-check": "bash ./.run-scripts/health-check.sh",
+    "status": "bash ./.run-scripts/status.sh",
+    "open:shell": "open http://localhost:8080 || xdg-open http://localhost:8080 || start http://localhost:8080"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "keywords": [
+    "mfe",
+    "micro-frontend",
+    "federation",
+    "native-federation",
+    "module-federation",
+    "single-spa",
+    "bundle-analysis"
+  ],
+  "author": "MFE-LABS Team",
+  "license": "MIT",
+  "devDependencies": {}
+}

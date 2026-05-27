@@ -1,27 +1,4 @@
 
-> mfe-ng-full@0.1.0 start
-> npm run package && npm run serve
-
-
-> mfe-ng-full@0.1.0 package
-> ng build mfe-ng-full --configuration production && node tools/package-webcomponent.mjs
-
-[33m❯[39m Building...
-[32m✔[39m Building...
-[1mInitial chunk files[22m[2m | [22m[1mNames[22m        [2m | [22m [1mRaw size[22m[2m | [22m[1mEstimated transfer size[22m
-[32mmain.js[39m            [2m | [22m[2mmain[22m         [2m | [22m[36m252.68 kB[39m[2m | [22m               [36m72.06 kB[39m
-[32mpolyfills.js[39m       [2m | [22m[2mpolyfills[22m    [2m | [22m [36m34.59 kB[39m[2m | [22m               [36m11.33 kB[39m
-[32mstyles.css[39m         [2m | [22m[2mstyles[22m       [2m | [22m  [36m3.18 kB[39m[2m | [22m              [36m821 bytes[39m
-
-[1m [22m                  [2m | [22m[1mInitial total[22m[2m | [22m[1m290.45 kB[22m[2m | [22m               [1m84.21 kB[22m
-
-Application bundle generation complete. [1.688 seconds] - 2026-05-27T01:35:00.582Z
-
-Output location: C:\Users\rodri\OneDrive\Imagens\Documentos\ESTUDO\MFE-LABS\MFEs\angular\mfe-ng-full\dist
-
-Bundle copiado para C:\Users\rodri\OneDrive\Imagens\Documentos\ESTUDO\MFE-LABS\MFEs\angular\mfe-ng-full\dist-webcomponent
-Sirva com: serve -l 9400 C:\Users\rodri\OneDrive\Imagens\Documentos\ESTUDO\MFE-LABS\MFEs\angular\mfe-ng-full\dist-webcomponent
-
 > mfe-ng-full@0.1.0 serve
 > node tools/serve-webcomponent.mjs
 

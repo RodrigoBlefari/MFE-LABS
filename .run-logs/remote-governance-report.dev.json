@@ -1,0 +1,65 @@
+{
+  "env": "dev",
+  "remotesFile": "C:\\Users\\rodri\\OneDrive\\Imagens\\Documentos\\ESTUDO\\MFE-LABS\\native-federation-shell-angular\\remotes.dev.json",
+  "checkLive": false,
+  "checkedAt": "2026-05-27T20:15:52.982Z",
+  "results": {
+    "nf": {
+      "url": "http://localhost:9101/mfe1.js",
+      "staticChecks": {
+        "requireHttps": true,
+        "allowedHost": true
+      },
+      "liveChecks": null
+    },
+    "mf": {
+      "url": "http://localhost:9301/remote-a.js",
+      "staticChecks": {
+        "requireHttps": true,
+        "allowedHost": true
+      },
+      "liveChecks": null
+    },
+    "ssa": {
+      "url": "http://localhost:9302/mfe-a.js",
+      "staticChecks": {
+        "requireHttps": true,
+        "allowedHost": true
+      },
+      "liveChecks": null
+    },
+    "ng": {
+      "url": "http://localhost:9310/mfe-ng.js",
+      "staticChecks": {
+        "requireHttps": true,
+        "allowedHost": true
+      },
+      "liveChecks": null
+    },
+    "ng-full": {
+      "url": "http://localhost:9400/mfe-ng-full.js",
+      "staticChecks": {
+        "requireHttps": true,
+        "allowedHost": true
+      },
+      "liveChecks": null
+    },
+    "react": {
+      "url": "http://localhost:9201/mfe-react.js",
+      "staticChecks": {
+        "requireHttps": true,
+        "allowedHost": true
+      },
+      "liveChecks": null
+    },
+    "vue": {
+      "url": "http://localhost:9001/mfe-vue.js",
+      "staticChecks": {
+        "requireHttps": true,
+        "allowedHost": true
+      },
+      "liveChecks": null
+    }
+  },
+  "errors": []
+}
