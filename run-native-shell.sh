@@ -16,6 +16,13 @@ if ! node "$ROOT_DIR/.run-scripts/validate-shared-deps.js"; then
   exit 3
 fi
 
+MFE_ENV="${MFE_ENV:-dev}"
+echo "[run-native-shell] Validando governança de remotos (env=$MFE_ENV)..."
+if ! node "$ROOT_DIR/.run-scripts/validate-remote-governance.js" --env="$MFE_ENV" --check-live=false; then
+  echo "[run-native-shell] Falha na validação de governança de remotos. Abortando startup." >&2
+  exit 4
+fi
+
 SHELL_DIR="$ROOT_DIR/native-federation-shell-angular"
 
 if [ ! -d "$SHELL_DIR" ]; then

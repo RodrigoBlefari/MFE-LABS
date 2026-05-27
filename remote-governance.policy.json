@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "environments": {
+    "dev": {
+      "requireHttps": false,
+      "allowedHosts": [
+        "localhost"
+      ],
+      "requiredHeaders": [
+        "access-control-allow-origin"
+      ]
+    },
+    "hml": {
+      "requireHttps": true,
+      "allowedHosts": [
+        "hml.example.com"
+      ],
+      "requiredHeaders": [
+        "content-security-policy",
+        "access-control-allow-origin",
+        "cross-origin-resource-policy",
+        "x-content-type-options"
+      ]
+    },
+    "prod": {
+      "requireHttps": true,
+      "allowedHosts": [
+        "prod.example.com"
+      ],
+      "requiredHeaders": [
+        "content-security-policy",
+        "access-control-allow-origin",
+        "cross-origin-resource-policy",
+        "x-content-type-options"
+      ]
+    }
+  }
+}
