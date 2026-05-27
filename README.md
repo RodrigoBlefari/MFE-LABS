@@ -1,4 +1,4 @@
-﻿![Exemplo](exemplo.jpg)
+﻿![Exemplo](ranking.png)
 
 # MFF LABS • Native Federation Lab (ESM + Design System + Telemetria)
 

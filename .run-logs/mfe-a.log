@@ -1,0 +1,24 @@
+
+> @org/mfe-a@0.1.0 start
+> serve -l 9302 --cors .
+
+ UPDATE  The latest version of `serve` is 14.2.6
+ INFO  Accepting connections at http://localhost:9302
+ HTTP  26/05/2026 22:35:38 ::1 GET /
+ HTTP  26/05/2026 22:35:38 ::1 Returned 200 in 8 ms
+ HTTP  26/05/2026 22:42:09 ::1 HEAD /mfe-a.js
+ HTTP  26/05/2026 22:42:09 ::1 Returned 304 in 3 ms
+ HTTP  26/05/2026 22:42:09 ::1 GET /mfe-a.js
+ HTTP  26/05/2026 22:42:09 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:42:09 ::1 GET /mfe-a.js
+ HTTP  26/05/2026 22:42:09 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:42:09 ::1 GET /mfe-a.css
+ HTTP  26/05/2026 22:42:09 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:20 ::1 HEAD /mfe-a.js
+ HTTP  26/05/2026 22:45:20 ::1 Returned 200 in 2 ms
+ HTTP  26/05/2026 22:45:20 ::1 GET /mfe-a.js
+ HTTP  26/05/2026 22:45:20 ::1 Returned 200 in 2 ms
+ HTTP  26/05/2026 22:45:20 ::1 GET /mfe-a.css
+ HTTP  26/05/2026 22:45:20 ::1 Returned 304 in 2 ms
+
+ INFO  Gracefully shutting down. Please wait...

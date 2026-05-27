@@ -1,0 +1,1702 @@
++ set -euo pipefail
++++ dirname run-native-shell.sh
+++ cd .
+++ pwd
++ ROOT_DIR=/c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS
++ LOG_DIR=/c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-logs
++ mkdir -p /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-logs
++ echo '[run-native-shell] Root: /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS'
+[run-native-shell] Root: /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS
++ SHELL_DIR=/c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/native-federation-shell-angular
++ '[' '!' -d /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/native-federation-shell-angular ']'
++ PORTS=(9001 9101 9200 9201 9301 9302 9303 9310 9400)
++ echo '[run-native-shell] Liberando portas conhecidas...'
+[run-native-shell] Liberando portas conhecidas...
++ for p in "${PORTS[@]}"
++ kill_port 9001
++ local port=9001
++ echo '[kill] Tentando liberar porta 9001'
+[kill] Tentando liberar porta 9001
++ command -v fuser
++ command -v lsof
++ command -v ss
++ command -v netstat
++ command -v awk
+++ netstat -ano
+++ grep -E '[:.]9001 '
+++ head -n1
++ line='  TCP    0.0.0.0:9001           0.0.0.0:0              LISTENING       17136'
++ '[' -n '  TCP    0.0.0.0:9001           0.0.0.0:0              LISTENING       17136' ']'
+++ echo '  TCP    0.0.0.0:9001           0.0.0.0:0              LISTENING       17136'
+++ awk '{print $NF}'
++ pid=17136
++ '[' -n 17136 ']'
++ taskkill //F //PID 17136
+�XITO: o processo com PID 17136 foi finalizado.
++ for p in "${PORTS[@]}"
++ kill_port 9101
++ local port=9101
++ echo '[kill] Tentando liberar porta 9101'
+[kill] Tentando liberar porta 9101
++ command -v fuser
++ command -v lsof
++ command -v ss
++ command -v netstat
++ command -v awk
+++ netstat -ano
+++ grep -E '[:.]9101 '
+++ head -n1
++ line='  TCP    0.0.0.0:9101           0.0.0.0:0              LISTENING       51148'
++ '[' -n '  TCP    0.0.0.0:9101           0.0.0.0:0              LISTENING       51148' ']'
+++ echo '  TCP    0.0.0.0:9101           0.0.0.0:0              LISTENING       51148'
+++ awk '{print $NF}'
++ pid=51148
++ '[' -n 51148 ']'
++ taskkill //F //PID 51148
+�XITO: o processo com PID 51148 foi finalizado.
++ for p in "${PORTS[@]}"
++ kill_port 9200
++ local port=9200
++ echo '[kill] Tentando liberar porta 9200'
+[kill] Tentando liberar porta 9200
++ command -v fuser
++ command -v lsof
++ command -v ss
++ command -v netstat
++ command -v awk
+++ netstat -ano
+++ grep -E '[:.]9200 '
+++ head -n1
+++ true
++ line=
++ '[' -n '' ']'
++ for p in "${PORTS[@]}"
++ kill_port 9201
++ local port=9201
++ echo '[kill] Tentando liberar porta 9201'
+[kill] Tentando liberar porta 9201
++ command -v fuser
++ command -v lsof
++ command -v ss
++ command -v netstat
++ command -v awk
+++ netstat -ano
+++ grep -E '[:.]9201 '
+++ head -n1
++ line='  TCP    0.0.0.0:9201           0.0.0.0:0              LISTENING       50428'
++ '[' -n '  TCP    0.0.0.0:9201           0.0.0.0:0              LISTENING       50428' ']'
+++ echo '  TCP    0.0.0.0:9201           0.0.0.0:0              LISTENING       50428'
+++ awk '{print $NF}'
++ pid=50428
++ '[' -n 50428 ']'
++ taskkill //F //PID 50428
+�XITO: o processo com PID 50428 foi finalizado.
++ for p in "${PORTS[@]}"
++ kill_port 9301
++ local port=9301
++ echo '[kill] Tentando liberar porta 9301'
+[kill] Tentando liberar porta 9301
++ command -v fuser
++ command -v lsof
++ command -v ss
++ command -v netstat
++ command -v awk
+++ netstat -ano
+++ grep -E '[:.]9301 '
+++ head -n1
++ line='  TCP    0.0.0.0:9301           0.0.0.0:0              LISTENING       41760'
++ '[' -n '  TCP    0.0.0.0:9301           0.0.0.0:0              LISTENING       41760' ']'
+++ echo '  TCP    0.0.0.0:9301           0.0.0.0:0              LISTENING       41760'
+++ awk '{print $NF}'
++ pid=41760
++ '[' -n 41760 ']'
++ taskkill //F //PID 41760
+�XITO: o processo com PID 41760 foi finalizado.
++ for p in "${PORTS[@]}"
++ kill_port 9302
++ local port=9302
++ echo '[kill] Tentando liberar porta 9302'
+[kill] Tentando liberar porta 9302
++ command -v fuser
++ command -v lsof
++ command -v ss
++ command -v netstat
++ command -v awk
+++ netstat -ano
+++ grep -E '[:.]9302 '
+++ head -n1
++ line='  TCP    0.0.0.0:9302           0.0.0.0:0              LISTENING       56856'
++ '[' -n '  TCP    0.0.0.0:9302           0.0.0.0:0              LISTENING       56856' ']'
+++ echo '  TCP    0.0.0.0:9302           0.0.0.0:0              LISTENING       56856'
+++ awk '{print $NF}'
++ pid=56856
++ '[' -n 56856 ']'
++ taskkill //F //PID 56856
+�XITO: o processo com PID 56856 foi finalizado.
++ for p in "${PORTS[@]}"
++ kill_port 9303
++ local port=9303
++ echo '[kill] Tentando liberar porta 9303'
+[kill] Tentando liberar porta 9303
++ command -v fuser
++ command -v lsof
++ command -v ss
++ command -v netstat
++ command -v awk
+++ netstat -ano
+++ grep -E '[:.]9303 '
+++ head -n1
+++ true
++ line=
++ '[' -n '' ']'
++ for p in "${PORTS[@]}"
++ kill_port 9310
++ local port=9310
++ echo '[kill] Tentando liberar porta 9310'
+[kill] Tentando liberar porta 9310
++ command -v fuser
++ command -v lsof
++ command -v ss
++ command -v netstat
++ command -v awk
+++ netstat -ano
+++ grep -E '[:.]9310 '
+++ head -n1
++ line='  TCP    0.0.0.0:9310           0.0.0.0:0              LISTENING       52184'
++ '[' -n '  TCP    0.0.0.0:9310           0.0.0.0:0              LISTENING       52184' ']'
+++ echo '  TCP    0.0.0.0:9310           0.0.0.0:0              LISTENING       52184'
+++ awk '{print $NF}'
++ pid=52184
++ '[' -n 52184 ']'
++ taskkill //F //PID 52184
+�XITO: o processo com PID 52184 foi finalizado.
++ for p in "${PORTS[@]}"
++ kill_port 9400
++ local port=9400
++ echo '[kill] Tentando liberar porta 9400'
+[kill] Tentando liberar porta 9400
++ command -v fuser
++ command -v lsof
++ command -v ss
++ command -v netstat
++ command -v awk
+++ netstat -ano
+++ grep -E '[:.]9400 '
+++ head -n1
++ line='  TCP    [::1]:9400             [::]:0                 LISTENING       24440'
++ '[' -n '  TCP    [::1]:9400             [::]:0                 LISTENING       24440' ']'
+++ echo '  TCP    [::1]:9400             [::]:0                 LISTENING       24440'
+++ awk '{print $NF}'
++ pid=24440
++ '[' -n 24440 ']'
++ taskkill //F //PID 24440
+�XITO: o processo com PID 24440 foi finalizado.
++ ensure_nvm
++ load_nvm
++ '[' -n /c/Users/rodri/.nvm ']'
++ '[' -s /c/Users/rodri/.nvm/nvm.sh ']'
++ . /c/Users/rodri/.nvm/nvm.sh
+++ NVM_SCRIPT_SOURCE=']'
+++ '[' -z '' ']'
+++ export NVM_CD_FLAGS=
+++ NVM_CD_FLAGS=
+++ nvm_is_zsh
+++ '[' -n '' ']'
+++ '[' -z /c/Users/rodri/.nvm ']'
+++ case $NVM_DIR in
+++ unset NVM_SCRIPT_SOURCE
+++ nvm_process_parameters
+++ local NVM_AUTO_MODE
+++ NVM_AUTO_MODE=use
+++ '[' 0 -ne 0 ']'
+++ nvm_auto use
+++ local NVM_MODE
+++ NVM_MODE=use
+++ local VERSION
+++ local NVM_CURRENT
+++ '[' _use = _install ']'
+++ '[' _use = _use ']'
++++ nvm_ls_current
++++ local NVM_LS_CURRENT_NODE_PATH
+++++ command which node
++++ NVM_LS_CURRENT_NODE_PATH='/c/Program Files/nodejs/node'
+++++ nvm_version_dir iojs
+++++ local NVM_WHICH_DIR
+++++ NVM_WHICH_DIR=iojs
+++++ '[' -z iojs ']'
+++++ '[' iojs = new ']'
+++++ '[' _iojs = _iojs ']'
+++++ nvm_echo /c/Users/rodri/.nvm/versions/io.js
+++++ command printf '%s\n' /c/Users/rodri/.nvm/versions/io.js
++++ nvm_tree_contains_path /c/Users/rodri/.nvm/versions/io.js '/c/Program Files/nodejs/node'
++++ local tree
++++ tree=/c/Users/rodri/.nvm/versions/io.js
++++ local node_path
++++ node_path='/c/Program Files/nodejs/node'
++++ '[' @/c/Users/rodri/.nvm/versions/io.js@ = @@ ']'
++++ '[' '@/c/Program Files/nodejs/node@' = @@ ']'
++++ local previous_pathdir
++++ previous_pathdir='/c/Program Files/nodejs/node'
++++ local pathdir
+++++ dirname '/c/Program Files/nodejs/node'
++++ pathdir='/c/Program Files/nodejs'
++++ '[' '/c/Program Files/nodejs' '!=' '' ']'
++++ '[' '/c/Program Files/nodejs' '!=' . ']'
++++ '[' '/c/Program Files/nodejs' '!=' / ']'
++++ '[' '/c/Program Files/nodejs' '!=' /c/Users/rodri/.nvm/versions/io.js ']'
++++ '[' '/c/Program Files/nodejs' '!=' '/c/Program Files/nodejs/node' ']'
++++ previous_pathdir='/c/Program Files/nodejs'
+++++ dirname '/c/Program Files/nodejs'
++++ pathdir='/c/Program Files'
++++ '[' '/c/Program Files' '!=' '' ']'
++++ '[' '/c/Program Files' '!=' . ']'
++++ '[' '/c/Program Files' '!=' / ']'
++++ '[' '/c/Program Files' '!=' /c/Users/rodri/.nvm/versions/io.js ']'
++++ '[' '/c/Program Files' '!=' '/c/Program Files/nodejs' ']'
++++ previous_pathdir='/c/Program Files'
+++++ dirname '/c/Program Files'
++++ pathdir=/c
++++ '[' /c '!=' '' ']'
++++ '[' /c '!=' . ']'
++++ '[' /c '!=' / ']'
++++ '[' /c '!=' /c/Users/rodri/.nvm/versions/io.js ']'
++++ '[' /c '!=' '/c/Program Files' ']'
++++ previous_pathdir=/c
+++++ dirname /c
++++ pathdir=/
++++ '[' / '!=' '' ']'
++++ '[' / '!=' . ']'
++++ '[' / '!=' / ']'
++++ '[' / = /c/Users/rodri/.nvm/versions/io.js ']'
++++ nvm_tree_contains_path /c/Users/rodri/.nvm '/c/Program Files/nodejs/node'
++++ local tree
++++ tree=/c/Users/rodri/.nvm
++++ local node_path
++++ node_path='/c/Program Files/nodejs/node'
++++ '[' @/c/Users/rodri/.nvm@ = @@ ']'
++++ '[' '@/c/Program Files/nodejs/node@' = @@ ']'
++++ local previous_pathdir
++++ previous_pathdir='/c/Program Files/nodejs/node'
++++ local pathdir
+++++ dirname '/c/Program Files/nodejs/node'
++++ pathdir='/c/Program Files/nodejs'
++++ '[' '/c/Program Files/nodejs' '!=' '' ']'
++++ '[' '/c/Program Files/nodejs' '!=' . ']'
++++ '[' '/c/Program Files/nodejs' '!=' / ']'
++++ '[' '/c/Program Files/nodejs' '!=' /c/Users/rodri/.nvm ']'
++++ '[' '/c/Program Files/nodejs' '!=' '/c/Program Files/nodejs/node' ']'
++++ previous_pathdir='/c/Program Files/nodejs'
+++++ dirname '/c/Program Files/nodejs'
++++ pathdir='/c/Program Files'
++++ '[' '/c/Program Files' '!=' '' ']'
++++ '[' '/c/Program Files' '!=' . ']'
++++ '[' '/c/Program Files' '!=' / ']'
++++ '[' '/c/Program Files' '!=' /c/Users/rodri/.nvm ']'
++++ '[' '/c/Program Files' '!=' '/c/Program Files/nodejs' ']'
++++ previous_pathdir='/c/Program Files'
+++++ dirname '/c/Program Files'
++++ pathdir=/c
++++ '[' /c '!=' '' ']'
++++ '[' /c '!=' . ']'
++++ '[' /c '!=' / ']'
++++ '[' /c '!=' /c/Users/rodri/.nvm ']'
++++ '[' /c '!=' '/c/Program Files' ']'
++++ previous_pathdir=/c
+++++ dirname /c
++++ pathdir=/
++++ '[' / '!=' '' ']'
++++ '[' / '!=' . ']'
++++ '[' / '!=' / ']'
++++ '[' / = /c/Users/rodri/.nvm ']'
++++ nvm_echo system
++++ command printf '%s\n' system
+++ NVM_CURRENT=system
+++ '[' _system = _none ']'
+++ '[' _system = _system ']'
++++ nvm_resolve_local_alias default
+++ VERSION=v24.16.0
+++ '[' -n v24.16.0 ']'
+++ nvm use --silent v24.16.0
+++ '[' 3 -lt 1 ']'
+++ local DEFAULT_IFS
++++ nvm_echo t
++++ command printf '%s\n' t
++++ command tr t '\t'
+++ DEFAULT_IFS=' 	
+'
+++ '[' huxB '!=' ehuxB ']'
+++ set +e
+++ local EXIT_CODE
+++ IFS=' 	
+'
+++ nvm use --silent v24.16.0
+++ '[' 3 -lt 1 ']'
+++ local DEFAULT_IFS
++++ nvm_echo t
++++ command printf '%s\n' t
++++ command tr t '\t'
+++ DEFAULT_IFS=' 	
+'
+++ '[' huxB '!=' huxB ']'
+++ '[' huxB '!=' huxB ']'
+++ '[' -n /usr/bin/bash ']'
+++ '[' huxB '!=' huxB ']'
+++ '[' ' 	
+' '!=' ' 	
+' ']'
+++ local i
+++ for i in "$@"
+++ case $i in
+++ for i in "$@"
+++ case $i in
+++ for i in "$@"
+++ case $i in
+++ local COMMAND
+++ COMMAND=use
+++ shift
+++ local VERSION
+++ local ADDITIONAL_PARAMETERS
+++ case $COMMAND in
+++ local PROVIDED_VERSION
+++ local NVM_SILENT
+++ local NVM_SILENT_ARG
+++ local NVM_DELETE_PREFIX
+++ NVM_DELETE_PREFIX=0
+++ local NVM_LTS
+++ local IS_VERSION_FROM_NVMRC
+++ IS_VERSION_FROM_NVMRC=0
+++ '[' 2 -ne 0 ']'
+++ case "$1" in
+++ NVM_SILENT=1
+++ NVM_SILENT_ARG=--silent
+++ shift
+++ '[' 1 -ne 0 ']'
+++ case "$1" in
+++ '[' -n v24.16.0 ']'
+++ PROVIDED_VERSION=v24.16.0
+++ shift
+++ '[' 0 -ne 0 ']'
+++ '[' -n '' ']'
+++ '[' -z v24.16.0 ']'
++++ nvm_match_version v24.16.0
++++ local NVM_IOJS_PREFIX
+++++ nvm_iojs_prefix
+++++ nvm_echo iojs
+++++ command printf '%s\n' iojs
++++ NVM_IOJS_PREFIX=iojs
++++ local PROVIDED_VERSION
++++ PROVIDED_VERSION=v24.16.0
++++ case "_${PROVIDED_VERSION}" in
++++ nvm_version v24.16.0
++++ local PATTERN
++++ PATTERN=v24.16.0
++++ local VERSION
++++ '[' -z v24.16.0 ']'
++++ '[' v24.16.0 = current ']'
++++ local NVM_NODE_PREFIX
+++++ nvm_node_prefix
+++++ nvm_echo node
+++++ command printf '%s\n' node
++++ NVM_NODE_PREFIX=node
++++ case "_${PATTERN}" in
+++++ nvm_ls v24.16.0
+++++ local PATTERN
+++++ PATTERN=v24.16.0
+++++ local VERSIONS
+++++ VERSIONS=
+++++ '[' v24.16.0 = current ']'
+++++ local NVM_IOJS_PREFIX
+++++ command tail -1
++++++ nvm_iojs_prefix
++++++ nvm_echo iojs
++++++ command printf '%s\n' iojs
+++++ NVM_IOJS_PREFIX=iojs
+++++ local NVM_NODE_PREFIX
++++++ nvm_node_prefix
++++++ nvm_echo node
++++++ command printf '%s\n' node
+++++ NVM_NODE_PREFIX=node
+++++ local NVM_VERSION_DIR_IOJS
++++++ nvm_version_dir iojs
++++++ local NVM_WHICH_DIR
++++++ NVM_WHICH_DIR=iojs
++++++ '[' -z iojs ']'
++++++ '[' iojs = new ']'
++++++ '[' _iojs = _iojs ']'
++++++ nvm_echo /c/Users/rodri/.nvm/versions/io.js
++++++ command printf '%s\n' /c/Users/rodri/.nvm/versions/io.js
+++++ NVM_VERSION_DIR_IOJS=/c/Users/rodri/.nvm/versions/io.js
+++++ local NVM_VERSION_DIR_NEW
++++++ nvm_version_dir new
++++++ local NVM_WHICH_DIR
++++++ NVM_WHICH_DIR=new
++++++ '[' -z new ']'
++++++ '[' new = new ']'
++++++ nvm_echo /c/Users/rodri/.nvm/versions/node
++++++ command printf '%s\n' /c/Users/rodri/.nvm/versions/node
+++++ NVM_VERSION_DIR_NEW=/c/Users/rodri/.nvm/versions/node
+++++ local NVM_VERSION_DIR_OLD
++++++ nvm_version_dir old
++++++ local NVM_WHICH_DIR
++++++ NVM_WHICH_DIR=old
++++++ '[' -z old ']'
++++++ '[' old = new ']'
++++++ '[' _old = _iojs ']'
++++++ '[' _old = _old ']'
++++++ nvm_echo /c/Users/rodri/.nvm
++++++ command printf '%s\n' /c/Users/rodri/.nvm
+++++ NVM_VERSION_DIR_OLD=/c/Users/rodri/.nvm
+++++ case "${PATTERN}" in
+++++ nvm_resolve_local_alias v24.16.0
+++++ '[' -z v24.16.0 ']'
+++++ local VERSION
+++++ local EXIT_CODE
++++++ nvm_resolve_alias v24.16.0
++++++ '[' -z v24.16.0 ']'
++++++ local PATTERN
++++++ PATTERN=v24.16.0
++++++ local ALIAS
++++++ ALIAS=v24.16.0
++++++ local ALIAS_TEMP
++++++ local SEEN_ALIASES
++++++ SEEN_ALIASES=v24.16.0
++++++ local NVM_ALIAS_INDEX
++++++ NVM_ALIAS_INDEX=1
++++++ true
+++++++ nvm_alias v24.16.0
+++++++ command head -n 1
+++++++ command tail -n 1
+++++++ nvm_echo
+++++++ command printf '%s\n' ''
++++++ ALIAS_TEMP=
++++++ '[' -z '' ']'
++++++ break
++++++ '[' -n v24.16.0 ']'
++++++ '[' _v24.16.0 '!=' _v24.16.0 ']'
++++++ nvm_validate_implicit_alias v24.16.0
++++++ return 2
+++++ VERSION=
+++++ EXIT_CODE=2
+++++ '[' -z '' ']'
+++++ return 2
++++++ nvm_ensure_version_prefix v24.16.0
++++++ local NVM_VERSION
+++++++ nvm_strip_iojs_prefix v24.16.0
+++++++ local NVM_IOJS_PREFIX
+++++++ command sed -e 's/^\([0-9]\)/v\1/g'
++++++++ nvm_iojs_prefix
++++++++ nvm_echo iojs
++++++++ command printf '%s\n' iojs
+++++++ NVM_IOJS_PREFIX=iojs
+++++++ '[' v24.16.0 = iojs ']'
+++++++ nvm_echo v24.16.0
+++++++ command printf '%s\n' v24.16.0
++++++ NVM_VERSION=v24.16.0
++++++ nvm_is_iojs_version v24.16.0
++++++ case "${1-}" in
++++++ return 1
++++++ nvm_echo v24.16.0
++++++ command printf '%s\n' v24.16.0
+++++ PATTERN=v24.16.0
+++++ '[' v24.16.0 = N/A ']'
+++++ local NVM_PATTERN_STARTS_WITH_V
+++++ case $PATTERN in
+++++ NVM_PATTERN_STARTS_WITH_V=true
+++++ '[' true = true ']'
++++++ nvm_num_version_groups v24.16.0
++++++ local VERSION
++++++ VERSION=v24.16.0
++++++ VERSION=24.16.0
++++++ VERSION=24.16.0
++++++ '[' -z 24.16.0 ']'
++++++ local NVM_NUM_DOTS
+++++++ nvm_echo 24.16.0
+++++++ command printf '%s\n' 24.16.0
+++++++ command sed -e 's/[^\.]//g'
++++++ NVM_NUM_DOTS=..
++++++ local NVM_NUM_GROUPS
++++++ NVM_NUM_GROUPS=...
++++++ nvm_echo 3
++++++ command printf '%s\n' 3
+++++ '[' _3 = _3 ']'
+++++ nvm_is_version_installed v24.16.0
+++++ '[' -z v24.16.0 ']'
+++++ local NVM_NODE_BINARY
+++++ NVM_NODE_BINARY=node
++++++ nvm_get_os
++++++ local NVM_UNAME
+++++++ command uname -a
++++++ NVM_UNAME='MINGW64_NT-10.0-26200 DESKTOP-S6J3OLB 3.6.5-22c95533.x86_64 2025-10-10 12:02 UTC x86_64 Msys'
++++++ local NVM_OS
++++++ case "${NVM_UNAME}" in
++++++ NVM_OS=win
++++++ nvm_echo win
++++++ command printf '%s\n' win
+++++ '[' _win = _win ']'
+++++ NVM_NODE_BINARY=node.exe
++++++ nvm_version_path v24.16.0
+++++ '[' -x /c/Users/rodri/.nvm/versions/node/v24.16.0/bin/node.exe ']'
+++++ return 0
+++++ VERSIONS=v24.16.0
+++++ '[' '' = true ']'
+++++ '[' -z v24.16.0 ']'
+++++ nvm_echo v24.16.0
+++++ command printf '%s\n' v24.16.0
++++ VERSION=v24.16.0
++++ '[' -z v24.16.0 ']'
++++ '[' _v24.16.0 = _N/A ']'
++++ nvm_echo v24.16.0
++++ command printf '%s\n' v24.16.0
+++ VERSION=v24.16.0
+++ '[' -z v24.16.0 ']'
+++ '[' _v24.16.0 = _system ']'
+++ '[' _v24.16.0 = _∞ ']'
+++ '[' v24.16.0 = N/A ']'
+++ nvm_ensure_version_installed v24.16.0 0
+++ local PROVIDED_VERSION
+++ PROVIDED_VERSION=v24.16.0
+++ local IS_VERSION_FROM_NVMRC
+++ IS_VERSION_FROM_NVMRC=0
+++ '[' v24.16.0 = system ']'
+++ local LOCAL_VERSION
+++ local EXIT_CODE
++++ nvm_version v24.16.0
++++ local PATTERN
++++ PATTERN=v24.16.0
++++ local VERSION
++++ '[' -z v24.16.0 ']'
++++ '[' v24.16.0 = current ']'
++++ local NVM_NODE_PREFIX
+++++ nvm_node_prefix
+++++ nvm_echo node
+++++ command printf '%s\n' node
++++ NVM_NODE_PREFIX=node
++++ case "_${PATTERN}" in
+++++ nvm_ls v24.16.0
+++++ local PATTERN
+++++ PATTERN=v24.16.0
+++++ local VERSIONS
+++++ VERSIONS=
+++++ '[' v24.16.0 = current ']'
+++++ local NVM_IOJS_PREFIX
+++++ command tail -1
++++++ nvm_iojs_prefix
++++++ nvm_echo iojs
++++++ command printf '%s\n' iojs
+++++ NVM_IOJS_PREFIX=iojs
+++++ local NVM_NODE_PREFIX
++++++ nvm_node_prefix
++++++ nvm_echo node
++++++ command printf '%s\n' node
+++++ NVM_NODE_PREFIX=node
+++++ local NVM_VERSION_DIR_IOJS
++++++ nvm_version_dir iojs
++++++ local NVM_WHICH_DIR
++++++ NVM_WHICH_DIR=iojs
++++++ '[' -z iojs ']'
++++++ '[' iojs = new ']'
++++++ '[' _iojs = _iojs ']'
++++++ nvm_echo /c/Users/rodri/.nvm/versions/io.js
++++++ command printf '%s\n' /c/Users/rodri/.nvm/versions/io.js
+++++ NVM_VERSION_DIR_IOJS=/c/Users/rodri/.nvm/versions/io.js
+++++ local NVM_VERSION_DIR_NEW
++++++ nvm_version_dir new
++++++ local NVM_WHICH_DIR
++++++ NVM_WHICH_DIR=new
++++++ '[' -z new ']'
++++++ '[' new = new ']'
++++++ nvm_echo /c/Users/rodri/.nvm/versions/node
++++++ command printf '%s\n' /c/Users/rodri/.nvm/versions/node
+++++ NVM_VERSION_DIR_NEW=/c/Users/rodri/.nvm/versions/node
+++++ local NVM_VERSION_DIR_OLD
++++++ nvm_version_dir old
++++++ local NVM_WHICH_DIR
++++++ NVM_WHICH_DIR=old
++++++ '[' -z old ']'
++++++ '[' old = new ']'
++++++ '[' _old = _iojs ']'
++++++ '[' _old = _old ']'
++++++ nvm_echo /c/Users/rodri/.nvm
++++++ command printf '%s\n' /c/Users/rodri/.nvm
+++++ NVM_VERSION_DIR_OLD=/c/Users/rodri/.nvm
+++++ case "${PATTERN}" in
+++++ nvm_resolve_local_alias v24.16.0
+++++ '[' -z v24.16.0 ']'
+++++ local VERSION
+++++ local EXIT_CODE
++++++ nvm_resolve_alias v24.16.0
++++++ '[' -z v24.16.0 ']'
++++++ local PATTERN
++++++ PATTERN=v24.16.0
++++++ local ALIAS
++++++ ALIAS=v24.16.0
++++++ local ALIAS_TEMP
++++++ local SEEN_ALIASES
++++++ SEEN_ALIASES=v24.16.0
++++++ local NVM_ALIAS_INDEX
++++++ NVM_ALIAS_INDEX=1
++++++ true
+++++++ nvm_alias v24.16.0
+++++++ command head -n 1
+++++++ command tail -n 1
+++++++ nvm_echo
+++++++ command printf '%s\n' ''
++++++ ALIAS_TEMP=
++++++ '[' -z '' ']'
++++++ break
++++++ '[' -n v24.16.0 ']'
++++++ '[' _v24.16.0 '!=' _v24.16.0 ']'
++++++ nvm_validate_implicit_alias v24.16.0
++++++ return 2
+++++ VERSION=
+++++ EXIT_CODE=2
+++++ '[' -z '' ']'
+++++ return 2
++++++ nvm_ensure_version_prefix v24.16.0
++++++ local NVM_VERSION
+++++++ nvm_strip_iojs_prefix v24.16.0
+++++++ local NVM_IOJS_PREFIX
+++++++ command sed -e 's/^\([0-9]\)/v\1/g'
++++++++ nvm_iojs_prefix
++++++++ nvm_echo iojs
++++++++ command printf '%s\n' iojs
+++++++ NVM_IOJS_PREFIX=iojs
+++++++ '[' v24.16.0 = iojs ']'
+++++++ nvm_echo v24.16.0
+++++++ command printf '%s\n' v24.16.0
++++++ NVM_VERSION=v24.16.0
++++++ nvm_is_iojs_version v24.16.0
++++++ case "${1-}" in
++++++ return 1
++++++ nvm_echo v24.16.0
++++++ command printf '%s\n' v24.16.0
+++++ PATTERN=v24.16.0
+++++ '[' v24.16.0 = N/A ']'
+++++ local NVM_PATTERN_STARTS_WITH_V
+++++ case $PATTERN in
+++++ NVM_PATTERN_STARTS_WITH_V=true
+++++ '[' true = true ']'
++++++ nvm_num_version_groups v24.16.0
++++++ local VERSION
++++++ VERSION=v24.16.0
++++++ VERSION=24.16.0
++++++ VERSION=24.16.0
++++++ '[' -z 24.16.0 ']'
++++++ local NVM_NUM_DOTS
+++++++ nvm_echo 24.16.0
+++++++ command printf '%s\n' 24.16.0
+++++++ command sed -e 's/[^\.]//g'
++++++ NVM_NUM_DOTS=..
++++++ local NVM_NUM_GROUPS
++++++ NVM_NUM_GROUPS=...
++++++ nvm_echo 3
++++++ command printf '%s\n' 3
+++++ '[' _3 = _3 ']'
+++++ nvm_is_version_installed v24.16.0
+++++ '[' -z v24.16.0 ']'
+++++ local NVM_NODE_BINARY
+++++ NVM_NODE_BINARY=node
++++++ nvm_get_os
++++++ local NVM_UNAME
+++++++ command uname -a
++++++ NVM_UNAME='MINGW64_NT-10.0-26200 DESKTOP-S6J3OLB 3.6.5-22c95533.x86_64 2025-10-10 12:02 UTC x86_64 Msys'
++++++ local NVM_OS
++++++ case "${NVM_UNAME}" in
++++++ NVM_OS=win
++++++ nvm_echo win
++++++ command printf '%s\n' win
+++++ '[' _win = _win ']'
+++++ NVM_NODE_BINARY=node.exe
++++++ nvm_version_path v24.16.0
+++++ '[' -x /c/Users/rodri/.nvm/versions/node/v24.16.0/bin/node.exe ']'
+++++ return 0
+++++ VERSIONS=v24.16.0
+++++ '[' '' = true ']'
+++++ '[' -z v24.16.0 ']'
+++++ nvm_echo v24.16.0
+++++ command printf '%s\n' v24.16.0
++++ VERSION=v24.16.0
++++ '[' -z v24.16.0 ']'
++++ '[' _v24.16.0 = _N/A ']'
++++ nvm_echo v24.16.0
++++ command printf '%s\n' v24.16.0
+++ LOCAL_VERSION=v24.16.0
+++ EXIT_CODE=0
+++ local NVM_VERSION_DIR
+++ '[' 0 '!=' 0 ']'
+++ nvm_is_version_installed v24.16.0
+++ '[' -z v24.16.0 ']'
+++ local NVM_NODE_BINARY
+++ NVM_NODE_BINARY=node
++++ nvm_get_os
++++ local NVM_UNAME
+++++ command uname -a
++++ NVM_UNAME='MINGW64_NT-10.0-26200 DESKTOP-S6J3OLB 3.6.5-22c95533.x86_64 2025-10-10 12:02 UTC x86_64 Msys'
++++ local NVM_OS
++++ case "${NVM_UNAME}" in
++++ NVM_OS=win
++++ nvm_echo win
++++ command printf '%s\n' win
+++ '[' _win = _win ']'
+++ NVM_NODE_BINARY=node.exe
++++ nvm_version_path v24.16.0
+++ '[' -x /c/Users/rodri/.nvm/versions/node/v24.16.0/bin/node.exe ']'
+++ return 0
+++ local NVM_VERSION_DIR
++++ nvm_version_path v24.16.0
++++ local VERSION
++++ VERSION=v24.16.0
++++ '[' -z v24.16.0 ']'
++++ nvm_is_iojs_version v24.16.0
++++ case "${1-}" in
++++ return 1
++++ nvm_version_greater 0.12.0 v24.16.0
++++ command awk 'BEGIN {
+    if (ARGV[1] == "" || ARGV[2] == "") exit(1)
+    split(ARGV[1], a, /\./);
+    split(ARGV[2], b, /\./);
+    for (i=1; i<=3; i++) {
+      if (a[i] && a[i] !~ /^[0-9]+$/) exit(2);
+      if (b[i] && b[i] !~ /^[0-9]+$/) { exit(0); }
+      if (a[i] < b[i]) exit(3);
+      else if (a[i] > b[i]) exit(0);
+    }
+    exit(4)
+  }' 0.12.0 24.16.0
+++++ nvm_version_dir new
+++++ local NVM_WHICH_DIR
+++++ NVM_WHICH_DIR=new
+++++ '[' -z new ']'
+++++ '[' new = new ']'
+++++ nvm_echo /c/Users/rodri/.nvm/versions/node
+++++ command printf '%s\n' /c/Users/rodri/.nvm/versions/node
++++ nvm_echo /c/Users/rodri/.nvm/versions/node/v24.16.0
++++ command printf '%s\n' /c/Users/rodri/.nvm/versions/node/v24.16.0
+++ NVM_VERSION_DIR=/c/Users/rodri/.nvm/versions/node/v24.16.0
++++ nvm_change_path '/c/Users/rodri/bin:/mingw64/bin:/usr/local/bin:/usr/bin:/bin:/mingw64/bin:/usr/bin:/c/Users/rodri/bin:/c/Users/rodri/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/debugCommand:/c/Users/rodri/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/copilotCli:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR:/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/c/Program Files/dotnet:/c/Program Files/nodejs:/cmd:/c/Users/rodri/.local/bin:/c/Users/rodri/AppData/Local/Microsoft/WindowsApps:/c/Users/rodri/AppData/Local/Programs/Microsoft VS Code/bin:/c/Users/rodri/AppData/Roaming/npm:/usr/bin/vendor_perl:/usr/bin/core_perl' /bin /c/Users/rodri/.nvm/versions/node/v24.16.0
++++ '[' -z '/c/Users/rodri/bin:/mingw64/bin:/usr/local/bin:/usr/bin:/bin:/mingw64/bin:/usr/bin:/c/Users/rodri/bin:/c/Users/rodri/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/debugCommand:/c/Users/rodri/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/copilotCli:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR:/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/c/Program Files/dotnet:/c/Program Files/nodejs:/cmd:/c/Users/rodri/.local/bin:/c/Users/rodri/AppData/Local/Microsoft/WindowsApps:/c/Users/rodri/AppData/Local/Programs/Microsoft VS Code/bin:/c/Users/rodri/AppData/Roaming/npm:/usr/bin/vendor_perl:/usr/bin/core_perl' ']'
++++ nvm_echo '/c/Users/rodri/bin:/mingw64/bin:/usr/local/bin:/usr/bin:/bin:/mingw64/bin:/usr/bin:/c/Users/rodri/bin:/c/Users/rodri/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/debugCommand:/c/Users/rodri/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/copilotCli:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR:/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/c/Program Files/dotnet:/c/Program Files/nodejs:/cmd:/c/Users/rodri/.local/bin:/c/Users/rodri/AppData/Local/Microsoft/WindowsApps:/c/Users/rodri/AppData/Local/Programs/Microsoft VS Code/bin:/c/Users/rodri/AppData/Roaming/npm:/usr/bin/vendor_perl:/usr/bin/core_perl'
++++ command printf '%s\n' '/c/Users/rodri/bin:/mingw64/bin:/usr/local/bin:/usr/bin:/bin:/mingw64/bin:/usr/bin:/c/Users/rodri/bin:/c/Users/rodri/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/debugCommand:/c/Users/rodri/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/copilotCli:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR:/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/c/Program Files/dotnet:/c/Program Files/nodejs:/cmd:/c/Users/rodri/.local/bin:/c/Users/rodri/AppData/Local/Microsoft/WindowsApps:/c/Users/rodri/AppData/Local/Programs/Microsoft VS Code/bin:/c/Users/rodri/AppData/Roaming/npm:/usr/bin/vendor_perl:/usr/bin/core_perl'
++++ nvm_grep -q '/c/Users/rodri/.nvm/[^/]*/bin'
++++ GREP_OPTIONS=
++++ command grep -q '/c/Users/rodri/.nvm/[^/]*/bin'
++++ nvm_echo '/c/Users/rodri/bin:/mingw64/bin:/usr/local/bin:/usr/bin:/bin:/mingw64/bin:/usr/bin:/c/Users/rodri/bin:/c/Users/rodri/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/debugCommand:/c/Users/rodri/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/copilotCli:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR:/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/c/Program Files/dotnet:/c/Program Files/nodejs:/cmd:/c/Users/rodri/.local/bin:/c/Users/rodri/AppData/Local/Microsoft/WindowsApps:/c/Users/rodri/AppData/Local/Programs/Microsoft VS Code/bin:/c/Users/rodri/AppData/Roaming/npm:/usr/bin/vendor_perl:/usr/bin/core_perl'
++++ command printf '%s\n' '/c/Users/rodri/bin:/mingw64/bin:/usr/local/bin:/usr/bin:/bin:/mingw64/bin:/usr/bin:/c/Users/rodri/bin:/c/Users/rodri/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/debugCommand:/c/Users/rodri/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/copilotCli:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR:/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/c/Program Files/dotnet:/c/Program Files/nodejs:/cmd:/c/Users/rodri/.local/bin:/c/Users/rodri/AppData/Local/Microsoft/WindowsApps:/c/Users/rodri/AppData/Local/Programs/Microsoft VS Code/bin:/c/Users/rodri/AppData/Roaming/npm:/usr/bin/vendor_perl:/usr/bin/core_perl'
++++ nvm_grep -q '/c/Users/rodri/.nvm/versions/[^/]*/[^/]*/bin'
++++ GREP_OPTIONS=
++++ command grep -q '/c/Users/rodri/.nvm/versions/[^/]*/[^/]*/bin'
++++ nvm_echo '/c/Users/rodri/.nvm/versions/node/v24.16.0/bin:/c/Users/rodri/bin:/mingw64/bin:/usr/local/bin:/usr/bin:/bin:/mingw64/bin:/usr/bin:/c/Users/rodri/bin:/c/Users/rodri/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/debugCommand:/c/Users/rodri/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/copilotCli:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR:/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/c/Program Files/dotnet:/c/Program Files/nodejs:/cmd:/c/Users/rodri/.local/bin:/c/Users/rodri/AppData/Local/Microsoft/WindowsApps:/c/Users/rodri/AppData/Local/Programs/Microsoft VS Code/bin:/c/Users/rodri/AppData/Roaming/npm:/usr/bin/vendor_perl:/usr/bin/core_perl'
++++ command printf '%s\n' '/c/Users/rodri/.nvm/versions/node/v24.16.0/bin:/c/Users/rodri/bin:/mingw64/bin:/usr/local/bin:/usr/bin:/bin:/mingw64/bin:/usr/bin:/c/Users/rodri/bin:/c/Users/rodri/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/debugCommand:/c/Users/rodri/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/copilotCli:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR:/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/c/Program Files/dotnet:/c/Program Files/nodejs:/cmd:/c/Users/rodri/.local/bin:/c/Users/rodri/AppData/Local/Microsoft/WindowsApps:/c/Users/rodri/AppData/Local/Programs/Microsoft VS Code/bin:/c/Users/rodri/AppData/Roaming/npm:/usr/bin/vendor_perl:/usr/bin/core_perl'
+++ PATH='/c/Users/rodri/.nvm/versions/node/v24.16.0/bin:/c/Users/rodri/bin:/mingw64/bin:/usr/local/bin:/usr/bin:/bin:/mingw64/bin:/usr/bin:/c/Users/rodri/bin:/c/Users/rodri/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/debugCommand:/c/Users/rodri/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/copilotCli:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR:/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/c/Program Files/dotnet:/c/Program Files/nodejs:/cmd:/c/Users/rodri/.local/bin:/c/Users/rodri/AppData/Local/Microsoft/WindowsApps:/c/Users/rodri/AppData/Local/Programs/Microsoft VS Code/bin:/c/Users/rodri/AppData/Roaming/npm:/usr/bin/vendor_perl:/usr/bin/core_perl'
+++ nvm_has manpath
+++ type manpath
+++ export PATH
+++ command hash -r
+++ export NVM_BIN=/c/Users/rodri/.nvm/versions/node/v24.16.0/bin
+++ NVM_BIN=/c/Users/rodri/.nvm/versions/node/v24.16.0/bin
+++ export NVM_INC=/c/Users/rodri/.nvm/versions/node/v24.16.0/include/node
+++ NVM_INC=/c/Users/rodri/.nvm/versions/node/v24.16.0/include/node
+++ '[' '' = true ']'
+++ local NVM_USE_OUTPUT
+++ NVM_USE_OUTPUT=
+++ '[' 1 -ne 1 ']'
+++ '[' _v24.16.0 '!=' _system ']'
+++ local NVM_USE_CMD
+++ NVM_USE_CMD='nvm use --delete-prefix'
+++ '[' -n v24.16.0 ']'
+++ NVM_USE_CMD='nvm use --delete-prefix v24.16.0'
+++ '[' 1 -eq 1 ']'
+++ NVM_USE_CMD='nvm use --delete-prefix v24.16.0 --silent'
+++ nvm_die_on_prefix 0 'nvm use --delete-prefix v24.16.0 --silent' /c/Users/rodri/.nvm/versions/node/v24.16.0
+++ local NVM_DELETE_PREFIX
+++ NVM_DELETE_PREFIX=0
+++ case "${NVM_DELETE_PREFIX}" in
+++ local NVM_COMMAND
+++ NVM_COMMAND='nvm use --delete-prefix v24.16.0 --silent'
+++ local NVM_VERSION_DIR
+++ NVM_VERSION_DIR=/c/Users/rodri/.nvm/versions/node/v24.16.0
+++ '[' -z 'nvm use --delete-prefix v24.16.0 --silent' ']'
+++ '[' -z /c/Users/rodri/.nvm/versions/node/v24.16.0 ']'
+++ '[' -n '' ']'
+++ local NVM_OS
++++ nvm_get_os
++++ local NVM_UNAME
+++++ command uname -a
++++ NVM_UNAME='MINGW64_NT-10.0-26200 DESKTOP-S6J3OLB 3.6.5-22c95533.x86_64 2025-10-10 12:02 UTC x86_64 Msys'
++++ local NVM_OS
++++ case "${NVM_UNAME}" in
++++ NVM_OS=win
++++ nvm_echo win
++++ command printf '%s\n' win
+++ NVM_OS=win
+++ local NVM_NPM_CONFIG_x_PREFIX_ENV
++++ command awk 'BEGIN { for (name in ENVIRON) if (toupper(name) == "NPM_CONFIG_PREFIX") { print name; break } }'
+++ NVM_NPM_CONFIG_x_PREFIX_ENV=
+++ '[' -n '' ']'
+++ local NVM_NPM_BUILTIN_NPMRC
+++ NVM_NPM_BUILTIN_NPMRC=/c/Users/rodri/.nvm/versions/node/v24.16.0/lib/node_modules/npm/npmrc
+++ nvm_npmrc_bad_news_bears /c/Users/rodri/.nvm/versions/node/v24.16.0/lib/node_modules/npm/npmrc
+++ local NVM_NPMRC
+++ NVM_NPMRC=/c/Users/rodri/.nvm/versions/node/v24.16.0/lib/node_modules/npm/npmrc
+++ '[' -n /c/Users/rodri/.nvm/versions/node/v24.16.0/lib/node_modules/npm/npmrc ']'
+++ '[' -f /c/Users/rodri/.nvm/versions/node/v24.16.0/lib/node_modules/npm/npmrc ']'
+++ return 1
+++ local NVM_NPM_GLOBAL_NPMRC
+++ NVM_NPM_GLOBAL_NPMRC=/c/Users/rodri/.nvm/versions/node/v24.16.0/etc/npmrc
+++ nvm_npmrc_bad_news_bears /c/Users/rodri/.nvm/versions/node/v24.16.0/etc/npmrc
+++ local NVM_NPMRC
+++ NVM_NPMRC=/c/Users/rodri/.nvm/versions/node/v24.16.0/etc/npmrc
+++ '[' -n /c/Users/rodri/.nvm/versions/node/v24.16.0/etc/npmrc ']'
+++ '[' -f /c/Users/rodri/.nvm/versions/node/v24.16.0/etc/npmrc ']'
+++ return 1
+++ local NVM_NPM_USER_NPMRC
+++ NVM_NPM_USER_NPMRC=/c/Users/rodri/.npmrc
+++ nvm_npmrc_bad_news_bears /c/Users/rodri/.npmrc
+++ local NVM_NPMRC
+++ NVM_NPMRC=/c/Users/rodri/.npmrc
+++ '[' -n /c/Users/rodri/.npmrc ']'
+++ '[' -f /c/Users/rodri/.npmrc ']'
+++ return 1
+++ local NVM_NPM_PROJECT_NPMRC
++++ nvm_find_project_dir
++++ local path_
++++ path_=/c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS
++++ '[' /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS '!=' '' ']'
++++ '[' /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS '!=' . ']'
++++ '[' '!' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/package.json ']'
++++ '[' '!' -d /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/node_modules ']'
++++ path_=/c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO
++++ '[' /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO '!=' '' ']'
++++ '[' /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO '!=' . ']'
++++ '[' '!' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/package.json ']'
++++ '[' '!' -d /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/node_modules ']'
++++ path_=/c/Users/rodri/OneDrive/Imagens/Documentos
++++ '[' /c/Users/rodri/OneDrive/Imagens/Documentos '!=' '' ']'
++++ '[' /c/Users/rodri/OneDrive/Imagens/Documentos '!=' . ']'
++++ '[' '!' -f /c/Users/rodri/OneDrive/Imagens/Documentos/package.json ']'
++++ '[' '!' -d /c/Users/rodri/OneDrive/Imagens/Documentos/node_modules ']'
++++ path_=/c/Users/rodri/OneDrive/Imagens
++++ '[' /c/Users/rodri/OneDrive/Imagens '!=' '' ']'
++++ '[' /c/Users/rodri/OneDrive/Imagens '!=' . ']'
++++ '[' '!' -f /c/Users/rodri/OneDrive/Imagens/package.json ']'
++++ '[' '!' -d /c/Users/rodri/OneDrive/Imagens/node_modules ']'
++++ path_=/c/Users/rodri/OneDrive
++++ '[' /c/Users/rodri/OneDrive '!=' '' ']'
++++ '[' /c/Users/rodri/OneDrive '!=' . ']'
++++ '[' '!' -f /c/Users/rodri/OneDrive/package.json ']'
++++ '[' '!' -d /c/Users/rodri/OneDrive/node_modules ']'
++++ path_=/c/Users/rodri
++++ '[' /c/Users/rodri '!=' '' ']'
++++ '[' /c/Users/rodri '!=' . ']'
++++ '[' '!' -f /c/Users/rodri/package.json ']'
++++ '[' '!' -d /c/Users/rodri/node_modules ']'
++++ path_=/c/Users
++++ '[' /c/Users '!=' '' ']'
++++ '[' /c/Users '!=' . ']'
++++ '[' '!' -f /c/Users/package.json ']'
++++ '[' '!' -d /c/Users/node_modules ']'
++++ path_=/c
++++ '[' /c '!=' '' ']'
++++ '[' /c '!=' . ']'
++++ '[' '!' -f /c/package.json ']'
++++ '[' '!' -d /c/node_modules ']'
++++ path_=
++++ '[' '' '!=' '' ']'
++++ nvm_echo ''
++++ command printf '%s\n' ''
+++ NVM_NPM_PROJECT_NPMRC=/.npmrc
+++ nvm_npmrc_bad_news_bears /.npmrc
+++ local NVM_NPMRC
+++ NVM_NPMRC=/.npmrc
+++ '[' -n /.npmrc ']'
+++ '[' -f /.npmrc ']'
+++ return 1
+++ '[' -n '' ']'
+++ EXIT_CODE=0
+++ set -e
+++ return 0
++ return 0
++ echo '[nvm] nvm carregado'
+[nvm] nvm carregado
++ return 0
++ NVM_OK=1
++ echo '[nvm] nvm carregado (sem '\''nvm use'\'' automático)'
+[nvm] nvm carregado (sem 'nvm use' automático)
++ command -v node
+++ node -v
++ echo '[nvm] node presente no PATH -> v24.16.0'
+[nvm] node presente no PATH -> v24.16.0
++ echo '[run-native-shell] Scanning MFEs and starting any project with package.json/start script...'
+[run-native-shell] Scanning MFEs and starting any project with package.json/start script...
++ STARTED=()
++ FAILED=()
++ shopt -s nullglob
++ for mfe_dir in "$ROOT_DIR"/MFEs/*/*
++ '[' -d /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng ']'
++ '[' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng/package.json ']'
+++ basename /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng
++ name=mfe-ng
++ echo '[mfe] Preparando mfe-ng in /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng'
+[mfe] Preparando mfe-ng in /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng
++ pushd /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng
++ '[' 1 -eq 1 ']'
++ ensure_node_for_project /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng
++ local dir=/c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng
++ local ver=
++ '[' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng/.nvmrc ']'
++ '[' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng/package.json ']'
+++ node -e 'const fs=require("fs"); try{const p=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); process.stdout.write((p.engines&&p.engines.node)||"")}catch(e){process.stdout.write("")}' /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng/package.json
++ ver=
++ '[' -z '' ']'
++ ver='lts/*'
++ echo '[nvm] Assegurando Node lts/* para /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng'
+[nvm] Assegurando Node lts/* para /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng
++ '[' -n /c/Users/rodri/.nvm ']'
++ candidate='/c/Users/rodri/.nvm/versions/node/vlts/*'
++ '[' '!' -x '/c/Users/rodri/.nvm/versions/node/vlts/*/bin/node' ']'
+++ ls -1 /c/Users/rodri/.nvm/versions/node
+++ grep '^vlts/*'
+++ sort -V
+++ tail -n1
+++ true
++ cand=
++ '[' -n '' ']'
++ '[' -x '/c/Users/rodri/.nvm/versions/node/vlts/*/bin/node' ']'
++ echo '[nvm] versão lts/* não encontrada em /c/Users/rodri/.nvm/versions/node'
+[nvm] versão lts/* não encontrada em /c/Users/rodri/.nvm/versions/node
++ command -v nvm
++ echo '[nvm] instalando lts/* via nvm (fallback)'
+[nvm] instalando lts/* via nvm (fallback)
++ nvm install 'lts/*'
++ '[' -x '/c/Users/rodri/.nvm/versions/node/vlts/*/bin/node' ']'
++ echo '[nvm] não foi possível ativar Node lts/* para /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng; continue com PATH atual'
+[nvm] não foi possível ativar Node lts/* para /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng; continue com PATH atual
++ grep -q '"start"' package.json
++ echo '[mfe:mfe-ng] Instalando deps...'
+[mfe:mfe-ng] Instalando deps...
++ attempts=0
++ npm ci
++ [[    =~  mfe-ng  ]]
++ LOG_FILE=/c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-logs/mfe-ng.log
++ echo '[mfe:mfe-ng] Iniciando (log: /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-logs/mfe-ng.log)'
+[mfe:mfe-ng] Iniciando (log: /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-logs/mfe-ng.log)
++ pid=40141
++ echo 40141
++ npm start
++ sleep 2
++ kill -0 40141
++ echo '[mfe:mfe-ng] Iniciado PID 40141'
+[mfe:mfe-ng] Iniciado PID 40141
++ STARTED+=("$name")
+++ node -e 'try{const p=require('\''./package.json'\''); console.log((p.scripts&&p.scripts.start)||'\'''\'') }catch(e){console.log('\'''\'')}'
++ start_cmd='serve -l 9310 --cors .'
++ port=
++ [[ serve -l 9310 --cors . =~ -l[[:space:]]*([0-9]{3,5}) ]]
++ port=9310
++ '[' -z 9310 ']'
++ '[' -z 9310 ']'
++ '[' -n 9310 ']'
++ echo '[mfe:mfe-ng] Health-check -> polling http://localhost:9310/'
+[mfe:mfe-ng] Health-check -> polling http://localhost:9310/
++ attempts=0
++ curl --silent --fail --max-time 2 http://localhost:9310/
++ '[' 0 -lt 15 ']'
++ echo '[mfe:mfe-ng] Health OK on port 9310'
+[mfe:mfe-ng] Health OK on port 9310
++ popd
++ for mfe_dir in "$ROOT_DIR"/MFEs/*/*
++ '[' -d /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng-full ']'
++ '[' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng-full/package.json ']'
+++ basename /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng-full
++ name=mfe-ng-full
++ echo '[mfe] Preparando mfe-ng-full in /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng-full'
+[mfe] Preparando mfe-ng-full in /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng-full
++ pushd /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng-full
++ '[' 1 -eq 1 ']'
++ ensure_node_for_project /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng-full
++ local dir=/c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng-full
++ local ver=
++ '[' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng-full/.nvmrc ']'
++ '[' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng-full/package.json ']'
+++ node -e 'const fs=require("fs"); try{const p=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); process.stdout.write((p.engines&&p.engines.node)||"")}catch(e){process.stdout.write("")}' /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng-full/package.json
++ ver=
++ '[' -z '' ']'
++ ver='lts/*'
++ echo '[nvm] Assegurando Node lts/* para /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng-full'
+[nvm] Assegurando Node lts/* para /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng-full
++ '[' -n /c/Users/rodri/.nvm ']'
++ candidate='/c/Users/rodri/.nvm/versions/node/vlts/*'
++ '[' '!' -x '/c/Users/rodri/.nvm/versions/node/vlts/*/bin/node' ']'
+++ ls -1 /c/Users/rodri/.nvm/versions/node
+++ grep '^vlts/*'
+++ sort -V
+++ tail -n1
+++ true
++ cand=
++ '[' -n '' ']'
++ '[' -x '/c/Users/rodri/.nvm/versions/node/vlts/*/bin/node' ']'
++ echo '[nvm] versão lts/* não encontrada em /c/Users/rodri/.nvm/versions/node'
+[nvm] versão lts/* não encontrada em /c/Users/rodri/.nvm/versions/node
++ command -v nvm
++ echo '[nvm] instalando lts/* via nvm (fallback)'
+[nvm] instalando lts/* via nvm (fallback)
++ nvm install 'lts/*'
++ '[' -x '/c/Users/rodri/.nvm/versions/node/vlts/*/bin/node' ']'
++ echo '[nvm] não foi possível ativar Node lts/* para /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng-full; continue com PATH atual'
+[nvm] não foi possível ativar Node lts/* para /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng-full; continue com PATH atual
++ grep -q '"start"' package.json
++ echo '[mfe:mfe-ng-full] Instalando deps...'
+[mfe:mfe-ng-full] Instalando deps...
++ attempts=0
++ npm ci
++ [[    =~  mfe-ng-full  ]]
++ LOG_FILE=/c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-logs/mfe-ng-full.log
++ echo '[mfe:mfe-ng-full] Iniciando (log: /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-logs/mfe-ng-full.log)'
+[mfe:mfe-ng-full] Iniciando (log: /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-logs/mfe-ng-full.log)
++ pid=40407
++ echo 40407
++ npm start
++ sleep 2
++ kill -0 40407
++ echo '[mfe:mfe-ng-full] Iniciado PID 40407'
+[mfe:mfe-ng-full] Iniciado PID 40407
++ STARTED+=("$name")
+++ node -e 'try{const p=require('\''./package.json'\''); console.log((p.scripts&&p.scripts.start)||'\'''\'') }catch(e){console.log('\'''\'')}'
++ start_cmd='ng serve mfe-ng-full --port 9400'
++ port=
++ [[ ng serve mfe-ng-full --port 9400 =~ -l[[:space:]]*([0-9]{3,5}) ]]
++ [[ ng serve mfe-ng-full --port 9400 =~ --port[=[:space:]]*([0-9]{3,5}) ]]
++ port=9400
++ '[' -z 9400 ']'
++ '[' -z 9400 ']'
++ '[' -n 9400 ']'
++ echo '[mfe:mfe-ng-full] Health-check -> polling http://localhost:9400/'
+[mfe:mfe-ng-full] Health-check -> polling http://localhost:9400/
++ attempts=0
++ curl --silent --fail --max-time 2 http://localhost:9400/
++ attempts=1
++ sleep 1
++ '[' 1 -ge 15 ']'
++ curl --silent --fail --max-time 2 http://localhost:9400/
++ attempts=2
++ sleep 1
++ '[' 2 -ge 15 ']'
++ curl --silent --fail --max-time 2 http://localhost:9400/
++ attempts=3
++ sleep 1
++ '[' 3 -ge 15 ']'
++ curl --silent --fail --max-time 2 http://localhost:9400/
++ attempts=4
++ sleep 1
++ '[' 4 -ge 15 ']'
++ curl --silent --fail --max-time 2 http://localhost:9400/
++ '[' 4 -lt 15 ']'
++ echo '[mfe:mfe-ng-full] Health OK on port 9400'
+[mfe:mfe-ng-full] Health OK on port 9400
++ popd
++ for mfe_dir in "$ROOT_DIR"/MFEs/*/*
++ '[' -d /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/module-federation/remote-a ']'
++ '[' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/module-federation/remote-a/package.json ']'
+++ basename /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/module-federation/remote-a
++ name=remote-a
++ echo '[mfe] Preparando remote-a in /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/module-federation/remote-a'
+[mfe] Preparando remote-a in /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/module-federation/remote-a
++ pushd /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/module-federation/remote-a
++ '[' 1 -eq 1 ']'
++ ensure_node_for_project /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/module-federation/remote-a
++ local dir=/c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/module-federation/remote-a
++ local ver=
++ '[' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/module-federation/remote-a/.nvmrc ']'
++ '[' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/module-federation/remote-a/package.json ']'
+++ node -e 'const fs=require("fs"); try{const p=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); process.stdout.write((p.engines&&p.engines.node)||"")}catch(e){process.stdout.write("")}' /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/module-federation/remote-a/package.json
++ ver=
++ '[' -z '' ']'
++ ver='lts/*'
++ echo '[nvm] Assegurando Node lts/* para /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/module-federation/remote-a'
+[nvm] Assegurando Node lts/* para /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/module-federation/remote-a
++ '[' -n /c/Users/rodri/.nvm ']'
++ candidate='/c/Users/rodri/.nvm/versions/node/vlts/*'
++ '[' '!' -x '/c/Users/rodri/.nvm/versions/node/vlts/*/bin/node' ']'
+++ ls -1 /c/Users/rodri/.nvm/versions/node
+++ grep '^vlts/*'
+++ sort -V
+++ tail -n1
+++ true
++ cand=
++ '[' -n '' ']'
++ '[' -x '/c/Users/rodri/.nvm/versions/node/vlts/*/bin/node' ']'
++ echo '[nvm] versão lts/* não encontrada em /c/Users/rodri/.nvm/versions/node'
+[nvm] versão lts/* não encontrada em /c/Users/rodri/.nvm/versions/node
++ command -v nvm
++ echo '[nvm] instalando lts/* via nvm (fallback)'
+[nvm] instalando lts/* via nvm (fallback)
++ nvm install 'lts/*'
++ '[' -x '/c/Users/rodri/.nvm/versions/node/vlts/*/bin/node' ']'
++ echo '[nvm] não foi possível ativar Node lts/* para /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/module-federation/remote-a; continue com PATH atual'
+[nvm] não foi possível ativar Node lts/* para /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/module-federation/remote-a; continue com PATH atual
++ grep -q '"start"' package.json
++ echo '[mfe:remote-a] Instalando deps...'
+[mfe:remote-a] Instalando deps...
++ attempts=0
++ npm ci
++ [[    =~  remote-a  ]]
++ LOG_FILE=/c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-logs/remote-a.log
++ echo '[mfe:remote-a] Iniciando (log: /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-logs/remote-a.log)'
+[mfe:remote-a] Iniciando (log: /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-logs/remote-a.log)
++ npm start
++ pid=40681
++ echo 40681
++ sleep 2
++ kill -0 40681
++ echo '[mfe:remote-a] Iniciado PID 40681'
+[mfe:remote-a] Iniciado PID 40681
++ STARTED+=("$name")
+++ node -e 'try{const p=require('\''./package.json'\''); console.log((p.scripts&&p.scripts.start)||'\'''\'') }catch(e){console.log('\'''\'')}'
++ start_cmd='serve -l 9301 --cors .'
++ port=
++ [[ serve -l 9301 --cors . =~ -l[[:space:]]*([0-9]{3,5}) ]]
++ port=9301
++ '[' -z 9301 ']'
++ '[' -z 9301 ']'
++ '[' -n 9301 ']'
++ echo '[mfe:remote-a] Health-check -> polling http://localhost:9301/'
+[mfe:remote-a] Health-check -> polling http://localhost:9301/
++ attempts=0
++ curl --silent --fail --max-time 2 http://localhost:9301/
++ '[' 0 -lt 15 ']'
++ echo '[mfe:remote-a] Health OK on port 9301'
+[mfe:remote-a] Health OK on port 9301
++ popd
++ for mfe_dir in "$ROOT_DIR"/MFEs/*/*
++ '[' -d /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/native-federation/mfe1 ']'
++ '[' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/native-federation/mfe1/package.json ']'
+++ basename /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/native-federation/mfe1
++ name=mfe1
++ echo '[mfe] Preparando mfe1 in /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/native-federation/mfe1'
+[mfe] Preparando mfe1 in /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/native-federation/mfe1
++ pushd /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/native-federation/mfe1
++ '[' 1 -eq 1 ']'
++ ensure_node_for_project /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/native-federation/mfe1
++ local dir=/c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/native-federation/mfe1
++ local ver=
++ '[' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/native-federation/mfe1/.nvmrc ']'
++ '[' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/native-federation/mfe1/package.json ']'
+++ node -e 'const fs=require("fs"); try{const p=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); process.stdout.write((p.engines&&p.engines.node)||"")}catch(e){process.stdout.write("")}' /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/native-federation/mfe1/package.json
++ ver=
++ '[' -z '' ']'
++ ver='lts/*'
++ echo '[nvm] Assegurando Node lts/* para /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/native-federation/mfe1'
+[nvm] Assegurando Node lts/* para /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/native-federation/mfe1
++ '[' -n /c/Users/rodri/.nvm ']'
++ candidate='/c/Users/rodri/.nvm/versions/node/vlts/*'
++ '[' '!' -x '/c/Users/rodri/.nvm/versions/node/vlts/*/bin/node' ']'
+++ ls -1 /c/Users/rodri/.nvm/versions/node
+++ grep '^vlts/*'
+++ sort -V
+++ tail -n1
+++ true
++ cand=
++ '[' -n '' ']'
++ '[' -x '/c/Users/rodri/.nvm/versions/node/vlts/*/bin/node' ']'
++ echo '[nvm] versão lts/* não encontrada em /c/Users/rodri/.nvm/versions/node'
+[nvm] versão lts/* não encontrada em /c/Users/rodri/.nvm/versions/node
++ command -v nvm
++ echo '[nvm] instalando lts/* via nvm (fallback)'
+[nvm] instalando lts/* via nvm (fallback)
++ nvm install 'lts/*'
++ '[' -x '/c/Users/rodri/.nvm/versions/node/vlts/*/bin/node' ']'
++ echo '[nvm] não foi possível ativar Node lts/* para /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/native-federation/mfe1; continue com PATH atual'
+[nvm] não foi possível ativar Node lts/* para /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/native-federation/mfe1; continue com PATH atual
++ grep -q '"start"' package.json
++ echo '[mfe:mfe1] Instalando deps...'
+[mfe:mfe1] Instalando deps...
++ attempts=0
++ npm ci
++ [[    =~  mfe1  ]]
++ LOG_FILE=/c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-logs/mfe1.log
++ echo '[mfe:mfe1] Iniciando (log: /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-logs/mfe1.log)'
+[mfe:mfe1] Iniciando (log: /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-logs/mfe1.log)
++ pid=40947
++ echo 40947
++ npm start
++ sleep 2
++ kill -0 40947
++ echo '[mfe:mfe1] Iniciado PID 40947'
+[mfe:mfe1] Iniciado PID 40947
++ STARTED+=("$name")
+++ node -e 'try{const p=require('\''./package.json'\''); console.log((p.scripts&&p.scripts.start)||'\'''\'') }catch(e){console.log('\'''\'')}'
++ start_cmd='serve -l 9101 --cors .'
++ port=
++ [[ serve -l 9101 --cors . =~ -l[[:space:]]*([0-9]{3,5}) ]]
++ port=9101
++ '[' -z 9101 ']'
++ '[' -z 9101 ']'
++ '[' -n 9101 ']'
++ echo '[mfe:mfe1] Health-check -> polling http://localhost:9101/'
+[mfe:mfe1] Health-check -> polling http://localhost:9101/
++ attempts=0
++ curl --silent --fail --max-time 2 http://localhost:9101/
++ '[' 0 -lt 15 ']'
++ echo '[mfe:mfe1] Health OK on port 9101'
+[mfe:mfe1] Health OK on port 9101
++ popd
++ for mfe_dir in "$ROOT_DIR"/MFEs/*/*
++ '[' -d /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/react/mfe-react ']'
++ '[' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/react/mfe-react/package.json ']'
+++ basename /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/react/mfe-react
++ name=mfe-react
++ echo '[mfe] Preparando mfe-react in /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/react/mfe-react'
+[mfe] Preparando mfe-react in /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/react/mfe-react
++ pushd /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/react/mfe-react
++ '[' 1 -eq 1 ']'
++ ensure_node_for_project /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/react/mfe-react
++ local dir=/c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/react/mfe-react
++ local ver=
++ '[' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/react/mfe-react/.nvmrc ']'
++ '[' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/react/mfe-react/package.json ']'
+++ node -e 'const fs=require("fs"); try{const p=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); process.stdout.write((p.engines&&p.engines.node)||"")}catch(e){process.stdout.write("")}' /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/react/mfe-react/package.json
++ ver=
++ '[' -z '' ']'
++ ver='lts/*'
++ echo '[nvm] Assegurando Node lts/* para /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/react/mfe-react'
+[nvm] Assegurando Node lts/* para /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/react/mfe-react
++ '[' -n /c/Users/rodri/.nvm ']'
++ candidate='/c/Users/rodri/.nvm/versions/node/vlts/*'
++ '[' '!' -x '/c/Users/rodri/.nvm/versions/node/vlts/*/bin/node' ']'
+++ ls -1 /c/Users/rodri/.nvm/versions/node
+++ grep '^vlts/*'
+++ sort -V
+++ tail -n1
+++ true
++ cand=
++ '[' -n '' ']'
++ '[' -x '/c/Users/rodri/.nvm/versions/node/vlts/*/bin/node' ']'
++ echo '[nvm] versão lts/* não encontrada em /c/Users/rodri/.nvm/versions/node'
+[nvm] versão lts/* não encontrada em /c/Users/rodri/.nvm/versions/node
++ command -v nvm
++ echo '[nvm] instalando lts/* via nvm (fallback)'
+[nvm] instalando lts/* via nvm (fallback)
++ nvm install 'lts/*'
++ '[' -x '/c/Users/rodri/.nvm/versions/node/vlts/*/bin/node' ']'
++ echo '[nvm] não foi possível ativar Node lts/* para /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/react/mfe-react; continue com PATH atual'
+[nvm] não foi possível ativar Node lts/* para /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/react/mfe-react; continue com PATH atual
++ grep -q '"start"' package.json
++ echo '[mfe:mfe-react] Instalando deps...'
+[mfe:mfe-react] Instalando deps...
++ attempts=0
++ npm ci
++ [[    =~  mfe-react  ]]
++ LOG_FILE=/c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-logs/mfe-react.log
++ echo '[mfe:mfe-react] Iniciando (log: /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-logs/mfe-react.log)'
+[mfe:mfe-react] Iniciando (log: /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-logs/mfe-react.log)
++ pid=41213
++ npm start
++ echo 41213
++ sleep 2
++ kill -0 41213
++ echo '[mfe:mfe-react] Iniciado PID 41213'
+[mfe:mfe-react] Iniciado PID 41213
++ STARTED+=("$name")
+++ node -e 'try{const p=require('\''./package.json'\''); console.log((p.scripts&&p.scripts.start)||'\'''\'') }catch(e){console.log('\'''\'')}'
++ start_cmd='serve -l 9201 --cors .'
++ port=
++ [[ serve -l 9201 --cors . =~ -l[[:space:]]*([0-9]{3,5}) ]]
++ port=9201
++ '[' -z 9201 ']'
++ '[' -z 9201 ']'
++ '[' -n 9201 ']'
++ echo '[mfe:mfe-react] Health-check -> polling http://localhost:9201/'
+[mfe:mfe-react] Health-check -> polling http://localhost:9201/
++ attempts=0
++ curl --silent --fail --max-time 2 http://localhost:9201/
++ '[' 0 -lt 15 ']'
++ echo '[mfe:mfe-react] Health OK on port 9201'
+[mfe:mfe-react] Health OK on port 9201
++ popd
++ for mfe_dir in "$ROOT_DIR"/MFEs/*/*
++ '[' -d /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/single-spa/mfe-a ']'
++ '[' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/single-spa/mfe-a/package.json ']'
+++ basename /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/single-spa/mfe-a
++ name=mfe-a
++ echo '[mfe] Preparando mfe-a in /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/single-spa/mfe-a'
+[mfe] Preparando mfe-a in /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/single-spa/mfe-a
++ pushd /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/single-spa/mfe-a
++ '[' 1 -eq 1 ']'
++ ensure_node_for_project /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/single-spa/mfe-a
++ local dir=/c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/single-spa/mfe-a
++ local ver=
++ '[' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/single-spa/mfe-a/.nvmrc ']'
++ '[' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/single-spa/mfe-a/package.json ']'
+++ node -e 'const fs=require("fs"); try{const p=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); process.stdout.write((p.engines&&p.engines.node)||"")}catch(e){process.stdout.write("")}' /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/single-spa/mfe-a/package.json
++ ver=
++ '[' -z '' ']'
++ ver='lts/*'
++ echo '[nvm] Assegurando Node lts/* para /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/single-spa/mfe-a'
+[nvm] Assegurando Node lts/* para /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/single-spa/mfe-a
++ '[' -n /c/Users/rodri/.nvm ']'
++ candidate='/c/Users/rodri/.nvm/versions/node/vlts/*'
++ '[' '!' -x '/c/Users/rodri/.nvm/versions/node/vlts/*/bin/node' ']'
+++ ls -1 /c/Users/rodri/.nvm/versions/node
+++ grep '^vlts/*'
+++ sort -V
+++ tail -n1
+++ true
++ cand=
++ '[' -n '' ']'
++ '[' -x '/c/Users/rodri/.nvm/versions/node/vlts/*/bin/node' ']'
++ echo '[nvm] versão lts/* não encontrada em /c/Users/rodri/.nvm/versions/node'
+[nvm] versão lts/* não encontrada em /c/Users/rodri/.nvm/versions/node
++ command -v nvm
++ echo '[nvm] instalando lts/* via nvm (fallback)'
+[nvm] instalando lts/* via nvm (fallback)
++ nvm install 'lts/*'
++ '[' -x '/c/Users/rodri/.nvm/versions/node/vlts/*/bin/node' ']'
++ echo '[nvm] não foi possível ativar Node lts/* para /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/single-spa/mfe-a; continue com PATH atual'
+[nvm] não foi possível ativar Node lts/* para /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/single-spa/mfe-a; continue com PATH atual
++ grep -q '"start"' package.json
++ echo '[mfe:mfe-a] Instalando deps...'
+[mfe:mfe-a] Instalando deps...
++ attempts=0
++ npm ci
++ [[    =~  mfe-a  ]]
++ LOG_FILE=/c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-logs/mfe-a.log
++ echo '[mfe:mfe-a] Iniciando (log: /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-logs/mfe-a.log)'
+[mfe:mfe-a] Iniciando (log: /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-logs/mfe-a.log)
++ pid=41479
++ npm start
++ echo 41479
++ sleep 2
++ kill -0 41479
++ echo '[mfe:mfe-a] Iniciado PID 41479'
+[mfe:mfe-a] Iniciado PID 41479
++ STARTED+=("$name")
+++ node -e 'try{const p=require('\''./package.json'\''); console.log((p.scripts&&p.scripts.start)||'\'''\'') }catch(e){console.log('\'''\'')}'
++ start_cmd='serve -l 9302 --cors .'
++ port=
++ [[ serve -l 9302 --cors . =~ -l[[:space:]]*([0-9]{3,5}) ]]
++ port=9302
++ '[' -z 9302 ']'
++ '[' -z 9302 ']'
++ '[' -n 9302 ']'
++ echo '[mfe:mfe-a] Health-check -> polling http://localhost:9302/'
+[mfe:mfe-a] Health-check -> polling http://localhost:9302/
++ attempts=0
++ curl --silent --fail --max-time 2 http://localhost:9302/
++ '[' 0 -lt 15 ']'
++ echo '[mfe:mfe-a] Health OK on port 9302'
+[mfe:mfe-a] Health OK on port 9302
++ popd
++ for mfe_dir in "$ROOT_DIR"/MFEs/*/*
++ '[' -d /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/vue/mfe-vue ']'
++ '[' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/vue/mfe-vue/package.json ']'
+++ basename /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/vue/mfe-vue
++ name=mfe-vue
++ echo '[mfe] Preparando mfe-vue in /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/vue/mfe-vue'
+[mfe] Preparando mfe-vue in /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/vue/mfe-vue
++ pushd /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/vue/mfe-vue
++ '[' 1 -eq 1 ']'
++ ensure_node_for_project /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/vue/mfe-vue
++ local dir=/c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/vue/mfe-vue
++ local ver=
++ '[' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/vue/mfe-vue/.nvmrc ']'
++ '[' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/vue/mfe-vue/package.json ']'
+++ node -e 'const fs=require("fs"); try{const p=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); process.stdout.write((p.engines&&p.engines.node)||"")}catch(e){process.stdout.write("")}' /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/vue/mfe-vue/package.json
++ ver=
++ '[' -z '' ']'
++ ver='lts/*'
++ echo '[nvm] Assegurando Node lts/* para /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/vue/mfe-vue'
+[nvm] Assegurando Node lts/* para /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/vue/mfe-vue
++ '[' -n /c/Users/rodri/.nvm ']'
++ candidate='/c/Users/rodri/.nvm/versions/node/vlts/*'
++ '[' '!' -x '/c/Users/rodri/.nvm/versions/node/vlts/*/bin/node' ']'
+++ ls -1 /c/Users/rodri/.nvm/versions/node
+++ grep '^vlts/*'
+++ sort -V
+++ tail -n1
+++ true
++ cand=
++ '[' -n '' ']'
++ '[' -x '/c/Users/rodri/.nvm/versions/node/vlts/*/bin/node' ']'
++ echo '[nvm] versão lts/* não encontrada em /c/Users/rodri/.nvm/versions/node'
+[nvm] versão lts/* não encontrada em /c/Users/rodri/.nvm/versions/node
++ command -v nvm
++ echo '[nvm] instalando lts/* via nvm (fallback)'
+[nvm] instalando lts/* via nvm (fallback)
++ nvm install 'lts/*'
++ '[' -x '/c/Users/rodri/.nvm/versions/node/vlts/*/bin/node' ']'
++ echo '[nvm] não foi possível ativar Node lts/* para /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/vue/mfe-vue; continue com PATH atual'
+[nvm] não foi possível ativar Node lts/* para /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/vue/mfe-vue; continue com PATH atual
++ grep -q '"start"' package.json
++ echo '[mfe:mfe-vue] Instalando deps...'
+[mfe:mfe-vue] Instalando deps...
++ attempts=0
++ npm ci
++ [[    =~  mfe-vue  ]]
++ LOG_FILE=/c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-logs/mfe-vue.log
++ echo '[mfe:mfe-vue] Iniciando (log: /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-logs/mfe-vue.log)'
+[mfe:mfe-vue] Iniciando (log: /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-logs/mfe-vue.log)
++ pid=41745
++ echo 41745
++ npm start
++ sleep 2
++ kill -0 41745
++ echo '[mfe:mfe-vue] Iniciado PID 41745'
+[mfe:mfe-vue] Iniciado PID 41745
++ STARTED+=("$name")
+++ node -e 'try{const p=require('\''./package.json'\''); console.log((p.scripts&&p.scripts.start)||'\'''\'') }catch(e){console.log('\'''\'')}'
++ start_cmd='serve -l 9001 --cors .'
++ port=
++ [[ serve -l 9001 --cors . =~ -l[[:space:]]*([0-9]{3,5}) ]]
++ port=9001
++ '[' -z 9001 ']'
++ '[' -z 9001 ']'
++ '[' -n 9001 ']'
++ echo '[mfe:mfe-vue] Health-check -> polling http://localhost:9001/'
+[mfe:mfe-vue] Health-check -> polling http://localhost:9001/
++ attempts=0
++ curl --silent --fail --max-time 2 http://localhost:9001/
++ '[' 0 -lt 15 ']'
++ echo '[mfe:mfe-vue] Health OK on port 9001'
+[mfe:mfe-vue] Health OK on port 9001
++ popd
++ echo '[run-native-shell] Resumo de inicio de MFEs:'
+[run-native-shell] Resumo de inicio de MFEs:
++ echo '  Iniciados: mfe-ng mfe-ng-full remote-a mfe1 mfe-react mfe-a mfe-vue'
+  Iniciados: mfe-ng mfe-ng-full remote-a mfe1 mfe-react mfe-a mfe-vue
++ echo '  Falhados: none'
+  Falhados: none
++ echo '[run-native-shell] Gerando mapa de versões (mfe-versions.json)...'
+[run-native-shell] Gerando mapa de versões (mfe-versions.json)...
++ NAME_TO_ID=(['mfe1']='nf' ['remote-a']='mf' ['mfe-a']='ssa' ['mfe-ng']='ng' ['mfe-ng-full']='ng-full' ['mfe-react']='react' ['mfe-vue']='vue')
++ declare -A NAME_TO_ID
++ VERSIONS_FILE=/c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/native-federation-shell-angular/mfe-versions.json
++ echo '{'
++ first=1
++ for pkg in "$ROOT_DIR"/MFEs/*/*/package.json
++ '[' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng/package.json ']'
++++ dirname /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng/package.json
+++ basename /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng
++ dir=mfe-ng
++ id=ng
++ '[' -z ng ']'
++++ dirname /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng/package.json
+++ node /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-scripts/detect-framework.js /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng/package.json /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng
++ fw='Angular 17.3.0'
+++ printf %s 'Angular 17.3.0'
+++ tr -d '\r'
+++ tr '\n' ' '
+++ sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
++ fw='Angular 17.3.0'
++ '[' 1 -eq 1 ']'
++ first=0
+++ printf %s 'Angular 17.3.0'
+++ sed 's/\\/\\\\/g; s/"/\\"/g'
++ esc_fw='Angular 17.3.0'
++ printf '  "%s": "%s"' ng 'Angular 17.3.0'
++ for pkg in "$ROOT_DIR"/MFEs/*/*/package.json
++ '[' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng-full/package.json ']'
++++ dirname /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng-full/package.json
+++ basename /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng-full
++ dir=mfe-ng-full
++ id=ng-full
++ '[' -z ng-full ']'
++++ dirname /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng-full/package.json
+++ node /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-scripts/detect-framework.js /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng-full/package.json /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/angular/mfe-ng-full
++ fw='Angular 17.3.0'
+++ printf %s 'Angular 17.3.0'
+++ tr -d '\r'
+++ tr '\n' ' '
+++ sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
++ fw='Angular 17.3.0'
++ '[' 0 -eq 1 ']'
++ echo ,
+++ printf %s 'Angular 17.3.0'
+++ sed 's/\\/\\\\/g; s/"/\\"/g'
++ esc_fw='Angular 17.3.0'
++ printf '  "%s": "%s"' ng-full 'Angular 17.3.0'
++ for pkg in "$ROOT_DIR"/MFEs/*/*/package.json
++ '[' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/module-federation/remote-a/package.json ']'
++++ dirname /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/module-federation/remote-a/package.json
+++ basename /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/module-federation/remote-a
++ dir=remote-a
++ id=mf
++ '[' -z mf ']'
++++ dirname /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/module-federation/remote-a/package.json
+++ node /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-scripts/detect-framework.js /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/module-federation/remote-a/package.json /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/module-federation/remote-a
++ fw='Module Federation (webpack)'
+++ printf %s 'Module Federation (webpack)'
+++ tr -d '\r'
+++ tr '\n' ' '
+++ sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
++ fw='Module Federation (webpack)'
++ '[' 0 -eq 1 ']'
++ echo ,
+++ printf %s 'Module Federation (webpack)'
+++ sed 's/\\/\\\\/g; s/"/\\"/g'
++ esc_fw='Module Federation (webpack)'
++ printf '  "%s": "%s"' mf 'Module Federation (webpack)'
++ for pkg in "$ROOT_DIR"/MFEs/*/*/package.json
++ '[' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/native-federation/mfe1/package.json ']'
++++ dirname /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/native-federation/mfe1/package.json
+++ basename /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/native-federation/mfe1
++ dir=mfe1
++ id=nf
++ '[' -z nf ']'
++++ dirname /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/native-federation/mfe1/package.json
+++ node /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-scripts/detect-framework.js /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/native-federation/mfe1/package.json /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/native-federation/mfe1
++ fw='Module Federation (webpack)'
+++ printf %s 'Module Federation (webpack)'
+++ tr -d '\r'
+++ tr '\n' ' '
+++ sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
++ fw='Module Federation (webpack)'
++ '[' 0 -eq 1 ']'
++ echo ,
+++ printf %s 'Module Federation (webpack)'
+++ sed 's/\\/\\\\/g; s/"/\\"/g'
++ esc_fw='Module Federation (webpack)'
++ printf '  "%s": "%s"' nf 'Module Federation (webpack)'
++ for pkg in "$ROOT_DIR"/MFEs/*/*/package.json
++ '[' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/react/mfe-react/package.json ']'
++++ dirname /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/react/mfe-react/package.json
+++ basename /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/react/mfe-react
++ dir=mfe-react
++ id=react
++ '[' -z react ']'
++++ dirname /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/react/mfe-react/package.json
+++ node /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-scripts/detect-framework.js /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/react/mfe-react/package.json /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/react/mfe-react
++ fw='React 18.2.0'
+++ printf %s 'React 18.2.0'
+++ tr -d '\r'
+++ tr '\n' ' '
+++ sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
++ fw='React 18.2.0'
++ '[' 0 -eq 1 ']'
++ echo ,
+++ printf %s 'React 18.2.0'
+++ sed 's/\\/\\\\/g; s/"/\\"/g'
++ esc_fw='React 18.2.0'
++ printf '  "%s": "%s"' react 'React 18.2.0'
++ for pkg in "$ROOT_DIR"/MFEs/*/*/package.json
++ '[' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/single-spa/mfe-a/package.json ']'
++++ dirname /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/single-spa/mfe-a/package.json
+++ basename /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/single-spa/mfe-a
++ dir=mfe-a
++ id=ssa
++ '[' -z ssa ']'
++++ dirname /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/single-spa/mfe-a/package.json
+++ node /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-scripts/detect-framework.js /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/single-spa/mfe-a/package.json /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/single-spa/mfe-a
++ fw='Single-SPA '
+++ printf %s 'Single-SPA '
+++ tr -d '\r'
+++ tr '\n' ' '
+++ sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
++ fw=Single-SPA
++ '[' 0 -eq 1 ']'
++ echo ,
+++ printf %s Single-SPA
+++ sed 's/\\/\\\\/g; s/"/\\"/g'
++ esc_fw=Single-SPA
++ printf '  "%s": "%s"' ssa Single-SPA
++ for pkg in "$ROOT_DIR"/MFEs/*/*/package.json
++ '[' -f /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/vue/mfe-vue/package.json ']'
++++ dirname /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/vue/mfe-vue/package.json
+++ basename /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/vue/mfe-vue
++ dir=mfe-vue
++ id=vue
++ '[' -z vue ']'
++++ dirname /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/vue/mfe-vue/package.json
+++ node /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-scripts/detect-framework.js /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/vue/mfe-vue/package.json /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/MFEs/vue/mfe-vue
++ fw='Vue 3.4.21'
+++ printf %s 'Vue 3.4.21'
+++ tr -d '\r'
+++ tr '\n' ' '
+++ sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
++ fw='Vue 3.4.21'
++ '[' 0 -eq 1 ']'
++ echo ,
+++ printf %s 'Vue 3.4.21'
+++ sed 's/\\/\\\\/g; s/"/\\"/g'
++ esc_fw='Vue 3.4.21'
++ printf '  "%s": "%s"' vue 'Vue 3.4.21'
++ printf '\n}\n'
++ echo '[run-native-shell] Wrote /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/native-federation-shell-angular/mfe-versions.json'
+[run-native-shell] Wrote /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/native-federation-shell-angular/mfe-versions.json
++ '[' 0 = 1 ']'
++ '[' 0 = 1 ']'
++ echo '[run-native-shell] Iniciando shell Native Federation (em primeiro plano)...'
+[run-native-shell] Iniciando shell Native Federation (em primeiro plano)...
++ cd /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/native-federation-shell-angular
++ '[' -f package.json ']'
++ echo '[shell] Instalando dependências (npm ci || npm install)...'
+[shell] Instalando dependências (npm ci || npm install)...
++ npm ci
+
+added 88 packages, and audited 89 packages in 2s
+
+25 packages are looking for funding
+  run `npm fund` for details
+
+6 vulnerabilities (3 moderate, 3 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
++ echo '[shell] Logs: /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-logs/shell.log'
+[shell] Logs: /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-logs/shell.log
++ npm start
++ tee /c/Users/rodri/OneDrive/Imagens/Documentos/ESTUDO/MFE-LABS/.run-logs/shell.log
+
+> native-federation-shell-angular@0.1.0 start
+> serve --cors -l 9100 .
+
+ UPDATE  The latest version of `serve` is 14.2.6
+ INFO  Accepting connections at http://localhost:9100
+ HTTP  26/05/2026 21:21:15 ::1 GET /
+ HTTP  26/05/2026 21:21:15 ::1 Returned 304 in 9 ms
+ HTTP  26/05/2026 21:21:15 ::1 GET /design-system.css
+ HTTP  26/05/2026 21:21:15 ::1 GET /styles.css
+ HTTP  26/05/2026 21:21:15 ::1 GET /app.js
+ HTTP  26/05/2026 21:21:15 ::1 Returned 304 in 2 ms
+ HTTP  26/05/2026 21:21:15 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 21:21:15 ::1 Returned 200 in 20 ms
+ HTTP  26/05/2026 21:21:15 ::1 GET /mfe-versions.json
+ HTTP  26/05/2026 21:21:15 ::1 Returned 200 in 1 ms
+ HTTP  26/05/2026 21:21:15 ::1 GET /design-system/loader.js
+ HTTP  26/05/2026 21:21:15 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 21:21:15 ::1 GET /design-system.css
+ HTTP  26/05/2026 21:21:15 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 21:21:37 ::1 GET /
+ HTTP  26/05/2026 21:21:37 ::1 Returned 200 in 1 ms
+ HTTP  26/05/2026 21:21:37 ::1 GET /design-system.css
+ HTTP  26/05/2026 21:21:37 ::1 GET /styles.css
+ HTTP  26/05/2026 21:21:37 ::1 GET /app.js
+ HTTP  26/05/2026 21:21:37 ::1 Returned 200 in 1 ms
+ HTTP  26/05/2026 21:21:37 ::1 Returned 200 in 1 ms
+ HTTP  26/05/2026 21:21:37 ::1 Returned 200 in 1 ms
+ HTTP  26/05/2026 21:21:37 ::1 GET /mfe-versions.json
+ HTTP  26/05/2026 21:21:37 ::1 Returned 200 in 0 ms
+ HTTP  26/05/2026 21:21:37 ::1 GET /design-system/loader.js
+ HTTP  26/05/2026 21:21:37 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 21:21:37 ::1 GET /design-system.css
+ HTTP  26/05/2026 21:21:37 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 21:21:52 ::1 GET /
+ HTTP  26/05/2026 21:21:52 ::1 Returned 200 in 0 ms
+ HTTP  26/05/2026 21:21:52 ::1 GET /design-system.css
+ HTTP  26/05/2026 21:21:52 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 21:21:52 ::1 GET /styles.css
+ HTTP  26/05/2026 21:21:52 ::1 GET /app.js
+ HTTP  26/05/2026 21:21:52 ::1 Returned 200 in 1 ms
+ HTTP  26/05/2026 21:21:52 ::1 Returned 200 in 1 ms
+ HTTP  26/05/2026 21:21:52 ::1 GET /mfe-versions.json
+ HTTP  26/05/2026 21:21:52 ::1 Returned 200 in 0 ms
+ HTTP  26/05/2026 21:21:52 ::1 GET /design-system/loader.js
+ HTTP  26/05/2026 21:21:52 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 21:21:52 ::1 GET /design-system.css
+ HTTP  26/05/2026 21:21:52 ::1 Returned 304 in 0 ms
+
+ INFO  Gracefully shutting down. Please wait...

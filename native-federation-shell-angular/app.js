@@ -868,7 +868,7 @@ function updateInsightsTable() {
 const registry = [
   {
     id: 'nf',
-    label: 'NF - Event Stream',
+    label: 'Vanilla JS + Native Federation',
     accent: '#10b981',
     accentAlt: '#34d399',
     description: 'Remote ESM nativo orientado a eventos com pipeline zero-bundler.',
@@ -901,7 +901,7 @@ const registry = [
   },
   {
     id: 'mf',
-    label: 'Remote-A - Module Federation',
+    label: 'React + Module Federation',
     accent: '#1c78c0',
     accentAlt: '#8ed6fb',
     description: 'Remote webpack 5 exposto como ESM para catalogos omnichannel regulados.',
@@ -934,7 +934,7 @@ const registry = [
   },
   {
     id: 'ssa',
-    label: 'MFE-A - Single-SPA',
+    label: 'Angular 15 + Single-SPA',
     accent: '#f97316',
     accentAlt: '#fb923c',
     description: 'Lifecycle bootstrap/mount/unmount em Angular 15 pronto para modernizar shells legados.',
@@ -968,7 +968,7 @@ const registry = [
   },
   {
     id: 'ng',
-    label: 'Angular - Web Component',
+    label: 'Angular 15 + Native Federation',
     accent: '#dd0031',
     accentAlt: '#f87171',
     description: 'Angular 15 empacotado como Custom Element leve para Native Federation.',
@@ -998,7 +998,7 @@ const registry = [
   },
   {
     id: 'ng-full',
-    label: 'Angular - Experience Platform',
+    label: 'Angular 20 + Native Federation',
     accent: '#dd0031',
     accentAlt: '#fca5a5',
     description: 'Aplicacao Angular CLI completa disponibilizada como Web Component federado.',
@@ -1020,7 +1020,7 @@ const registry = [
   },
   {
     id: 'react',
-    label: 'React - Observability',
+    label: 'React + Native Federation',
     accent: '#61dafb',
     accentAlt: '#38bdf8',
     description: 'React 18 encapsulado como Custom Element para painéis de observabilidade.',
@@ -1052,7 +1052,7 @@ const registry = [
   },
   {
     id: 'vue',
-    label: 'Vue - Operational Insights',
+    label: 'Vue + Native Federation',
     accent: '#42b883',
     accentAlt: '#22c55e',
     description: 'Vue 3 defineCustomElement otimizado para portais híbridos.',

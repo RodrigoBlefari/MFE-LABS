@@ -1,0 +1,192 @@
+
+> mfe-vue-webcomponent@0.1.0 start
+> serve -l 9001 --cors .
+
+ UPDATE  The latest version of `serve` is 14.2.6
+ INFO  Accepting connections at http://localhost:9001
+ HTTP  26/05/2026 22:35:44 ::1 GET /
+ HTTP  26/05/2026 22:35:44 ::1 Returned 200 in 9 ms
+ HTTP  26/05/2026 22:42:09 ::1 HEAD /mfe-vue.js
+ HTTP  26/05/2026 22:42:09 ::1 Returned 304 in 2 ms
+ HTTP  26/05/2026 22:42:09 ::1 GET /mfe-vue.js
+ HTTP  26/05/2026 22:42:09 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:42:09 ::1 GET /mfe-vue.js
+ HTTP  26/05/2026 22:42:09 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:42:09 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:42:09 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:42:45 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:42:45 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:42:45 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:42:45 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:42:45 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:42:45 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:42:46 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:42:46 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:42:46 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:42:46 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:42:46 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:42:46 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:42:46 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:42:46 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:42:46 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:42:46 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:20 ::1 HEAD /mfe-vue.js
+ HTTP  26/05/2026 22:45:20 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:20 ::1 GET /mfe-vue.js
+ HTTP  26/05/2026 22:45:20 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:20 ::1 GET /mfe-vue.js
+ HTTP  26/05/2026 22:45:20 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:20 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:20 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:40 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:40 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:41 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:41 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:41 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:41 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:41 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:41 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:41 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:41 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:41 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:41 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:42 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:42 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:42 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:42 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:42 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:42 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:42 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:42 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:42 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:42 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:42 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:42 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:43 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:43 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:43 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:43 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:43 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:43 ::1 Returned 304 in 10 ms
+ HTTP  26/05/2026 22:45:43 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:43 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:43 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:43 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:43 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:43 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:44 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:44 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:44 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:44 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:44 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:44 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:44 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:44 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:45 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:45 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:45 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:45 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:45 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:45 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:45 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:45 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:45 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:45 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:46 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:46 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:46 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:46 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:46 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:46 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:46 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:46 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:46 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:46 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:46 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:46 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:47 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:47 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:47 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:47 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:47 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:47 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:47 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:47 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:47 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:47 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:48 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:48 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:48 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:48 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:48 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:48 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:48 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:48 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:48 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:48 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:48 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:48 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:49 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:49 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:49 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:49 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:49 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:49 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:49 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:49 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:50 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:50 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:50 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:50 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:50 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:50 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:50 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:50 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:50 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:50 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:51 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:51 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:51 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:51 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:51 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:51 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:51 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:51 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:51 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:51 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:51 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:51 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:52 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:52 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:52 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:52 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:52 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:52 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:52 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:52 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:52 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:52 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:53 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:53 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:53 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:53 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:53 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:53 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:53 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:53 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:53 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:53 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:54 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:54 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:54 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:54 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:54 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:54 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:54 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:54 ::1 Returned 304 in 0 ms
+ HTTP  26/05/2026 22:45:54 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:54 ::1 Returned 304 in 1 ms
+ HTTP  26/05/2026 22:45:55 ::1 GET /mfe-vue.css
+ HTTP  26/05/2026 22:45:55 ::1 Returned 304 in 1 ms
+
+ INFO  Gracefully shutting down. Please wait...
