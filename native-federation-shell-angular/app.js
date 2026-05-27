@@ -14,6 +14,7 @@ const insightSlowest = document.getElementById('insight-slowest');
 const insightAverage = document.getElementById('insight-average');
 const insightSamples = document.getElementById('insight-samples');
 const insightBestPeak = document.getElementById('insight-best');
+const insightP95 = document.getElementById('insight-p95');
 const insightsTableBody = document.getElementById('insights-table-body');
 const insightsTableFoot = document.getElementById('insights-table-foot');
 const modalBackdrop = document.getElementById('modal-backdrop');
@@ -679,12 +680,93 @@ function closeModal() {
 
 function createMetricsSeed() {
   return {
+    warmupDone: false,
+    samples: [],
     count: 0,
     total: 0,
     last: 0,
     average: 0,
     best: Number.POSITIVE_INFINITY,
     worst: 0,
+    median: 0,
+    p95: 0,
+    phases: {
+      fetch: { total: 0, avg: 0, last: 0 },
+      eval: { total: 0, avg: 0, last: 0 },
+      mount: { total: 0, avg: 0, last: 0 },
+    },
+    transfer: {
+      bytes: 0,
+      duration: 0,
+      count: 0,
+      avgDuration: 0,
+    },
+  };
+}
+
+function percentile(values, p) {
+  if (!Array.isArray(values) || values.length === 0) return 0;
+  const sorted = values.slice().sort((a, b) => a - b);
+  const idx = Math.min(sorted.length - 1, Math.max(0, Math.ceil((p / 100) * sorted.length) - 1));
+  return sorted[idx];
+}
+
+function median(values) {
+  if (!Array.isArray(values) || values.length === 0) return 0;
+  const sorted = values.slice().sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
+}
+
+function readResourceTiming(remoteUrl, t0, t1) {
+  try {
+    const entries = performance
+      .getEntriesByType('resource')
+      .filter((e) =>
+        e.name === remoteUrl &&
+        typeof e.startTime === 'number' &&
+        typeof e.responseEnd === 'number' &&
+        e.startTime >= t0 - 5 &&
+        e.responseEnd <= t1 + 5,
+      );
+    if (!entries.length) return null;
+    const latest = entries[entries.length - 1];
+    return {
+      bytes: Number(latest.transferSize || latest.encodedBodySize || 0),
+      duration: Number(latest.duration || 0),
+    };
+  } catch {
+    return null;
+  }
+}
+
+async function mountWithBenchmark(mfe, outlet, options = {}) {
+  const remoteUrl = getRemoteUrl(mfe.id);
+  const fetchStart = performance.now();
+  const mod = await import(remoteUrl);
+  const fetchEnd = performance.now();
+
+  const mountStart = performance.now();
+  const lifecycleCandidate =
+    (await mfe.mount(outlet, {
+      ...options,
+      __preloadedModule: mod,
+    })) ?? createLifecycle(null, null, null);
+  const mountEnd = performance.now();
+
+  const total = mountEnd - fetchStart;
+  const fetchPhase = Math.max(0, fetchEnd - fetchStart);
+  const mountPhase = Math.max(0, mountEnd - mountStart);
+  const evalPhase = Math.max(0, total - fetchPhase - mountPhase);
+  const transfer = readResourceTiming(remoteUrl, fetchStart, mountEnd);
+
+  return {
+    lifecycle: lifecycleCandidate,
+    metricsInput: {
+      total,
+      phases: { fetch: fetchPhase, eval: evalPhase, mount: mountPhase },
+      transfer,
+    },
   };
 }
 
@@ -698,6 +780,13 @@ function getMetricsSnapshot(id) {
       average: 0,
       best: 0,
       worst: 0,
+      median: 0,
+      p95: 0,
+      phases: {
+        fetch: { avg: 0, last: 0 },
+        eval: { avg: 0, last: 0 },
+        mount: { avg: 0, last: 0 },
+      },
     };
   }
   return {
@@ -707,11 +796,28 @@ function getMetricsSnapshot(id) {
     average: entry.average,
     best: entry.best === Number.POSITIVE_INFINITY ? 0 : entry.best,
     worst: entry.worst,
+    median: entry.median,
+    p95: entry.p95,
+    phases: {
+      fetch: { avg: entry.phases.fetch.avg, last: entry.phases.fetch.last },
+      eval: { avg: entry.phases.eval.avg, last: entry.phases.eval.last },
+      mount: { avg: entry.phases.mount.avg, last: entry.phases.mount.last },
+    },
   };
 }
 
-function recordMetrics(id, duration) {
+function recordMetrics(id, input) {
+  const duration = typeof input === 'number' ? input : Number(input?.total || 0);
+  const phases = typeof input === 'object' && input?.phases ? input.phases : { fetch: 0, eval: 0, mount: duration };
+  const transfer = typeof input === 'object' ? input?.transfer : null;
   const entry = metricsStore.get(id) ?? createMetricsSeed();
+
+  if (!entry.warmupDone) {
+    entry.warmupDone = true;
+    metricsStore.set(id, entry);
+    return getMetricsSnapshot(id);
+  }
+
   const previousCount = entry.count;
   entry.count = previousCount + 1;
   entry.total += duration;
@@ -719,6 +825,29 @@ function recordMetrics(id, duration) {
   entry.best = previousCount === 0 ? duration : Math.min(entry.best, duration);
   entry.worst = previousCount === 0 ? duration : Math.max(entry.worst, duration);
   entry.average = entry.total / entry.count;
+
+  entry.samples.push(duration);
+  if (entry.samples.length > 200) entry.samples.shift();
+  entry.median = median(entry.samples);
+  entry.p95 = percentile(entry.samples, 95);
+
+  entry.phases.fetch.total += Number(phases.fetch || 0);
+  entry.phases.fetch.last = Number(phases.fetch || 0);
+  entry.phases.fetch.avg = entry.phases.fetch.total / entry.count;
+  entry.phases.eval.total += Number(phases.eval || 0);
+  entry.phases.eval.last = Number(phases.eval || 0);
+  entry.phases.eval.avg = entry.phases.eval.total / entry.count;
+  entry.phases.mount.total += Number(phases.mount || duration);
+  entry.phases.mount.last = Number(phases.mount || duration);
+  entry.phases.mount.avg = entry.phases.mount.total / entry.count;
+
+  if (transfer && (transfer.bytes > 0 || transfer.duration > 0)) {
+    entry.transfer.bytes += Number(transfer.bytes || 0);
+    entry.transfer.duration += Number(transfer.duration || 0);
+    entry.transfer.count += 1;
+    entry.transfer.avgDuration = entry.transfer.duration / entry.transfer.count;
+  }
+
   metricsStore.set(id, entry);
   return {
     count: entry.count,
@@ -727,6 +856,13 @@ function recordMetrics(id, duration) {
     average: entry.average,
     best: entry.best,
     worst: entry.worst,
+    median: entry.median,
+    p95: entry.p95,
+    phases: {
+      fetch: { avg: entry.phases.fetch.avg, last: entry.phases.fetch.last },
+      eval: { avg: entry.phases.eval.avg, last: entry.phases.eval.last },
+      mount: { avg: entry.phases.mount.avg, last: entry.phases.mount.last },
+    },
   };
 }
 
@@ -768,7 +904,7 @@ function applyTelemetryBadges(id, metrics) {
 }
 
 function updateInsights() {
-  if (!insightFastest || !insightSlowest || !insightAverage || !insightSamples || !insightBestPeak) {
+  if (!insightFastest || !insightSlowest || !insightAverage || !insightSamples || !insightBestPeak || !insightP95) {
     return;
   }
 
@@ -801,11 +937,16 @@ function updateInsights() {
     const b = entry.metrics.best ?? Number.POSITIVE_INFINITY;
     return b > 0 && b < best ? b : best;
   }, Number.POSITIVE_INFINITY);
+  const globalP95 = percentile(
+    entries.flatMap((entry) => (entry.metrics?.samples || []).slice(-100)),
+    95,
+  );
 
   insightFastest.textContent = `${fastest.label} · ${toMetricLabel(fastest.metrics.average)}`;
   insightSlowest.textContent = `${slowest.label} · ${toMetricLabel(slowest.metrics.average)}`;
   insightAverage.textContent = toMetricLabel(globalAverage);
   insightBestPeak.textContent = toMetricLabel(globalBest === Number.POSITIVE_INFINITY ? 0 : globalBest);
+  insightP95.textContent = toMetricLabel(globalP95);
   insightSamples.textContent = String(totalSamples);
 
   updateInsightsTable();
@@ -849,7 +990,12 @@ function updateInsightsTable() {
         metrics?.best === Number.POSITIVE_INFINITY ? 0 : metrics?.best,
       );
       const worst = toMetricLabel(metrics?.worst);
+      const medianValue = toMetricLabel(metrics?.median);
+      const p95Value = toMetricLabel(metrics?.p95);
       const count = String(metrics?.count ?? 0);
+      const fetchAvg = toMetricLabel(metrics?.phases?.fetch?.avg);
+      const evalAvg = toMetricLabel(metrics?.phases?.eval?.avg);
+      const mountAvg = toMetricLabel(metrics?.phases?.mount?.avg);
       const version = reg?.version || '--';
       return `<tr data-mfe="${id}">
         <td>${label}</td>
@@ -857,21 +1003,31 @@ function updateInsightsTable() {
         <td>${avg}</td>
         <td>${best}</td>
         <td>${worst}</td>
+        <td>${medianValue}</td>
+        <td>${p95Value}</td>
         <td>${count}</td>
+        <td>${fetchAvg}</td>
+        <td>${evalAvg}</td>
+        <td>${mountAvg}</td>
         <td>${bundle}</td>
       </tr>`;
     })
     .join('');
 
   insightsTableBody.innerHTML =
-    rows || `<tr><td colspan="6" style="text-align:center;opacity:.7">Nenhum dado ainda.</td></tr>`;
+    rows || `<tr><td colspan="12" style="text-align:center;opacity:.7">Nenhum dado ainda.</td></tr>`;
 
   // Agregados globais para o rodapé
   const withData = full.filter((e) => e.metrics && e.metrics.count > 0);
   let globalAvg = '--';
   let globalBest = '--';
   let globalWorst = '--';
+  let globalMedian = '--';
+  let globalP95 = '--';
   let samples = '0';
+  let fetchAvg = '--';
+  let evalAvg = '--';
+  let mountAvg = '--';
   if (withData.length > 0) {
     const totalSamples = withData.reduce((s, e) => s + e.metrics.count, 0);
     const totalTime = withData.reduce((s, e) => s + e.metrics.total, 0);
@@ -883,6 +1039,15 @@ function updateInsightsTable() {
     globalAvg = toMetricLabel(totalTime / totalSamples);
     globalBest = toMetricLabel(best === Number.POSITIVE_INFINITY ? 0 : best);
     globalWorst = toMetricLabel(worst);
+    const samplePool = withData.flatMap((e) => (e.metrics.samples || []).slice(-100));
+    globalMedian = toMetricLabel(median(samplePool));
+    globalP95 = toMetricLabel(percentile(samplePool, 95));
+    const fetchTotal = withData.reduce((s, e) => s + (e.metrics?.phases?.fetch?.total || 0), 0);
+    const evalTotal = withData.reduce((s, e) => s + (e.metrics?.phases?.eval?.total || 0), 0);
+    const mountTotal = withData.reduce((s, e) => s + (e.metrics?.phases?.mount?.total || 0), 0);
+    fetchAvg = toMetricLabel(fetchTotal / totalSamples);
+    evalAvg = toMetricLabel(evalTotal / totalSamples);
+    mountAvg = toMetricLabel(mountTotal / totalSamples);
     samples = String(totalSamples);
   }
 
@@ -902,7 +1067,12 @@ function updateInsightsTable() {
       <td>${globalAvg}</td>
       <td>${globalBest}</td>
       <td>${globalWorst}</td>
+      <td>${globalMedian}</td>
+      <td>${globalP95}</td>
       <td>${samples}</td>
+      <td>${fetchAvg}</td>
+      <td>${evalAvg}</td>
+      <td>${mountAvg}</td>
       <td>${avgBundle}</td>
     `;
   }
@@ -917,9 +1087,9 @@ const registry = [
     description: 'Remote ESM nativo orientado a eventos com pipeline zero-bundler.',
     tagline: 'CustomEvent + contratos simples: integra Single-SPA e Module Federation sem acoplamento.',
     remote: 'http://localhost:9101/mfe1.js',
-    mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('nf') } = {}) => {
+    mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('nf'), __preloadedModule = null } = {}) => {
       const variant = compact ? 'compact' : 'full';
-      const mod = await import(getRemoteUrl('nf'));
+      const mod = __preloadedModule || (await import(getRemoteUrl('nf')));
       const result = await mod.render(outlet, {
         host: 'native-shell',
         name: 'mfe1-nf',
@@ -950,9 +1120,9 @@ const registry = [
     description: 'Remote webpack 5 exposto como ESM para catalogos omnichannel regulados.',
     tagline: 'Bridge MF + Native Federation com compartilhamento controlado de dependências.',
     remote: 'http://localhost:9301/remote-a.js',
-    mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('mf') } = {}) => {
+    mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('mf'), __preloadedModule = null } = {}) => {
       const variant = compact ? 'compact' : 'full';
-      const mod = await import(getRemoteUrl('mf'));
+      const mod = __preloadedModule || (await import(getRemoteUrl('mf')));
       const result = await mod.render(outlet, {
         host: 'native-shell',
         name: 'remote-a-mf',
@@ -983,9 +1153,9 @@ const registry = [
     description: 'Lifecycle bootstrap/mount/unmount em Angular 15 pronto para modernizar shells legados.',
     tagline: 'Adapter ESM Angular 15 que publica BUS e convive com MF/NF sem retrabalho.',
     remote: 'http://localhost:9302/mfe-a.js',
-    mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('ssa') } = {}) => {
+    mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('ssa'), __preloadedModule = null } = {}) => {
       const variant = compact ? 'compact' : 'full';
-      const mod = await import(getRemoteUrl('ssa'));
+      const mod = __preloadedModule || (await import(getRemoteUrl('ssa')));
       const baseProps = {
         name: '@org/mfe-a',
         host: 'native-shell',
@@ -1017,9 +1187,9 @@ const registry = [
     description: 'Angular 15 empacotado como Custom Element leve para Native Federation.',
     tagline: 'Angular 15 + @angular/elements com telemetria nativa.',
     remote: 'http://localhost:9310/mfe-ng.js',
-    mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('ng') } = {}) => {
+    mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('ng'), __preloadedModule = null } = {}) => {
       const variant = compact ? 'compact' : 'full';
-      const mod = await import(getRemoteUrl('ng'));
+      const mod = __preloadedModule || (await import(getRemoteUrl('ng')));
       const result = await mod.render(outlet, {
         replace: true,
         variant,
@@ -1047,8 +1217,8 @@ const registry = [
     description: 'Aplicacao Angular CLI completa disponibilizada como Web Component federado.',
     tagline: 'CLI standalone + Angular Elements pronta para canais regulados.',
     remote: 'http://localhost:9400/mfe-ng-full.js',
-    mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('ng-full') } = {}) => {
-      const mod = await import(getRemoteUrl('ng-full'));
+    mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('ng-full'), __preloadedModule = null } = {}) => {
+      const mod = __preloadedModule || (await import(getRemoteUrl('ng-full')));
       const result = await mod.render(outlet, {
         baseUrl: 'http://localhost:9400/',
         variant: compact ? 'compact' : 'full',
@@ -1069,9 +1239,9 @@ const registry = [
     description: 'React 18 encapsulado como Custom Element para painéis de observabilidade.',
     tagline: 'createRoot + Web Component com isolamento e telemetria de renderizacao.',
     remote: 'http://localhost:9201/mfe-react.js',
-    mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('react') } = {}) => {
+    mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('react'), __preloadedModule = null } = {}) => {
       const variant = compact ? 'compact' : 'full';
-      const mod = await import(getRemoteUrl('react'));
+      const mod = __preloadedModule || (await import(getRemoteUrl('react')));
       const result = await mod.render(outlet, {
         replace: true,
         log: !compact,
@@ -1101,9 +1271,9 @@ const registry = [
     description: 'Vue 3 defineCustomElement otimizado para portais híbridos.',
     tagline: 'Composition API + Custom Element com BUS integrado e métricas reais.',
     remote: 'http://localhost:9001/mfe-vue.js',
-    mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('vue') } = {}) => {
+    mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('vue'), __preloadedModule = null } = {}) => {
       const variant = compact ? 'compact' : 'full';
-      const mod = await import(getRemoteUrl('vue'));
+      const mod = __preloadedModule || (await import(getRemoteUrl('vue')));
       const result = await mod.render(outlet, {
         replace: true,
         variant,
@@ -1262,15 +1432,12 @@ async function mountPrimary(key) {
   setLoading(true);
   try {
     await teardownPrimary();
-    const start = performance.now();
-    const lifecycle =
-      (await mfe.mount(primaryOutlet, {
-        compact: false,
-        metrics: getMetricsSnapshot(mfe.id),
-      })) ?? createLifecycle(null, null, null);
-    const duration = performance.now() - start;
+    const { lifecycle, metricsInput } = await mountWithBenchmark(mfe, primaryOutlet, {
+      compact: false,
+      metrics: getMetricsSnapshot(mfe.id),
+    });
     primaryLifecycle = lifecycle;
-    const metrics = recordMetrics(mfe.id, duration);
+    const metrics = recordMetrics(mfe.id, metricsInput);
     primaryLifecycle.updateMetrics?.(metrics);
     applyTelemetryBadges(mfe.id, metrics);
     updateInsights();
@@ -1391,15 +1558,12 @@ slot.appendChild(body);
 pageGrid.appendChild(slot);
 
       try {
-        const start = performance.now();
-        const lifecycle =
-          (await mfe.mount(surface, {
-            compact: true,
-            metrics: getMetricsSnapshot(id),
-          })) ?? createLifecycle(null, null, null);
-        const duration = performance.now() - start;
+        const { lifecycle, metricsInput } = await mountWithBenchmark(mfe, surface, {
+          compact: true,
+          metrics: getMetricsSnapshot(id),
+        });
         combinedLifecycles.set(id, lifecycle);
-        const metrics = recordMetrics(id, duration);
+        const metrics = recordMetrics(id, metricsInput);
         lifecycle.updateMetrics?.(metrics);
         applyTelemetryBadges(id, metrics);
         slot.classList.add('is-active');
