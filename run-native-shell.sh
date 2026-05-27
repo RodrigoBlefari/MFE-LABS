@@ -197,8 +197,8 @@ install_deps_for_mfe() {
   local name="$1"
   local attempts=0
 
-  if [ "$name" = "mfe-ng-full" ]; then
-    echo "[mfe:$name] Instalando deps com --legacy-peer-deps (Angular 20)"
+  if [ "$name" = "mfe-ng-full" ] || [ "$name" = "mfe-ng" ] || [ "$name" = "mfe-a" ]; then
+    echo "[mfe:$name] Instalando deps com --legacy-peer-deps (compat Angular/Single-SPA)"
     until npm install --legacy-peer-deps >/dev/null 2>&1; do
       attempts=$((attempts + 1))
       echo "[mfe:$name] npm install --legacy-peer-deps falhou (tentativa $attempts)"

@@ -53,6 +53,8 @@ function formatMetric(value) {
 }
 
 export async function bootstrap() {
+  // Contrato Single-SPA: bootstrap único por aplicação.
+  // Neste laboratório, o widget é entregue como ESM compatível com shells Native Federation.
   ensureStylesheet();
 }
 
@@ -63,8 +65,8 @@ export async function mount(props = {}) {
     appendTo = document.body,
     replace = true,
     title = 'Single-SPA - Orchestration Tile',
-    description = 'Widget Single-SPA embalado como modulo ESM, ideal para shells legados evoluirem gradualmente.',
-    tagline = 'Expose mount/unmount e deixe o host decidir quem convive em tela.',
+    description = 'Widget Single-SPA em Angular 15 embalado como modulo ESM, ideal para shells legados evoluirem gradualmente.',
+    tagline = 'single-spa-angular + lifecycle bootstrap/mount/unmount para convivência com Native Federation.',
     log = true,
     variant = 'full',
     metrics = {},
@@ -154,19 +156,19 @@ export async function mount(props = {}) {
     <div class="ssa-detail-group">
       <h3>Arquitetura remota</h3>
       <ul class="ssa-detail-list">
-        <li><strong>Lifecycle:</strong> bootstrap/mount/unmount padrao Single-SPA</li>
-        <li><strong>Integracao:</strong> Wrapper ESM exportado para hosts Native/MF</li>
-        <li><strong>Versao alvo:</strong> Single-SPA 5.x</li>
+        <li><strong>Lifecycle:</strong> bootstrap/mount/unmount padrão Single-SPA</li>
+        <li><strong>Stack:</strong> Angular 15 + single-spa-angular (adapter ESM)</li>
+        <li><strong>Versão alvo:</strong> Single-SPA 5.x</li>
       </ul>
     </div>
     <div class="ssa-detail-group">
       <h4>Exemplo pratico</h4>
-      <p>Aplicacao legado AngularJS coexistindo com React e Vue em um orquestrador Single-SPA corporativo.</p>
+      <p>Aplicação Angular 15 coexistindo com React e Vue em um orquestrador Single-SPA corporativo.</p>
     </div>
     <div class="ssa-detail-group">
       <h4>Como consumir</h4>
       <ul class="ssa-detail-list">
-        <li>Registrar via SystemJS e montar sob demanda</li>
+        <li>Registrar via SystemJS/single-spa e montar sob demanda</li>
         <li>Utilizar adaptador ESM em hosts Native Federation</li>
         <li>Propagar eventos pelo canal BUS unificado</li>
       </ul>

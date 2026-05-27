@@ -126,7 +126,7 @@ const overviewDocumentation = `
         <div>
           <h4>MFEs</h4>
           <ul>
-            <li>Angular CLI 17 (esbuild) para <code>mfe-ng-full</code> e Angular standalone Elements.</li>
+            <li>Angular CLI 20 (esbuild) para <code>mfe-ng-full</code> e Angular 15 para remotos Native Federation/Single-SPA.</li>
             <li>Vue 3 <code>defineCustomElement</code>, React 18 <code>createRoot</code>, Module Federation remoto e Single-SPA.</li>
             <li>Servicos estaticos expostos com <code>npm start</code>/<code>npm run serve</code> liberando apenas o host.</li>
           </ul>
@@ -375,12 +375,12 @@ npm start</code></pre>
       <span class="doc-tag">Single-SPA</span>
       <div class="doc-block">
         <h3>Resumo</h3>
-        <p>Adapter Single-SPA em <code>http://localhost:9302/mfe-a.js</code>, provendo <code>bootstrap</code>, <code>mount</code> e <code>unmount</code>.</p>
+        <p>Adapter Single-SPA em <code>http://localhost:9302/mfe-a.js</code>, baseado em Angular 15 e provendo <code>bootstrap</code>, <code>mount</code> e <code>unmount</code>.</p>
       </div>
       <div class="doc-block">
         <h3>Stack tecnico</h3>
         <ul>
-          <li>Fonte em <code>MFEs/single-spa/mfe-a/</code> com TypeScript e contratos Single-SPA.</li>
+          <li>Fonte em <code>MFEs/single-spa/mfe-a/</code> com Angular 15 e contratos Single-SPA.</li>
           <li>Exporta tambem <code>render()</code> adaptado para Native Federation.</li>
           <li>Scripts: <code>npm install</code> e <code>npm start</code> (porta 9001).</li>
         </ul>
@@ -400,12 +400,12 @@ npm start</code></pre>
       <span class="doc-tag">Angular Elements</span>
       <div class="doc-block">
         <h3>Resumo</h3>
-        <p>Angular standalone + Signals convertido em Web Component (<code>mfe-ng</code> em <code>http://localhost:9310/mfe-ng.js</code>).</p>
+        <p>Angular 15 convertido em Web Component para Native Federation (<code>mfe-ng</code> em <code>http://localhost:9310/mfe-ng.js</code>).</p>
       </div>
       <div class="doc-block">
         <h3>Stack tecnico</h3>
         <ul>
-          <li>Fonte em <code>MFEs/angular/mfe-ng/</code> com <code>createApplication</code> e <code>@angular/elements</code>.</li>
+          <li>Fonte em <code>MFEs/angular/mfe-ng/</code> com Angular 15, <code>@angular/elements</code> e integração Native Federation.</li>
           <li>Signals para metricas, estilos encapsulados e bundle esbuild.</li>
           <li>Servido via <code>npm start</code> (porta 9301).</li>
         </ul>
@@ -937,8 +937,8 @@ const registry = [
     label: 'MFE-A - Single-SPA',
     accent: '#f97316',
     accentAlt: '#fb923c',
-    description: 'Lifecycle bootstrap/mount/unmount pronto para modernizar shells legados.',
-    tagline: 'Adapter ESM que publica BUS e convive com MF/NF sem retrabalho.',
+    description: 'Lifecycle bootstrap/mount/unmount em Angular 15 pronto para modernizar shells legados.',
+    tagline: 'Adapter ESM Angular 15 que publica BUS e convive com MF/NF sem retrabalho.',
     remote: 'http://localhost:9302/mfe-a.js',
     mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('ssa') } = {}) => {
       const variant = compact ? 'compact' : 'full';
@@ -953,8 +953,8 @@ const registry = [
         metrics,
         title: compact ? 'Single-SPA Widget' : 'Single-SPA - Orchestration Tile',
         description: compact
-          ? 'Widget Single-SPA pronto para shells legados.'
-          : 'Widget Single-SPA embalado como modulo ESM, ideal para shells legados evoluirem gradualmente.',
+          ? 'Widget Single-SPA em Angular 15 pronto para shells legados.'
+          : 'Widget Single-SPA em Angular 15 embalado como modulo ESM, ideal para shells legados evoluirem gradualmente.',
         tagline: compact
           ? 'Contrato mount/unmount padrao Single-SPA.'
           : 'Expose mount/unmount e deixe o shell decidir quem convive em tela.',
@@ -971,8 +971,8 @@ const registry = [
     label: 'Angular - Web Component',
     accent: '#dd0031',
     accentAlt: '#f87171',
-    description: 'Angular standalone + Signals empacotado como Custom Element leve.',
-    tagline: 'createApplication + @angular/elements com telemetria nativa.',
+    description: 'Angular 15 empacotado como Custom Element leve para Native Federation.',
+    tagline: 'Angular 15 + @angular/elements com telemetria nativa.',
     remote: 'http://localhost:9310/mfe-ng.js',
     mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('ng') } = {}) => {
       const variant = compact ? 'compact' : 'full';
@@ -983,8 +983,8 @@ const registry = [
         metrics,
         title: compact ? 'Angular Widget' : 'Angular Engagement Dashboard',
         description: compact
-          ? 'Angular standalone registrado via createCustomElement.'
-          : 'Web Component Angular standalone com Signals, ideal para orquestracao corporativa.',
+          ? 'Angular 15 registrado via createCustomElement.'
+          : 'Web Component Angular 15 para Native Federation, ideal para orquestracao corporativa.',
         tagline: compact
           ? 'Signals + emissao de BUS.'
           : 'Empacotado com createApplication + @angular/elements.',

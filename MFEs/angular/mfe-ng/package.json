@@ -2,6 +2,9 @@
   "name": "mfe-ng-webcomponent",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=16 <19"
+  },
   "scripts": {
     "start": "serve -l 9310 --cors .",
     "build": "node ./scripts/build-copy.mjs mfe-ng.js mfe-ng.css"
@@ -10,9 +13,11 @@
     "serve": "^14.2.3"
   },
   "dependencies": {
-    "@angular/elements": "^17.3.0",
-    "@angular/platform-browser-dynamic": "^17.3.0",
+    "@angular/core": "^15.2.10",
+    "@angular/elements": "^15.2.10",
+    "@angular/platform-browser": "^15.2.10",
+    "@angular/platform-browser-dynamic": "^15.2.10",
     "tslib": "^2.6.2",
-    "zone.js": "^0.14.2"
+    "zone.js": "^0.12.0"
   }
 }
