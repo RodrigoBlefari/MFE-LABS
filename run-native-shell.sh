@@ -10,6 +10,10 @@ mkdir -p "$LOG_DIR"
 
 echo "[run-native-shell] Root: $ROOT_DIR"
 
+# Modo recomendado para benchmark real: build primeiro, depois serve artefato estático.
+BUILD_FIRST="${BUILD_FIRST:-1}"
+echo "[run-native-shell] BUILD_FIRST=$BUILD_FIRST (1=build->dist->serve)"
+
 echo "[run-native-shell] Validando contrato de shared dependencies..."
 if ! node "$ROOT_DIR/.run-scripts/validate-shared-deps.js"; then
   echo "[run-native-shell] Falha na validação de shared dependencies. Abortando startup." >&2
@@ -235,6 +239,61 @@ install_deps_for_mfe() {
   return 0
 }
 
+build_mfe_if_needed() {
+  local name="$1"
+  if [ "$BUILD_FIRST" != "1" ]; then
+    return 0
+  fi
+
+  if [ "$name" = "mfe-ng-full" ]; then
+    echo "[mfe:$name] Build real (npm run package)"
+    npm run package
+    return 0
+  fi
+
+  if npm run | grep -q " build"; then
+    echo "[mfe:$name] Build real (npm run build)"
+    npm run build
+  else
+    echo "[mfe:$name] Sem script build, seguindo com start padrão"
+  fi
+}
+
+start_command_for_mfe() {
+  local name="$1"
+  if [ "$BUILD_FIRST" != "1" ]; then
+    echo "npm start"
+    return 0
+  fi
+
+  case "$name" in
+    mfe1)
+      echo "npx serve -l 9101 --cors dist"
+      ;;
+    remote-a)
+      echo "npx serve -l 9301 --cors dist"
+      ;;
+    mfe-a)
+      echo "npx serve -l 9302 --cors dist"
+      ;;
+    mfe-ng)
+      echo "npx serve -l 9310 --cors ."
+      ;;
+    mfe-ng-full)
+      echo "npm run serve"
+      ;;
+    mfe-react)
+      echo "npx serve -l 9201 --cors dist"
+      ;;
+    mfe-vue)
+      echo "npx serve -l 9001 --cors dist"
+      ;;
+    *)
+      echo "npm start"
+      ;;
+  esac
+}
+
 shopt -s nullglob || true
 for mfe_dir in "$ROOT_DIR"/MFEs/*/*; do
   if [ -d "$mfe_dir" ] && [ -f "$mfe_dir/package.json" ]; then
@@ -262,9 +321,17 @@ for mfe_dir in "$ROOT_DIR"/MFEs/*/*; do
         continue
       fi
 
+      if ! build_mfe_if_needed "$name"; then
+        echo "[mfe:$name] Falha no build"
+        FAILED+=("$name")
+        popd >/dev/null || true
+        continue
+      fi
+
       LOG_FILE="$LOG_DIR/${name}.log"
-      echo "[mfe:$name] Iniciando (log: $LOG_FILE)"
-      npm start > "$LOG_FILE" 2>&1 &
+      START_CMD="$(start_command_for_mfe "$name")"
+      echo "[mfe:$name] Iniciando com: $START_CMD (log: $LOG_FILE)"
+      bash -lc "$START_CMD" > "$LOG_FILE" 2>&1 &
       pid=$!
       echo $pid > "$LOG_DIR/${name}.pid"
 

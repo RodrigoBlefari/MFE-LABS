@@ -147,6 +147,26 @@ Regras importantes:
 bash run-native-shell.sh
 ```
 
+### Modo benchmark real (build-first, recomendado)
+
+Agora o orquestrador suporta pipeline realista de produção para os MFEs estáticos:
+
+1. instala dependências
+2. roda build (`dist`)
+3. sobe servidor estático do `dist`
+
+Executar:
+
+```bash
+BUILD_FIRST=1 bash run-native-shell.sh
+```
+
+Se quiser voltar ao comportamento antigo (start direto):
+
+```bash
+BUILD_FIRST=0 bash run-native-shell.sh
+```
+
 Esse script agora:
 1. valida shared deps
 2. valida governança de remotes (`MFE_ENV`, default `dev`)
