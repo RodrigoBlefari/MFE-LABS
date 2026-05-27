@@ -10,6 +10,12 @@ mkdir -p "$LOG_DIR"
 
 echo "[run-native-shell] Root: $ROOT_DIR"
 
+echo "[run-native-shell] Validando contrato de shared dependencies..."
+if ! node "$ROOT_DIR/.run-scripts/validate-shared-deps.js"; then
+  echo "[run-native-shell] Falha na validação de shared dependencies. Abortando startup." >&2
+  exit 3
+fi
+
 SHELL_DIR="$ROOT_DIR/native-federation-shell-angular"
 
 if [ ! -d "$SHELL_DIR" ]; then

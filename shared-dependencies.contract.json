@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "sharedPolicy": {
+    "singleton": true,
+    "strictVersion": true,
+    "libraries": [
+      "@angular/core",
+      "@angular/common",
+      "@angular/platform-browser",
+      "rxjs",
+      "zone.js"
+    ]
+  },
+  "federationGroups": [
+    {
+      "name": "angular15-shared",
+      "members": [
+        "MFEs/angular/mfe-ng",
+        "MFEs/single-spa/mfe-a"
+      ]
+    }
+  ],
+  "isolatedRemotes": [
+    "MFEs/angular/mfe-ng-full"
+  ]
+}
