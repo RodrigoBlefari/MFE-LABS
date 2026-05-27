@@ -294,6 +294,20 @@ start_command_for_mfe() {
   esac
 }
 
+port_for_mfe() {
+  local name="$1"
+  case "$name" in
+    mfe1) echo "9101" ;;
+    remote-a) echo "9301" ;;
+    mfe-a) echo "9302" ;;
+    mfe-ng) echo "9310" ;;
+    mfe-ng-full) echo "9400" ;;
+    mfe-react) echo "9201" ;;
+    mfe-vue) echo "9001" ;;
+    *) echo "" ;;
+  esac
+}
+
 shopt -s nullglob || true
 for mfe_dir in "$ROOT_DIR"/MFEs/*/*; do
   if [ -d "$mfe_dir" ] && [ -f "$mfe_dir/package.json" ]; then
@@ -344,10 +358,12 @@ for mfe_dir in "$ROOT_DIR"/MFEs/*/*; do
         echo "[mfe:$name] Falhou ao iniciar (PID not running) - ver $LOG_FILE"
         FAILED+=("$name")
       fi
-      # health-check: tenta extrair porta do script de start e aguardar disponibilidade HTTP
-      # extrai start script via node (estamos no diretório do MFE)
-      start_cmd=$(node -e "try{const p=require('./package.json'); console.log((p.scripts&&p.scripts.start)||'') }catch(e){console.log('')}" 2>/dev/null || true)
-      port=''
+      # health-check: usa porta conhecida por MFE; fallback para heurística do script start
+      port="$(port_for_mfe "$name")"
+      start_cmd=''
+      if [ -z "$port" ]; then
+        start_cmd=$(node -e "try{const p=require('./package.json'); console.log((p.scripts&&p.scripts.start)||'') }catch(e){console.log('')}" 2>/dev/null || true)
+      fi
       if [[ "$start_cmd" =~ -l[[:space:]]*([0-9]{3,5}) ]]; then
         port="${BASH_REMATCH[1]}"
       elif [[ "$start_cmd" =~ --port[=[:space:]]*([0-9]{3,5}) ]]; then
@@ -449,8 +465,8 @@ echo "[run-native-shell] Iniciando shell Native Federation (em primeiro plano)..
 ( 
   cd "$SHELL_DIR"
   if [ -f package.json ]; then
-    echo "[shell] Instalando dependências (npm ci || npm install)..."
-    npm ci || npm install || true
+    echo "[shell] Instalando dependências (npm install)"
+    npm install || true
   fi
   echo "[shell] Logs: $LOG_DIR/shell.log"
   npm start 2>&1 | tee "$LOG_DIR/shell.log"
