@@ -1,0 +1,12 @@
+{
+  "env": "hml",
+  "remotes": {
+    "nf": "https://hml.example.com/nf/mfe1.js",
+    "mf": "https://hml.example.com/mf/remote-a.js",
+    "ssa": "https://hml.example.com/ssa/mfe-a.js",
+    "ng": "https://hml.example.com/ng/mfe-ng.js",
+    "ng-full": "https://hml.example.com/ng-full/mfe-ng-full.js",
+    "react": "https://hml.example.com/react/mfe-react.js",
+    "vue": "https://hml.example.com/vue/mfe-vue.js"
+  }
+}

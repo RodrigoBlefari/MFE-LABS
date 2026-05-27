@@ -27,6 +27,49 @@ const stageHeader = document.querySelector('.stage-header');
 let primaryDocButton = null;
 let primaryBusButton = null;
 
+const REMOTE_MANIFEST_ENV =
+  new URLSearchParams(window.location.search).get('env') ||
+  window.localStorage.getItem('mfe-env') ||
+  'dev';
+
+const remoteManifestCandidates = {
+  dev: './remotes.dev.json',
+  hml: './remotes.hml.json',
+  prod: './remotes.prod.json',
+};
+
+const defaultRemotes = {
+  nf: 'http://localhost:9101/mfe1.js',
+  mf: 'http://localhost:9301/remote-a.js',
+  ssa: 'http://localhost:9302/mfe-a.js',
+  ng: 'http://localhost:9310/mfe-ng.js',
+  'ng-full': 'http://localhost:9400/mfe-ng-full.js',
+  react: 'http://localhost:9201/mfe-react.js',
+  vue: 'http://localhost:9001/mfe-vue.js',
+};
+
+let runtimeRemotes = { ...defaultRemotes };
+
+function getRemoteUrl(id) {
+  return runtimeRemotes[id] || defaultRemotes[id];
+}
+
+async function loadRemoteManifest() {
+  const file = remoteManifestCandidates[REMOTE_MANIFEST_ENV] || remoteManifestCandidates.dev;
+  try {
+    const res = await fetch(file);
+    if (!res.ok) return;
+    const payload = await res.json();
+    if (payload && payload.remotes && typeof payload.remotes === 'object') {
+      runtimeRemotes = { ...defaultRemotes, ...payload.remotes };
+      window.localStorage.setItem('mfe-env', payload.env || REMOTE_MANIFEST_ENV);
+      console.info('[remotes] loaded manifest', file, runtimeRemotes);
+    }
+  } catch (err) {
+    console.warn('[remotes] failed loading manifest, using defaults', err);
+  }
+}
+
 const primaryButtons = new Map();
 const chipButtons = new Map();
 const interactiveElements = new Set();
@@ -876,7 +919,7 @@ const registry = [
     remote: 'http://localhost:9101/mfe1.js',
     mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('nf') } = {}) => {
       const variant = compact ? 'compact' : 'full';
-      const mod = await import('http://localhost:9101/mfe1.js');
+      const mod = await import(getRemoteUrl('nf'));
       const result = await mod.render(outlet, {
         host: 'native-shell',
         name: 'mfe1-nf',
@@ -909,7 +952,7 @@ const registry = [
     remote: 'http://localhost:9301/remote-a.js',
     mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('mf') } = {}) => {
       const variant = compact ? 'compact' : 'full';
-      const mod = await import('http://localhost:9301/remote-a.js');
+      const mod = await import(getRemoteUrl('mf'));
       const result = await mod.render(outlet, {
         host: 'native-shell',
         name: 'remote-a-mf',
@@ -942,7 +985,7 @@ const registry = [
     remote: 'http://localhost:9302/mfe-a.js',
     mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('ssa') } = {}) => {
       const variant = compact ? 'compact' : 'full';
-      const mod = await import('http://localhost:9302/mfe-a.js');
+      const mod = await import(getRemoteUrl('ssa'));
       const baseProps = {
         name: '@org/mfe-a',
         host: 'native-shell',
@@ -976,7 +1019,7 @@ const registry = [
     remote: 'http://localhost:9310/mfe-ng.js',
     mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('ng') } = {}) => {
       const variant = compact ? 'compact' : 'full';
-      const mod = await import('http://localhost:9310/mfe-ng.js');
+      const mod = await import(getRemoteUrl('ng'));
       const result = await mod.render(outlet, {
         replace: true,
         variant,
@@ -1005,7 +1048,7 @@ const registry = [
     tagline: 'CLI standalone + Angular Elements pronta para canais regulados.',
     remote: 'http://localhost:9400/mfe-ng-full.js',
     mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('ng-full') } = {}) => {
-      const mod = await import('http://localhost:9400/mfe-ng-full.js');
+      const mod = await import(getRemoteUrl('ng-full'));
       const result = await mod.render(outlet, {
         baseUrl: 'http://localhost:9400/',
         variant: compact ? 'compact' : 'full',
@@ -1028,7 +1071,7 @@ const registry = [
     remote: 'http://localhost:9201/mfe-react.js',
     mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('react') } = {}) => {
       const variant = compact ? 'compact' : 'full';
-      const mod = await import('http://localhost:9201/mfe-react.js');
+      const mod = await import(getRemoteUrl('react'));
       const result = await mod.render(outlet, {
         replace: true,
         log: !compact,
@@ -1060,7 +1103,7 @@ const registry = [
     remote: 'http://localhost:9001/mfe-vue.js',
     mount: async (outlet, { compact = false, metrics = getMetricsSnapshot('vue') } = {}) => {
       const variant = compact ? 'compact' : 'full';
-      const mod = await import('http://localhost:9001/mfe-vue.js');
+      const mod = await import(getRemoteUrl('vue'));
       const result = await mod.render(outlet, {
         replace: true,
         variant,
@@ -1471,6 +1514,10 @@ async function loadMfeVersions() {
 }
 
 async function init() {
+  await loadRemoteManifest();
+  registry.forEach((mfe) => {
+    mfe.remote = getRemoteUrl(mfe.id);
+  });
   await loadMfeVersions();
   buildMenus();
   updatePrimaryButtons();

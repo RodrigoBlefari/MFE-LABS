@@ -1,0 +1,12 @@
+{
+  "env": "dev",
+  "remotes": {
+    "nf": "http://localhost:9101/mfe1.js",
+    "mf": "http://localhost:9301/remote-a.js",
+    "ssa": "http://localhost:9302/mfe-a.js",
+    "ng": "http://localhost:9310/mfe-ng.js",
+    "ng-full": "http://localhost:9400/mfe-ng-full.js",
+    "react": "http://localhost:9201/mfe-react.js",
+    "vue": "http://localhost:9001/mfe-vue.js"
+  }
+}

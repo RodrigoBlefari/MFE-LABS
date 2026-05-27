@@ -1,0 +1,12 @@
+{
+  "env": "prod",
+  "remotes": {
+    "nf": "https://prod.example.com/nf/mfe1.js",
+    "mf": "https://prod.example.com/mf/remote-a.js",
+    "ssa": "https://prod.example.com/ssa/mfe-a.js",
+    "ng": "https://prod.example.com/ng/mfe-ng.js",
+    "ng-full": "https://prod.example.com/ng-full/mfe-ng-full.js",
+    "react": "https://prod.example.com/react/mfe-react.js",
+    "vue": "https://prod.example.com/vue/mfe-vue.js"
+  }
+}
