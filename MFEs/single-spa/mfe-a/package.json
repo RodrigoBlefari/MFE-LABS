@@ -6,7 +6,7 @@
     "node": ">=16 <19"
   },
   "scripts": {
-    "start": "serve -l 9302 --cors .",
+    "start": "npm run build && serve -l 9302 --cors dist",
     "build": "node ./scripts/build-copy.mjs mfe-a.js mfe-a.css"
   },
   "dependencies": {
@@ -29,6 +29,7 @@
     "zone.js": "^0.12.0"
   },
   "devDependencies": {
+    "esbuild": "^0.21.5",
     "serve": "^14.2.3"
   }
 }

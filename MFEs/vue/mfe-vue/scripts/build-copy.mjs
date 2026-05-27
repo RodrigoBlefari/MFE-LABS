@@ -1,29 +1,25 @@
 #!/usr/bin/env node
-/**
- * Simple build helper that copies the provided files into a dist/ folder.
- * Usage: node scripts/build-copy.mjs file-a.js file-b.css
- */
-import { mkdir, rm, copyFile } from 'node:fs/promises';
-import { join } from 'node:path';
+import { build } from 'esbuild';
+import { copyFile, mkdir, rm } from 'node:fs/promises';
 
 async function main() {
-  const args = process.argv.slice(2);
-  if (args.length === 0) {
-    console.error('Usage: node scripts/build-copy.mjs <file> [additional files]');
-    process.exitCode = 1;
-    return;
-  }
+  await rm('dist', { recursive: true, force: true });
+  await mkdir('dist', { recursive: true });
 
-  const distDir = 'dist';
-  await rm(distDir, { recursive: true, force: true });
-  await mkdir(distDir, { recursive: true });
+  await build({
+    entryPoints: ['mfe-vue.js'],
+    outfile: 'dist/mfe-vue.js',
+    bundle: true,
+    format: 'esm',
+    platform: 'browser',
+    sourcemap: false,
+    minify: false,
+    treeShaking: false,
+    legalComments: 'none',
+  });
 
-  for (const relative of args) {
-    const destination = join(distDir, relative.split('/').pop());
-    await copyFile(relative, destination);
-  }
-
-  console.log(`Copied ${args.length} file(s) to ${distDir}/`);
+  await copyFile('mfe-vue.css', 'dist/mfe-vue.css');
+  console.log('Bundled mfe-vue.js + copied mfe-vue.css -> dist/');
 }
 
 main().catch((err) => {

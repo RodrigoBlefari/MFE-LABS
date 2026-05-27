@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "serve -l 9301 --cors .",
+    "start": "npm run build && serve -l 9301 --cors dist",
     "build": "node ./scripts/build-copy.mjs remote-a.js remote-a.css"
   },
   "devDependencies": {
+    "esbuild": "^0.21.5",
     "serve": "^14.2.3"
   },
   "dependencies": {
