@@ -681,6 +681,7 @@ function closeModal() {
 function createMetricsSeed() {
   return {
     warmupDone: false,
+    warmupCount: 0,
     samples: [],
     count: 0,
     total: 0,
@@ -814,8 +815,7 @@ function recordMetrics(id, input) {
 
   if (!entry.warmupDone) {
     entry.warmupDone = true;
-    metricsStore.set(id, entry);
-    return getMetricsSnapshot(id);
+    entry.warmupCount = 1;
   }
 
   const previousCount = entry.count;
