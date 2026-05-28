@@ -1,12 +1,13 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { ShellLayoutComponent } from './components/shell-layout/shell-layout.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.html',
-  styleUrl: './app.css'
+  imports: [RouterOutlet, ShellLayoutComponent],
+  template: '<app-shell-layout />',
+  styles: []
 })
 export class App {
-  protected readonly title = signal('angular-shell-20');
+  title = 'Angular 20 Host Shell - Native Federation';
 }

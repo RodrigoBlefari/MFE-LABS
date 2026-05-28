@@ -581,9 +581,9 @@ npm install -g localtunnel
 
 ---
 
-## 🚀 **Como Executar (RECOMENDADO)**
+## 🚀 **Como Executar**
 
-### **Comando único - Sobe tudo:**
+### **Opção 1: Shell Vanilla JS (Produção - RECOMENDADO)**
 
 ```bash
 bash run-all.sh
@@ -591,14 +591,39 @@ bash run-all.sh
 
 **O que faz:**
 1. ✅ Build do MFE Angular 20 Native Federation
-2. ✅ Build do Shell Angular 20 (se existir e estiver pronto)
-3. ✅ Inicia todos os 7 MFEs em background
-4. ✅ Inicia o **Shell Vanilla JS** na porta 9100
-5. ✅ Cria túneis públicos (se localtunnel/cloudflared instalado)
+2. ✅ Inicia todos os 7 MFEs em background
+3. ✅ Inicia o **Shell Vanilla JS** na porta 9100
+4. ✅ Cria túneis públicos (se instalado)
 
-**Tempo:** ~2 minutos na primeira vez
+**Acesse:** http://localhost:9100
 
-**🎯 Shell em uso:** `native-federation-shell-angular/` (Vanilla JS)
+**Por que usar:**
+- ✅ Completo (telemetria, ranking, previews)
+- ✅ Testado e estável
+- ✅ Zero dependências de framework
+- ✅ Rápido e leve
+
+---
+
+### **Opção 2: Shell Angular 20 (Estudo/Desenvolvimento)**
+
+```bash
+# Primeiro, suba os MFEs
+bash run-native-shell.sh
+
+# Em outro terminal, rode o shell Angular
+bash run-angular-shell.sh
+```
+
+**Acesse:** http://localhost:4200
+
+**Por que usar:**
+- 🎓 Simula ambiente enterprise Angular
+- 🔬 Estudo de Native Federation com Angular 20
+- 🏗️ Implementação mínima (lista + botões)
+- ⚠️ Não tem telemetria/ranking (apenas carrega MFEs)
+
+**🎯 Shell padrão:** `Vanilla JS` (mais completo)
 
 ---
 

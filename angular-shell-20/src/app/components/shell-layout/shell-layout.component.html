@@ -1,0 +1,42 @@
+<div class="shell-container">
+  <header class="shell-header">
+    <div>
+      <h1>🚀 Angular 20 Host Shell</h1>
+      <p>Native Federation - Micro Frontends</p>
+    </div>
+    <button class="btn-clear" (click)="clearStage()" [disabled]="loading()">
+      Limpar Palco
+    </button>
+  </header>
+
+  <main class="shell-main">
+    <section class="mfe-list">
+      <h2>MFEs Disponíveis</h2>
+      <div class="mfe-cards">
+        @for (mfe of mfes(); track mfe.id) {
+          <div class="mfe-card">
+            <h3>{{ mfe.label }}</h3>
+            <p class="mfe-port">Porta: {{ mfe.port }}</p>
+            <button 
+              class="btn-load" 
+              (click)="loadMfe(mfe)"
+              [disabled]="loading()">
+              Carregar MFE
+            </button>
+          </div>
+        }
+      </div>
+    </section>
+
+    <section class="mfe-stage">
+      <h2>Palco Principal</h2>
+      <p class="status">{{ status() }}</p>
+      <div id="mfe-outlet" class="mfe-outlet"></div>
+    </section>
+  </main>
+
+  <footer class="shell-footer">
+    <p>Angular 20 Shell com Native Federation | MFE-LABS</p>
+    <p class="note">💡 Shell de estudo - Simula ambiente enterprise Angular</p>
+  </footer>
+</div>
