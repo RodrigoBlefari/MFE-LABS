@@ -2,3 +2,27 @@
  INFO  Accepting connections at http://localhost:9301
  HTTP  28/05/2026 03:57:31 127.0.0.1 GET /
  HTTP  28/05/2026 03:57:31 127.0.0.1 Returned 200 in 9 ms
+ HTTP  28/05/2026 03:59:48 ::1 HEAD /remote-a.js
+ HTTP  28/05/2026 03:59:48 ::1 Returned 200 in 14 ms
+ HTTP  28/05/2026 03:59:48 ::1 GET /remote-a.js
+ HTTP  28/05/2026 03:59:48 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 03:59:48 ::1 GET /remote-a.js
+ HTTP  28/05/2026 03:59:48 ::1 Returned 304 in 1 ms
+ HTTP  28/05/2026 03:59:49 ::1 GET /remote-a.js
+ HTTP  28/05/2026 03:59:49 ::1 Returned 304 in 1 ms
+ HTTP  28/05/2026 03:59:49 ::1 GET /remote-a.css
+ HTTP  28/05/2026 03:59:49 ::1 Returned 304 in 2 ms
+ HTTP  28/05/2026 04:01:17 ::1 HEAD /remote-a.js
+ HTTP  28/05/2026 04:01:17 ::1 Returned 304 in 0 ms
+ HTTP  28/05/2026 04:01:17 ::1 GET /remote-a.js
+ HTTP  28/05/2026 04:01:17 ::1 Returned 304 in 1 ms
+ HTTP  28/05/2026 04:01:17 ::1 GET /remote-a.js
+ HTTP  28/05/2026 04:01:17 ::1 Returned 304 in 1 ms
+ HTTP  28/05/2026 04:01:18 ::1 GET /remote-a.js
+ HTTP  28/05/2026 04:01:18 ::1 Returned 304 in 1 ms
+ HTTP  28/05/2026 04:01:18 ::1 GET /remote-a.css
+ HTTP  28/05/2026 04:01:18 ::1 GET /remote-a.js
+ HTTP  28/05/2026 04:01:18 ::1 Returned 304 in 1 ms
+ HTTP  28/05/2026 04:01:18 ::1 Returned 304 in 0 ms
+
+ INFO  Gracefully shutting down. Please wait...

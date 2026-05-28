@@ -3,4 +3,48 @@
 > serve --cors -l 9100 .
 
  UPDATE  The latest version of `serve` is 14.2.6
- INFO  Accepting connections at http://localhost:9100
+ INFO  Accepting connections at http://localhost:62793
+ HTTP  28/05/2026 03:59:42 ::1 GET /
+ HTTP  28/05/2026 03:59:42 ::1 Returned 200 in 10 ms
+ HTTP  28/05/2026 03:59:42 ::1 GET /design-system.css
+ HTTP  28/05/2026 03:59:42 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 03:59:42 ::1 GET /styles.css
+ HTTP  28/05/2026 03:59:42 ::1 GET /app.js
+ HTTP  28/05/2026 03:59:42 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 03:59:42 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 03:59:42 ::1 GET /remotes.dev.json
+ HTTP  28/05/2026 03:59:42 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 03:59:42 ::1 GET /favicon.ico
+ HTTP  28/05/2026 03:59:42 ::1 Returned 404 in 1 ms
+ HTTP  28/05/2026 03:59:44 ::1 GET /
+ HTTP  28/05/2026 03:59:44 ::1 Returned 200 in 0 ms
+ HTTP  28/05/2026 03:59:44 ::1 GET /design-system.css
+ HTTP  28/05/2026 03:59:44 ::1 GET /styles.css
+ HTTP  28/05/2026 03:59:44 ::1 GET /app.js
+ HTTP  28/05/2026 03:59:44 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 03:59:44 ::1 Returned 200 in 0 ms
+ HTTP  28/05/2026 03:59:44 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 03:59:44 ::1 GET /remotes.dev.json
+ HTTP  28/05/2026 03:59:44 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 03:59:44 ::1 GET /
+ HTTP  28/05/2026 03:59:44 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 03:59:44 ::1 GET /design-system.css
+ HTTP  28/05/2026 03:59:44 ::1 GET /styles.css
+ HTTP  28/05/2026 03:59:44 ::1 GET /app.js
+ HTTP  28/05/2026 03:59:44 ::1 Returned 200 in 0 ms
+ HTTP  28/05/2026 03:59:44 ::1 Returned 200 in 0 ms
+ HTTP  28/05/2026 03:59:44 ::1 Returned 200 in 0 ms
+ HTTP  28/05/2026 03:59:44 ::1 GET /remotes.dev.json
+ HTTP  28/05/2026 03:59:44 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:01:03 ::1 GET /
+ HTTP  28/05/2026 04:01:03 ::1 Returned 304 in 1 ms
+ HTTP  28/05/2026 04:01:03 ::1 GET /design-system.css
+ HTTP  28/05/2026 04:01:03 ::1 Returned 304 in 1 ms
+ HTTP  28/05/2026 04:01:03 ::1 GET /styles.css
+ HTTP  28/05/2026 04:01:03 ::1 GET /app.js
+ HTTP  28/05/2026 04:01:03 ::1 Returned 304 in 0 ms
+ HTTP  28/05/2026 04:01:03 ::1 Returned 304 in 1 ms
+ HTTP  28/05/2026 04:01:03 ::1 GET /remotes.dev.json
+ HTTP  28/05/2026 04:01:03 ::1 Returned 304 in 0 ms
+
+ INFO  Gracefully shutting down. Please wait...
