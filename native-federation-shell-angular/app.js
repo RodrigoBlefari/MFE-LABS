@@ -330,15 +330,16 @@ async function estimateRemoteBundleFootprint(mfe, remoteUrl) {
   const referenced = new Set(extractHttpUrls(sourceText));
   referenced.delete(remoteUrl);
 
-  // Bridge do Angular full costuma carregar main/polyfills separados
+  // Angular 20 Native Federation: main.js e polyfills.js já são detectados no sourceText
+  // Não precisa adicionar manualmente pois estão na mesma pasta que o entry
   if (mfe.id === 'ng-full') {
     try {
       const base = new URL(remoteUrl).origin;
+      // Apenas adiciona arquivos que realmente existem no mesmo nível
       [
         `${base}/main.js`,
-        `${base}/browser/main.js`,
         `${base}/polyfills.js`,
-        `${base}/browser/polyfills.js`,
+        `${base}/styles.css`,
       ].forEach((u) => referenced.add(u));
     } catch {
       // noop
