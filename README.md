@@ -74,10 +74,11 @@ Shell Universal (Vanilla JS + importmap)
 - Shell: `http://localhost:9100`
 - Com tunnel público: `http://localhost:9100/?env=public`
 
-**🔗 Outros shells no projeto (não usados por padrão):**
-- `module-federation-shell-angular/` - Shell experimental Webpack MF
-- `single-spa-shell-angular/` - Shell experimental Single-SPA
-- `angular-shell-20/` - Shell Angular 20 em desenvolvimento (fundação pronta)
+**🔗 Outros shells no projeto:**
+- `angular-shell-20/` - **Shell Angular 20 Host** em desenvolvimento (fundação pronta, não usado ainda)
+  - Quando pronto, substituirá o shell Vanilla JS
+  - Provê Angular runtime compartilhado para todos os MFEs
+  - Atualmente: estrutura criada, falta implementação
 
 ---
 
@@ -580,61 +581,47 @@ npm install -g localtunnel
 
 ---
 
-## 🚀 **Como Executar (3 opções)**
+## 🚀 **Como Executar (RECOMENDADO)**
 
-### **Opção 1: Automação Completa (RECOMENDADO)**
+### **Comando único - Sobe tudo:**
 
 ```bash
 bash run-all.sh
 ```
 
 **O que faz:**
-1. ✅ Build Angular 20 Native Federation
-2. ✅ Build Angular 20 Shell (se existir)
-3. ✅ Inicia todos os 7 MFEs
-4. ✅ Inicia o Shell
-5. ✅ Cria túneis públicos (se localtunnel instalado)
+1. ✅ Build do MFE Angular 20 Native Federation
+2. ✅ Build do Shell Angular 20 (se existir e estiver pronto)
+3. ✅ Inicia todos os 7 MFEs em background
+4. ✅ Inicia o **Shell Vanilla JS** na porta 9100
+5. ✅ Cria túneis públicos (se localtunnel/cloudflared instalado)
 
 **Tempo:** ~2 minutos na primeira vez
 
+**🎯 Shell em uso:** `native-federation-shell-angular/` (Vanilla JS)
+
 ---
 
-### **Opção 2: Apenas MFEs + Shell**
+### **Alternativa: Apenas MFEs + Shell (sem build):**
 
 ```bash
 bash run-native-shell.sh
 ```
 
 **O que faz:**
-1. Mata processos nas portas
-2. Valida governança
-3. Instala dependências (se necessário)
-4. Builds MFEs
-5. Inicia servidores
-6. Gera mfe-versions.json
+1. Mata processos nas portas (9001, 9101, 9201, 9301, 9302, 9310, 9400)
+2. Valida governança de remotes
+3. Instala dependências dos MFEs (se necessário)
+4. Builds dos MFEs que precisam
+5. Inicia todos os 7 MFEs em background
+6. Inicia o Shell Vanilla JS na porta 9100
+7. Gera `mfe-versions.json` com info dos MFEs
 
 **Variáveis de ambiente:**
 ```bash
-BUILD_FIRST=1 bash run-native-shell.sh   # Force rebuild
-MFE_ENV=prod bash run-native-shell.sh    # Ambiente prod
+BUILD_FIRST=1 bash run-native-shell.sh   # Force rebuild de tudo
+MFE_ENV=prod bash run-native-shell.sh    # Usa remotes.prod.json
 ```
-
----
-
-### **Opção 3: Apenas Túneis Públicos**
-
-```bash
-# Primeiro, tenha MFEs rodando
-bash run-native-shell.sh
-
-# Em outro terminal
-bash expose-public.sh
-```
-
-Gera 8 URLs públicas tipo:
-- `https://mfe-vue-123.loca.lt`
-- `https://mfe-react-456.loca.lt`
-- etc
 
 ---
 
