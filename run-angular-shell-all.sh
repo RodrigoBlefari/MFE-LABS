@@ -7,6 +7,43 @@ echo "========================================"
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# Função para matar processo em uma porta específica
+kill_port() {
+  local port=$1
+  echo "   └─ Verificando porta $port..."
+  
+  if command -v lsof >/dev/null 2>&1; then
+    # Unix/Mac usando lsof
+    local pid=$(lsof -ti:$port 2>/dev/null || true)
+    if [ -n "$pid" ]; then
+      echo "   └─ Matando processo $pid na porta $port"
+      kill -9 $pid 2>/dev/null || true
+      sleep 1
+    fi
+  elif command -v netstat >/dev/null 2>&1; then
+    # Windows usando netstat
+    local pid=$(netstat -ano | grep ":$port " | awk '{print $5}' | head -n1)
+    if [ -n "$pid" ] && [ "$pid" != "0" ]; then
+      echo "   └─ Matando processo $pid na porta $port"
+      taskkill //PID $pid //F 2>/dev/null || true
+      sleep 1
+    fi
+  fi
+}
+
+# Limpa portas que serão usadas
+echo ""
+echo "🧹 Limpando portas em uso..."
+kill_port 4200  # Shell Angular
+kill_port 9100  # Shell Vanilla
+kill_port 9001  # Vue
+kill_port 9101  # Native Federation
+kill_port 9201  # React
+kill_port 9301  # Module Federation
+kill_port 9302  # Single-SPA
+kill_port 9310  # Angular 15
+kill_port 9400  # Angular 20 Native Federation
+
 # 1. Build Angular 20 Native Federation (MFE)
 echo ""
 echo "📦 [1/4] Building Angular 20 Native Federation (MFE)..."
