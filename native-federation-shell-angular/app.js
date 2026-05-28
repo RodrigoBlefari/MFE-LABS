@@ -405,7 +405,12 @@ async function inspectRemoteRuntime(mfe, remoteUrl, mod) {
 
   let sharedRuntime = 'Self-contained entry';
   let sharedDetails = [];
-  if (Array.isArray(debug.sharedPackages) && debug.sharedPackages.length) {
+  
+  // Single-SPA e Angular 15 Element: Bundles monolíticos sem estratégia de sharing
+  if (mfe.id === 'ssa' || mfe.id === 'ng') {
+    sharedRuntime = 'Self-contained monolithic bundle';
+    sharedDetails = ['Todas as dependências embedadas em arquivo único', 'Sem estratégia de compartilhamento'];
+  } else if (Array.isArray(debug.sharedPackages) && debug.sharedPackages.length) {
     sharedDetails = [...debug.sharedPackages];
     const top = sharedDetails.slice(0, 3).join(', ');
     const more = sharedDetails.length > 3 ? ` +${sharedDetails.length - 3}` : '';
