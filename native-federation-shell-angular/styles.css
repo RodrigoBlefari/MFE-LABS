@@ -54,11 +54,23 @@ p {
 }
 
 .shell-header {
-  padding: 12px 14px;
+  padding: 1.5rem 2rem;
   display: flex;
-  justify-content: space-between;
   align-items: flex-start;
-  gap: 14px;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.shell-badge {
+  display: inline-block;
+  margin-top: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
 }
 
 .kicker {
