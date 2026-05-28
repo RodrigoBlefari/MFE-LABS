@@ -2,6 +2,26 @@
 
 ## 🎯 Core Principles
 
+### 0. **Safety-First Operations (File/System)**
+- ✅ Sempre usar **path explícito e correto** em qualquer operação de arquivo
+- ✅ Fazer buscas/edições **isoladas por pasta/arquivo** (evitar comandos abrangentes)
+- ✅ Preferir comandos não-destrutivos e reversíveis
+- ❌ Não usar `rm -rf` genérico na raiz/projeto inteiro
+- ❌ Não executar remoções em lote sem validar alvo exato
+- **Why:** evita travas, perda de artefatos e alterações acidentais em massa
+
+#### Shell Integration Fallback (anti-trava)
+- ✅ Se aparecer `Shell Integration Unavailable`, priorizar leitura/edição por arquivo (`read_file` + patch pontual)
+- ✅ Executar comandos curtos, um por vez, com path explícito
+- ✅ Evitar pipelines longos e listagens amplas em um único comando
+- ✅ Validar em passos pequenos (sintaxe, IDs e diff)
+- ✅ **Preferir Git Bash sempre** como shell principal
+  - Caminho padrão: `C:\Program Files\Git\bin\bash.exe`
+  - Fallback: `C:\Program Files\Git\usr\bin\bash.exe`
+  - Exemplo de execução segura: `"C:\Program Files\Git\bin\bash.exe" -lc "<comando>"`
+- ❌ Não repetir comando grande quando o output do terminal estiver instável
+- **Why:** mantém previsibilidade da sessão e evita novo travamento
+
 ### 1. **No Auto-Mount on Boot**
 - ✅ Renderize apenas os controles e cards
 - ❌ Não carregue MFEs automaticamente na inicialização
@@ -71,8 +91,16 @@ Para cada MFE:
 avg = total / count
 ```
 - ✅ Track import + mount time
+- ✅ Exibir metadados reais por remote: **Framework**, **Export Contract**, **Shared/Runtime**
 - ✅ Visual warning se avg > 1200ms
 - **Why:** Debug performance, identifica gargalos
+
+### 9. **Production-Like Remote Reality (sem atalhos fake)**
+- ✅ Medição deve refletir **entry real publicado** + recursos reais carregados (chunks/shared/runtime)
+- ✅ Evidenciar quando remote usa `render`, `mount`, `bootstrap+mount` ou `default`
+- ✅ Evidenciar se há compartilhamento por CDN/runtime chunks ou bundle embedded
+- ❌ Não mascarar bundle com métrica apenas do loader quando há dependências externas relevantes
+- **Why:** laboratório precisa simular produção de verdade, sem distorcer experiência do shell
 
 ---
 
@@ -151,6 +179,8 @@ avg = total / count
 
 ## 🚀 Future Improvements
 
+- [ ] Guardrail script para bloquear comandos destrutivos sem path explícito
+- [ ] Checklist automático de operação segura antes de rotinas de build/run
 - [ ] Persistent selectedSet (localStorage)
 - [ ] Export telemetry em JSON
 - [ ] Suporte a retry automático

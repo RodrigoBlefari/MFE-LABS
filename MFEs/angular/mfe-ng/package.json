@@ -6,10 +6,11 @@
     "node": ">=16 <19"
   },
   "scripts": {
-    "start": "serve -l 9310 --cors .",
+    "start": "npm run build && serve -l 9310 --cors dist",
     "build": "node ./scripts/build-copy.mjs mfe-ng.js mfe-ng.css"
   },
   "devDependencies": {
+    "esbuild": "^0.21.5",
     "serve": "^14.2.3"
   },
   "dependencies": {

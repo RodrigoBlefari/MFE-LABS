@@ -6,25 +6,40 @@ import {
   watch,
   onMounted,
   getCurrentInstance,
-} from 'https://cdn.jsdelivr.net/npm/vue@3.4.21/dist/vue.runtime.esm-browser.prod.js';
+} from 'vue';
 import { ensureDesignTokens } from 'http://localhost:9100/design-system/loader.js';
+import _ from 'lodash';
+import moment from 'moment';
+import dayjs from 'dayjs';
+import { format as formatDate } from 'date-fns';
+import * as ramda from 'ramda';
+import { create, all } from 'mathjs';
+import * as THREE from 'three';
+import Chart from 'chart.js/auto';
+import * as echarts from 'echarts';
+import * as XLSX from 'xlsx';
 
+const math = create(all);
 let heavyDepsPromise = null;
-const HEAVY_DEP_URLS = [
-  'https://esm.sh/lodash@4.17.21',
-  'https://esm.sh/moment@2.30.1',
-  'https://esm.sh/dayjs@1.11.13',
-  'https://esm.sh/date-fns@4.1.0',
-  'https://esm.sh/ramda@0.30.1',
-  'https://esm.sh/mathjs@13.2.3',
-  'https://esm.sh/three@0.168.0',
-  'https://esm.sh/chart.js@4.4.4/auto',
-  'https://esm.sh/echarts@5.5.1',
-  'https://esm.sh/xlsx@0.18.5',
-];
+
+function warmHeavyDeps() {
+  return {
+    lodashChunk: _.chunk([1, 2, 3, 4], 2).length,
+    momentNow: moment().format('YYYY-MM-DD'),
+    dayjsNow: dayjs().format('YYYY-MM-DD'),
+    dateFnsNow: formatDate(new Date(), 'yyyy-MM-dd'),
+    ramdaType: ramda.type({ value: 1 }),
+    mathPi: math.evaluate('pi'),
+    threeRevision: Number(THREE.REVISION || 0),
+    chartVersion: Chart.version,
+    echartsVersion: echarts.version,
+    xlsxVersion: XLSX.version,
+  };
+}
+
 async function preloadHeavyDeps() {
   if (!heavyDepsPromise) {
-    heavyDepsPromise = Promise.all(HEAVY_DEP_URLS.map((url) => import(url))).catch((err) => {
+    heavyDepsPromise = Promise.resolve(warmHeavyDeps()).catch((err) => {
       heavyDepsPromise = null;
       throw err;
     });
@@ -371,6 +386,7 @@ export function unmount(ctx = {}) {
   }
   instances.clear();
 }
+
 
 
 

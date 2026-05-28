@@ -11,7 +11,7 @@
   />
   <meta
     http-equiv="Content-Security-Policy"
-    content="default-src 'self'; script-src 'self' http://localhost:9001 http://localhost:9101 http://localhost:9201 http://localhost:9301 http://localhost:9302 http://localhost:9303 http://localhost:9310 http://localhost:9400 https://cdn.jsdelivr.net https://esm.sh https://unpkg.com; connect-src 'self' http://localhost:9001 http://localhost:9101 http://localhost:9201 http://localhost:9301 http://localhost:9302 http://localhost:9303 http://localhost:9310 http://localhost:9400 https://cdn.jsdelivr.net https://esm.sh https://unpkg.com; style-src 'self' http://localhost:9001 http://localhost:9101 http://localhost:9201 http://localhost:9301 http://localhost:9302 http://localhost:9303 http://localhost:9310 http://localhost:9400 https://cdn.jsdelivr.net https://esm.sh https://unpkg.com; img-src 'self' data:; font-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none';"
+    content="default-src 'self'; script-src 'self' http://localhost:9001 http://localhost:9101 http://localhost:9201 http://localhost:9301 http://localhost:9302 http://localhost:9303 http://localhost:9310 http://localhost:9400 https://*.loca.lt https://*.trycloudflare.com https://*.ngrok.io https://cdn.jsdelivr.net https://esm.sh https://unpkg.com; connect-src 'self' http://localhost:9001 http://localhost:9101 http://localhost:9201 http://localhost:9301 http://localhost:9302 http://localhost:9303 http://localhost:9310 http://localhost:9400 https://*.loca.lt https://*.trycloudflare.com https://*.ngrok.io https://cdn.jsdelivr.net https://esm.sh https://unpkg.com; style-src 'self' http://localhost:9001 http://localhost:9101 http://localhost:9201 http://localhost:9301 http://localhost:9302 http://localhost:9303 http://localhost:9310 http://localhost:9400 https://*.loca.lt https://*.trycloudflare.com https://*.ngrok.io https://cdn.jsdelivr.net https://esm.sh https://unpkg.com; img-src 'self' data:; font-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none';"
   />
   <meta name="referrer" content="same-origin" />
   <link rel="stylesheet" href="./design-system.css" />
@@ -38,6 +38,8 @@
       </div>
       <div class="header-actions">
         <button id="btn-open-overview" class="btn btn-primary" type="button">Visão geral</button>
+        <button id="btn-refresh-all" class="btn" type="button">Atualizar tudo</button>
+        <button id="btn-clear-cache" class="btn" type="button">Limpar cache</button>
         <button id="btn-open-bus" class="btn" type="button">Eventos BUS (<span id="bus-count">0</span>)</button>
         <button id="btn-bus-test" class="btn" type="button">Emitir BUS teste</button>
         <button id="btn-clear-stage" class="btn" type="button">Limpar palco</button>
@@ -52,11 +54,15 @@
           <thead>
             <tr>
               <th>MFE</th>
+              <th>Framework</th>
+              <th>Remote Entry</th>
+              <th>Shared/Runtime</th>
               <th>Média</th>
               <th>Melhor</th>
               <th>Pior</th>
               <th>Amostras</th>
               <th>Bundle</th>
+              <th>Score</th>
             </tr>
           </thead>
           <tbody id="telemetry-body"></tbody>
@@ -95,6 +101,7 @@
         <div class="catalog-actions">
           <button id="btn-select-all" class="btn" type="button">Selecionar todos</button>
           <button id="btn-select-none" class="btn" type="button">Limpar seleção</button>
+          <button id="btn-load-stage-all" class="btn btn-primary" type="button">🎭 Carregar todos no palco</button>
           <button id="btn-load-preview" class="btn btn-primary" type="button">Carregar previews</button>
           <button id="btn-clear-preview" class="btn" type="button">Limpar previews</button>
           <span id="selected-count" class="pill">0 selecionado(s)</span>

@@ -1,14 +1,4 @@
  UPDATE  The latest version of `serve` is 14.2.6
  INFO  Accepting connections at http://localhost:9310
- HTTP  27/05/2026 17:16:14 ::1 GET /
- HTTP  27/05/2026 17:16:14 ::1 Returned 200 in 9 ms
- HTTP  27/05/2026 17:18:54 ::1 HEAD /mfe-ng.js
- HTTP  27/05/2026 17:18:54 ::1 Returned 304 in 16 ms
- HTTP  27/05/2026 17:18:54 ::1 GET /mfe-ng.js
- HTTP  27/05/2026 17:18:54 ::1 Returned 304 in 1 ms
- HTTP  27/05/2026 17:18:54 ::1 GET /mfe-ng.js
- HTTP  27/05/2026 17:18:54 ::1 Returned 304 in 1 ms
- HTTP  27/05/2026 17:18:54 ::1 GET /mfe-ng.css
- HTTP  27/05/2026 17:18:54 ::1 Returned 304 in 5 ms
-
- INFO  Gracefully shutting down. Please wait...
+ HTTP  28/05/2026 03:56:54 127.0.0.1 GET /
+ HTTP  28/05/2026 03:56:54 127.0.0.1 Returned 200 in 8 ms

@@ -206,7 +206,7 @@ p {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.78rem;
-  min-width: 320px;
+  min-width: 980px;
 }
 
 .metrics-table th,
@@ -227,6 +227,46 @@ p {
 
 .metrics-table td.caution {
   color: #fca5a5;
+}
+
+.metrics-table td.meta {
+  color: var(--muted);
+  white-space: normal;
+  min-width: 130px;
+  line-height: 1.3;
+}
+
+.metrics-table td.meta details {
+  display: block;
+}
+
+.metrics-table td.meta summary {
+  cursor: pointer;
+  color: var(--text);
+  list-style: none;
+}
+
+.metrics-table td.meta summary::-webkit-details-marker {
+  display: none;
+}
+
+.metrics-table td.meta summary::before {
+  content: '▸ ';
+  color: var(--muted);
+}
+
+.metrics-table td.meta details[open] summary::before {
+  content: '▾ ';
+}
+
+.shared-details-list {
+  margin: 5px 0 0;
+  padding-left: 16px;
+  color: var(--muted);
+}
+
+.shared-details-list li {
+  margin: 2px 0;
 }
 
 .telemetry-summary {

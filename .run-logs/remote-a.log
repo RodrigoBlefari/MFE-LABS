@@ -1,14 +1,4 @@
  UPDATE  The latest version of `serve` is 14.2.6
  INFO  Accepting connections at http://localhost:9301
- HTTP  27/05/2026 17:17:07 ::1 GET /
- HTTP  27/05/2026 17:17:07 ::1 Returned 200 in 10 ms
- HTTP  27/05/2026 17:18:53 ::1 HEAD /remote-a.js
- HTTP  27/05/2026 17:18:53 ::1 Returned 304 in 2 ms
- HTTP  27/05/2026 17:18:53 ::1 GET /remote-a.js
- HTTP  27/05/2026 17:18:53 ::1 Returned 304 in 0 ms
- HTTP  27/05/2026 17:18:53 ::1 GET /remote-a.js
- HTTP  27/05/2026 17:18:53 ::1 Returned 304 in 0 ms
- HTTP  27/05/2026 17:18:53 ::1 GET /remote-a.css
- HTTP  27/05/2026 17:18:53 ::1 Returned 304 in 1 ms
-
- INFO  Gracefully shutting down. Please wait...
+ HTTP  28/05/2026 03:57:31 127.0.0.1 GET /
+ HTTP  28/05/2026 03:57:31 127.0.0.1 Returned 200 in 9 ms

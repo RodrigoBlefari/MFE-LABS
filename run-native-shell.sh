@@ -1,27 +1,76 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
 set -euo pipefail
 
-# run-native-shell.sh
-# Instala e inicia o MFE Native Federation (mfe1) em background e inicia o shell Native Federation em foreground.
-
+# Resolve raiz do projeto a partir da localização deste script (não do cwd)
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+MFE_ENV="${MFE_ENV:-dev}"
+BUILD_FIRST="${BUILD_FIRST:-1}"
 LOG_DIR="$ROOT_DIR/.run-logs"
 mkdir -p "$LOG_DIR"
 
-echo "[run-native-shell] Root: $ROOT_DIR"
+# Helper robusto para descobrir PIDs numa porta sem depender de lsof
+find_pids_on_port() {
+  local port="$1"
 
-# Modo recomendado para benchmark real: build primeiro, depois serve artefato estático.
-BUILD_FIRST="${BUILD_FIRST:-1}"
-echo "[run-native-shell] BUILD_FIRST=$BUILD_FIRST (1=build->dist->serve)"
+  if command -v lsof >/dev/null 2>&1; then
+    lsof -ti tcp:"$port" 2>/dev/null || true
+    return 0
+  fi
 
-echo "[run-native-shell] Validando contrato de shared dependencies..."
-if ! node "$ROOT_DIR/.run-scripts/validate-shared-deps.js"; then
-  echo "[run-native-shell] Falha na validação de shared dependencies. Abortando startup." >&2
-  exit 3
-fi
+  if command -v netstat >/dev/null 2>&1; then
+    if command -v tasklist >/dev/null 2>&1; then
+      # Git Bash / Windows: netstat + taskkill
+      netstat -ano 2>/dev/null | awk -v p=":$port" '$0 ~ p && $0 ~ /LISTENING|ESTABLISHED/ {print $NF}' | sort -u || true
+      return 0
+    fi
+  fi
 
-MFE_ENV="${MFE_ENV:-dev}"
-echo "[run-native-shell] Validando governança de remotos (env=$MFE_ENV)..."
+  if command -v ss >/dev/null 2>&1; then
+    ss -ltnp 2>/dev/null | grep -E ":${port}( |$)" | sed -n 's/.*pid=\([0-9]*\),.*/\1/p' | sort -u || true
+    return 0
+  fi
+
+  return 0
+}
+
+# Mata uma porta e reporta sucesso/erro sem quebrar o loop
+kill_port_once() {
+  local port="$1"
+  local pids
+  pids="$(find_pids_on_port "$port")"
+
+  if [ -n "$pids" ]; then
+    echo "Matando processos na porta $port (PIDs: $pids)"
+    for pid in $pids; do
+      kill -9 "$pid" 2>/dev/null || taskkill //F //PID "$pid" 2>/dev/null || true
+    done
+    return 0
+  fi
+
+  return 1
+}
+
+# Lista de portas a liberar
+PORTS=(9001 9101 9201 9301 9302 9303 9310 9400)
+
+while true; do
+  any_killed=0
+  for port in "${PORTS[@]}"; do
+    if kill_port_once "$port"; then
+      any_killed=1
+    fi
+  done
+
+  if [ $any_killed -eq 0 ]; then
+    echo "Nenhuma porta ocupada. Continuando..."
+    break
+  fi
+
+  # Aguarda 1 segundo antes de tentar novamente
+  sleep 1
+done
+
 if ! node "$ROOT_DIR/.run-scripts/validate-remote-governance.js" --env="$MFE_ENV" --check-live=false; then
   echo "[run-native-shell] Falha na validação de governança de remotos. Abortando startup." >&2
   exit 4
@@ -34,46 +83,7 @@ if [ ! -d "$SHELL_DIR" ]; then
   exit 2
 fi
 
-# portas comuns usadas pelos serviços (melhore conforme necessário)
-PORTS=(9001 9101 9200 9201 9301 9302 9303 9310 9400)
-
-kill_port() {
-  local port=$1
-  echo "[kill] Tentando liberar porta $port"
-  # tentar fuser (Linux)
-  if command -v fuser >/dev/null 2>&1; then
-    fuser -k ${port}/tcp 2>/dev/null || true
-  fi
-  # tentar lsof
-  if command -v lsof >/dev/null 2>&1; then
-    pids=$(lsof -t -i:${port} || true)
-    if [ -n "$pids" ]; then
-      echo "$pids" | xargs -r kill -9 || true
-    fi
-  fi
-  # fallback para sistemas com ss
-  if command -v ss >/dev/null 2>&1; then
-    pid=$(ss -ltnp 2>/dev/null | grep -E ":${port}( |$)" | sed -n 's/.*pid=\([0-9]*\),.*/\1/p' | head -n1 || true)
-    if [ -n "$pid" ]; then
-      kill -9 "$pid" 2>/dev/null || true
-    fi
-  fi
-  # Windows (Git Bash): tentar netstat + taskkill
-  if command -v netstat >/dev/null 2>&1 && command -v awk >/dev/null 2>&1; then
-    line=$(netstat -ano 2>/dev/null | grep -E "[:.]${port} " | head -n1 || true)
-    if [ -n "$line" ]; then
-      pid=$(echo "$line" | awk '{print $NF}')
-      if [ -n "$pid" ]; then
-        taskkill //F //PID "$pid" 2>/dev/null || kill -9 "$pid" 2>/dev/null || true
-      fi
-    fi
-  fi
-}
-
-echo "[run-native-shell] Liberando portas conhecidas..."
-for p in "${PORTS[@]}"; do
-  kill_port "$p"
-done
+echo "[run-native-shell] Portas já foram liberadas no início do script."
 
 # Helpers para nvm
 load_nvm() {
@@ -277,7 +287,7 @@ start_command_for_mfe() {
       echo "npx serve -l 9302 --cors dist"
       ;;
     mfe-ng)
-      echo "npx serve -l 9310 --cors ."
+      echo "npx serve -l 9310 --cors dist"
       ;;
     mfe-ng-full)
       echo "npm run serve"
