@@ -36,12 +36,12 @@ echo ""
 echo "🧹 Limpando portas em uso..."
 kill_port 4200  # Shell Angular
 kill_port 9100  # Shell Vanilla
-kill_port 9001  # Vue
+kill_port 9001  # Vue 3
 kill_port 9101  # Native Federation
-kill_port 9201  # React
+kill_port 9201  # React 18
 kill_port 9301  # Module Federation
 kill_port 9302  # Single-SPA
-kill_port 9310  # Angular 15
+kill_port 9310  # Angular 15 Element
 kill_port 9400  # Angular 20 Native Federation
 
 # 1. Build Angular 20 Native Federation (MFE)
