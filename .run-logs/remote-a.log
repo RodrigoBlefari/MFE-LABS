@@ -1,6 +1,49 @@
  UPDATE  The latest version of `serve` is 14.2.6
  INFO  Accepting connections at http://localhost:9301
- HTTP  28/05/2026 04:15:02 127.0.0.1 GET /
- HTTP  28/05/2026 04:15:02 127.0.0.1 Returned 200 in 10 ms
-
- INFO  Gracefully shutting down. Please wait...
+ HTTP  28/05/2026 04:22:46 ::1 GET /
+ HTTP  28/05/2026 04:22:46 ::1 Returned 200 in 9 ms
+ HTTP  28/05/2026 04:24:43 ::1 HEAD /remote-a.js
+ HTTP  28/05/2026 04:24:43 ::1 GET /remote-a.js
+ HTTP  28/05/2026 04:24:43 ::1 Returned 200 in 13 ms
+ HTTP  28/05/2026 04:24:43 ::1 Returned 200 in 14 ms
+ HTTP  28/05/2026 04:24:43 ::1 GET /remote-a.js
+ HTTP  28/05/2026 04:24:43 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:24:44 ::1 GET /remote-a.js
+ HTTP  28/05/2026 04:24:44 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:24:44 ::1 GET /remote-a.css
+ HTTP  28/05/2026 04:24:44 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:24:44 ::1 GET /remote-a.js
+ HTTP  28/05/2026 04:24:44 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:24:45 ::1 GET /remote-a.js
+ HTTP  28/05/2026 04:24:45 ::1 Returned 200 in 2 ms
+ HTTP  28/05/2026 04:24:45 ::1 HEAD /remote-a.js
+ HTTP  28/05/2026 04:24:45 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:24:45 ::1 GET /remote-a.js
+ HTTP  28/05/2026 04:24:45 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:24:45 ::1 GET /remote-a.js
+ HTTP  28/05/2026 04:24:45 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:24:46 ::1 HEAD /remote-a.js
+ HTTP  28/05/2026 04:24:46 ::1 Returned 200 in 0 ms
+ HTTP  28/05/2026 04:24:46 ::1 GET /remote-a.js
+ HTTP  28/05/2026 04:24:46 ::1 Returned 200 in 0 ms
+ HTTP  28/05/2026 04:24:46 ::1 GET /remote-a.js
+ HTTP  28/05/2026 04:24:46 ::1 Returned 200 in 0 ms
+ HTTP  28/05/2026 04:24:46 ::1 GET /remote-a.js
+ HTTP  28/05/2026 04:24:46 ::1 Returned 200 in 0 ms
+ HTTP  28/05/2026 04:24:47 ::1 GET /remote-a.js
+ HTTP  28/05/2026 04:24:47 ::1 HEAD /remote-a.js
+ HTTP  28/05/2026 04:24:47 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:24:47 ::1 Returned 200 in 0 ms
+ HTTP  28/05/2026 04:24:47 ::1 GET /remote-a.js
+ HTTP  28/05/2026 04:24:47 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:24:47 ::1 GET /remote-a.js
+ HTTP  28/05/2026 04:24:47 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:24:48 ::1 GET /remote-a.js
+ HTTP  28/05/2026 04:24:48 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:24:48 ::1 HEAD /remote-a.js
+ HTTP  28/05/2026 04:24:48 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:24:48 ::1 GET /remote-a.js
+ HTTP  28/05/2026 04:24:48 ::1 Returned 200 in 0 ms
+ HTTP  28/05/2026 04:24:48 ::1 GET /remote-a.js
+ HTTP  28/05/2026 04:24:48 ::1 Returned 200 in 1 ms
+^C

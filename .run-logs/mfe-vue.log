@@ -1,6 +1,67 @@
  UPDATE  The latest version of `serve` is 14.2.6
  INFO  Accepting connections at http://localhost:9001
- HTTP  28/05/2026 04:16:13 ::1 GET /
- HTTP  28/05/2026 04:16:13 ::1 Returned 200 in 9 ms
-
- INFO  Gracefully shutting down. Please wait...
+ HTTP  28/05/2026 04:23:55 ::1 GET /
+ HTTP  28/05/2026 04:23:55 ::1 Returned 200 in 8 ms
+ HTTP  28/05/2026 04:25:43 ::1 GET /mfe-vue.js
+ HTTP  28/05/2026 04:25:43 ::1 HEAD /mfe-vue.js
+ HTTP  28/05/2026 04:25:43 ::1 Returned 200 in 13 ms
+ HTTP  28/05/2026 04:25:43 ::1 Returned 200 in 13 ms
+ HTTP  28/05/2026 04:25:43 ::1 GET /mfe-vue.js
+ HTTP  28/05/2026 04:25:43 ::1 Returned 200 in 0 ms
+ HTTP  28/05/2026 04:25:44 ::1 GET /mfe-vue.js
+ HTTP  28/05/2026 04:25:44 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:25:44 ::1 GET /mfe-vue.js
+ HTTP  28/05/2026 04:25:44 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:25:44 ::1 GET /mfe-vue.css
+ HTTP  28/05/2026 04:25:44 ::1 Returned 200 in 8 ms
+ HTTP  28/05/2026 04:25:45 ::1 GET /mfe-vue.css
+ HTTP  28/05/2026 04:25:45 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:25:45 ::1 HEAD /mfe-vue.js
+ HTTP  28/05/2026 04:25:45 ::1 Returned 200 in 0 ms
+ HTTP  28/05/2026 04:25:45 ::1 GET /mfe-vue.js
+ HTTP  28/05/2026 04:25:45 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:25:45 ::1 GET /mfe-vue.js
+ HTTP  28/05/2026 04:25:45 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:25:45 ::1 GET /mfe-vue.js
+ HTTP  28/05/2026 04:25:45 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:25:46 ::1 GET /mfe-vue.css
+ HTTP  28/05/2026 04:25:46 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:25:46 ::1 GET /mfe-vue.js
+ HTTP  28/05/2026 04:25:46 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:25:46 ::1 HEAD /mfe-vue.js
+ HTTP  28/05/2026 04:25:46 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:25:46 ::1 GET /mfe-vue.js
+ HTTP  28/05/2026 04:25:46 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:25:46 ::1 GET /mfe-vue.js
+ HTTP  28/05/2026 04:25:46 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:25:47 ::1 HEAD /mfe-vue.js
+ HTTP  28/05/2026 04:25:47 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:25:47 ::1 GET /mfe-vue.js
+ HTTP  28/05/2026 04:25:47 ::1 GET /mfe-vue.css
+ HTTP  28/05/2026 04:25:47 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:25:47 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:25:47 ::1 GET /mfe-vue.js
+ HTTP  28/05/2026 04:25:47 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:25:47 ::1 GET /mfe-vue.js
+ HTTP  28/05/2026 04:25:47 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:25:48 ::1 GET /mfe-vue.css
+ HTTP  28/05/2026 04:25:48 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:25:48 ::1 GET /mfe-vue.js
+ HTTP  28/05/2026 04:25:48 ::1 HEAD /mfe-vue.js
+ HTTP  28/05/2026 04:25:48 ::1 Returned 200 in 0 ms
+ HTTP  28/05/2026 04:25:48 ::1 Returned 200 in 0 ms
+ HTTP  28/05/2026 04:25:48 ::1 GET /mfe-vue.js
+ HTTP  28/05/2026 04:25:48 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:25:48 ::1 GET /mfe-vue.js
+ HTTP  28/05/2026 04:25:48 ::1 Returned 200 in 0 ms
+ HTTP  28/05/2026 04:25:51 ::1 GET /mfe-vue.css
+ HTTP  28/05/2026 04:25:51 ::1 Returned 200 in 0 ms
+ HTTP  28/05/2026 04:25:52 ::1 GET /mfe-vue.css
+ HTTP  28/05/2026 04:25:52 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:25:52 ::1 GET /mfe-vue.css
+ HTTP  28/05/2026 04:25:52 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 04:25:53 ::1 GET /mfe-vue.css
+ HTTP  28/05/2026 04:25:53 ::1 Returned 200 in 0 ms
+ HTTP  28/05/2026 04:25:54 ::1 GET /mfe-vue.css
+ HTTP  28/05/2026 04:25:54 ::1 Returned 200 in 0 ms
+^C
