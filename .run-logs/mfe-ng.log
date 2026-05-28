@@ -1,4 +1,6 @@
  UPDATE  The latest version of `serve` is 14.2.6
  INFO  Accepting connections at http://localhost:9310
- HTTP  28/05/2026 04:06:02 ::1 GET /
- HTTP  28/05/2026 04:06:02 ::1 Returned 200 in 8 ms
+ HTTP  28/05/2026 04:14:24 ::1 GET /
+ HTTP  28/05/2026 04:14:24 ::1 Returned 200 in 9 ms
+
+ INFO  Gracefully shutting down. Please wait...

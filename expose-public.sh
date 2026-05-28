@@ -18,7 +18,10 @@ detect_tunnel_tool() {
     return
   fi
   
-  if command -v cloudflared >/dev/null 2>&1; then
+  # Verifica cloudflared local primeiro
+  if [ -f "$ROOT_DIR/cloudflared.exe" ]; then
+    echo "cloudflared-local"
+  elif command -v cloudflared >/dev/null 2>&1; then
     echo "cloudflared"
   elif command -v lt >/dev/null 2>&1 || command -v npx >/dev/null 2>&1; then
     echo "localtunnel"
@@ -68,8 +71,14 @@ tunnel_cloudflared() {
   
   echo "🔗 Criando túnel cloudflared para porta $port ($id)..."
   
+  # Determina comando cloudflared (local ou global)
+  local cf_cmd="cloudflared"
+  if [ "$TOOL" = "cloudflared-local" ]; then
+    cf_cmd="$ROOT_DIR/cloudflared.exe"
+  fi
+  
   # Inicia cloudflared em background e captura URL
-  cloudflared tunnel --url "http://localhost:$port" > "$ROOT_DIR/.run-logs/tunnel-$port.log" 2>&1 &
+  "$cf_cmd" tunnel --url "http://localhost:$port" > "$ROOT_DIR/.run-logs/tunnel-$port.log" 2>&1 &
   local pid=$!
   echo $pid > "$ROOT_DIR/.run-logs/tunnel-$port.pid"
   
@@ -150,7 +159,7 @@ mkdir -p "$ROOT_DIR/.run-logs"
 
 for port in "${PORTS[@]}"; do
   case "$TOOL" in
-    cloudflared)
+    cloudflared|cloudflared-local)
       tunnel_cloudflared "$port" || echo "  ❌ Falhou porta $port"
       ;;
     localtunnel)
