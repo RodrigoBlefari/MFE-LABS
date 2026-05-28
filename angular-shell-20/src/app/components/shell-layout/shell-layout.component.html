@@ -6,18 +6,177 @@
       <span class="shell-badge">⚡ Shell: Angular 20 + Native Federation (Estudo)</span>
       <span class="runtime-info">🔗 Compartilhando runtime: @angular/core, rxjs, zone.js + 10 libs</span>
     </div>
-    <button class="btn-clear" (click)="clearStage()" [disabled]="loading()">
-      Limpar Palco
-    </button>
+    <div class="header-actions">
+      <button class="btn-action" (click)="runBenchmark()" [disabled]="loading()">
+        🔬 Benchmark Científico
+      </button>
+      <button class="btn-action" (click)="clearCache()" [disabled]="loading()">
+        🗑️ Limpar Cache
+      </button>
+      <button class="btn-clear" (click)="clearStage()" [disabled]="loading()">
+        Limpar Palco
+      </button>
+    </div>
   </header>
 
   <main class="shell-main">
+    <!-- Ranking / Telemetria -->
+    <section class="telemetry-section">
+      <div class="section-header">
+        <h2>📊 Ranking de Performance - Telemetria Completa</h2>
+        <div class="selection-controls">
+          <span class="selected-count">{{ selectedCount() }} selecionado(s)</span>
+          <button class="btn-small" (click)="selectAll()">Todos</button>
+          <button class="btn-small" (click)="selectNone()">Nenhum</button>
+        </div>
+      </div>
+
+      <div class="telemetry-table-wrapper">
+        <table class="telemetry-table">
+          <thead>
+            <tr>
+              <th (click)="sortBy('mfe')" class="sortable">
+                MFE
+                @if (sortColumn() === 'mfe') {
+                  <span class="sort-indicator">{{ sortAscending() ? '▲' : '▼' }}</span>
+                }
+              </th>
+              <th (click)="sortBy('framework')" class="sortable">
+                Framework
+                @if (sortColumn() === 'framework') {
+                  <span class="sort-indicator">{{ sortAscending() ? '▲' : '▼' }}</span>
+                }
+              </th>
+              <th (click)="sortBy('remoteEntry')" class="sortable">
+                Remote Entry
+                @if (sortColumn() === 'remoteEntry') {
+                  <span class="sort-indicator">{{ sortAscending() ? '▲' : '▼' }}</span>
+                }
+              </th>
+              <th (click)="sortBy('sharedRuntime')" class="sortable">
+                Shared/Runtime
+                @if (sortColumn() === 'sharedRuntime') {
+                  <span class="sort-indicator">{{ sortAscending() ? '▲' : '▼' }}</span>
+                }
+              </th>
+              <th (click)="sortBy('avg')" class="sortable">
+                Média
+                @if (sortColumn() === 'avg') {
+                  <span class="sort-indicator">{{ sortAscending() ? '▲' : '▼' }}</span>
+                }
+              </th>
+              <th (click)="sortBy('best')" class="sortable">
+                Melhor
+                @if (sortColumn() === 'best') {
+                  <span class="sort-indicator">{{ sortAscending() ? '▲' : '▼' }}</span>
+                }
+              </th>
+              <th (click)="sortBy('worst')" class="sortable">
+                Pior
+                @if (sortColumn() === 'worst') {
+                  <span class="sort-indicator">{{ sortAscending() ? '▲' : '▼' }}</span>
+                }
+              </th>
+              <th (click)="sortBy('count')" class="sortable">
+                Montagens
+                @if (sortColumn() === 'count') {
+                  <span class="sort-indicator">{{ sortAscending() ? '▲' : '▼' }}</span>
+                }
+              </th>
+              <th (click)="sortBy('bundle')" class="sortable">
+                Bundle
+                @if (sortColumn() === 'bundle') {
+                  <span class="sort-indicator">{{ sortAscending() ? '▲' : '▼' }}</span>
+                }
+              </th>
+              <th (click)="sortBy('score')" class="sortable">
+                Score
+                @if (sortColumn() === 'score') {
+                  <span class="sort-indicator">{{ sortAscending() ? '▲' : '▼' }}</span>
+                }
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of telemetryDisplay(); track item.mfe.id) {
+              <tr>
+                <td>
+                  <label class="mfe-select">
+                    <input 
+                      type="checkbox" 
+                      [checked]="selectedMfes().has(item.mfe.id)"
+                      (change)="toggleSelection(item.mfe.id)"
+                    />
+                    <strong>{{ item.mfe.label }}</strong>
+                  </label>
+                </td>
+                <td class="meta">{{ item.entry?.framework || detectFrameworkFromSource(item.mfe, '') }}</td>
+                <td class="meta small-text" [title]="item.entry?.exportContract || '--'">
+                  {{ item.entry?.remoteEntryInfo || 'Aguardando montagem' }}
+                </td>
+                <td class="meta">
+                  @if (item.entry?.sharedDetails && (item.entry?.sharedDetails?.length ?? 0) > 0) {
+                    <details class="shared-details">
+                      <summary>{{ item.entry?.sharedRuntime }}</summary>
+                      <ul class="shared-list">
+                        @for (detail of item.entry?.sharedDetails ?? []; track detail) {
+                          <li>{{ detail }}</li>
+                        }
+                      </ul>
+                    </details>
+                  } @else {
+                    {{ item.entry?.sharedRuntime || 'Aguardando montagem' }}
+                  }
+                </td>
+                <td [class]="getPerformanceClass(item.avg)">{{ formatMs(item.avg) }}</td>
+                <td>{{ formatMs(item.entry?.best || 0) }}</td>
+                <td>{{ formatMs(item.entry?.worst || 0) }}</td>
+                <td>{{ item.entry?.count || 0 }}</td>
+                <td>{{ formatKb(item.entry?.bundle || 0) }}</td>
+                <td [class]="getPerformanceClass(item.avg)">{{ formatMs(item.avg) }}</td>
+              </tr>
+            }
+            <!-- Linha de Resumo -->
+            <tr class="telemetry-summary">
+              <td><strong>Resumo</strong></td>
+              <td>--</td>
+              <td>--</td>
+              <td>--</td>
+              <td [class]="getPerformanceClass(globalStats().avg)">{{ formatMs(globalStats().avg) }}</td>
+              <td>{{ formatMs(globalStats().best) }}</td>
+              <td>{{ formatMs(globalStats().worst) }}</td>
+              <td>{{ globalStats().totalMounts }}</td>
+              <td>{{ formatKb(globalStats().totalBundle) }}</td>
+              <td>--</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="telemetry-legend">
+        <span class="legend-item ok">■ Excelente (&lt;800ms)</span>
+        <span class="legend-item caution">■ Atenção (800-1200ms)</span>
+        <span class="legend-item warn">■ Alerta (&gt;1200ms)</span>
+      </div>
+    </section>
+
+    <!-- Cards de MFEs -->
     <section class="mfe-list">
       <h2>MFEs Disponíveis</h2>
       <div class="mfe-cards">
         @for (mfe of mfes(); track mfe.id) {
-          <div class="mfe-card">
-            <h3>{{ mfe.label }}</h3>
+          <div class="mfe-card" [class.selected]="selectedMfes().has(mfe.id)">
+            <div class="mfe-card-header">
+              <h3>{{ mfe.label }}</h3>
+              <label class="checkbox-inline">
+                <input 
+                  type="checkbox" 
+                  [checked]="selectedMfes().has(mfe.id)"
+                  (change)="toggleSelection(mfe.id)"
+                />
+              </label>
+            </div>
+            <p class="mfe-tagline">{{ mfe.tagline }}</p>
             <p class="mfe-port">Porta: {{ mfe.port }}</p>
             <button 
               class="btn-load" 
@@ -30,15 +189,38 @@
       </div>
     </section>
 
+    <!-- Palco Principal -->
     <section class="mfe-stage">
-      <h2>Palco Principal</h2>
-      <p class="status">{{ status() }}</p>
+      <h2>🎭 Palco Principal</h2>
+      <p class="status" [class.loading]="loading()">{{ status() }}</p>
       <div id="mfe-outlet" class="mfe-outlet"></div>
     </section>
   </main>
 
   <footer class="shell-footer">
     <p>Angular 20 Shell com Native Federation | MFE-LABS</p>
-    <p class="note">💡 Shell de estudo - Simula ambiente enterprise Angular</p>
+    <p class="note">💡 Shell de estudo - Simula ambiente enterprise Angular com telemetria científica</p>
   </footer>
+
+  <!-- Modal de Benchmark -->
+  @if (showBenchmarkModal()) {
+    <div class="modal-backdrop" (click)="showBenchmarkModal.set(false)">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>🔬 Benchmark Científico em Andamento</h3>
+        </div>
+        <div class="modal-body">
+          <div class="benchmark-progress">
+            <div class="spinner"></div>
+            <p>{{ benchmarkProgress() }}</p>
+            <div class="progress-info">
+              <small>• Simulando ambiente real com cache frio e quente</small>
+              <small>• {{ COLD_ROUNDS }} medições cold + {{ WARM_ROUNDS }} medições warm por MFE</small>
+              <small>• Aguardando GC entre fases para resultados precisos</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
 </div>

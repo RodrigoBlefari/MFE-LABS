@@ -583,9 +583,11 @@ npm install -g localtunnel
 
 ## 🚀 **Como Executar**
 
-### **Opção 1: Shell Vanilla JS (Produção - RECOMENDADO)**
+### **Opção 1: Shell Vanilla JS - COMPLETO (RECOMENDADO) 🏆**
 
 ```bash
+bash run-vanilla-shell-all.sh
+# ou simplesmente
 bash run-all.sh
 ```
 
@@ -598,32 +600,52 @@ bash run-all.sh
 **Acesse:** http://localhost:9100
 
 **Por que usar:**
-- ✅ Completo (telemetria, ranking, previews)
-- ✅ Testado e estável
+- 🏆 Shell de PRODUÇÃO
+- ✅ Telemetria científica completa (cold/warm cache)
+- ✅ Ranking automático de performance
+- ✅ Previews em paralelo
 - ✅ Zero dependências de framework
-- ✅ Rápido e leve
+- ✅ Testado e estável
 
 ---
 
-### **Opção 2: Shell Angular 20 (Estudo/Desenvolvimento)**
+### **Opção 2: Shell Angular 20 - COMPLETO (Estudo) 🎓**
 
 ```bash
-# Primeiro, suba os MFEs
-bash run-native-shell.sh
-
-# Em outro terminal, rode o shell Angular
-bash run-angular-shell.sh
+bash run-angular-shell-all.sh
 ```
+
+**O que faz:**
+1. ✅ Build do MFE Angular 20 Native Federation
+2. ✅ Build do Shell Angular 20 (HOST)
+3. ✅ Inicia todos os 7 MFEs em background
+4. ✅ Inicia o **Shell Angular 20** na porta 4200
 
 **Acesse:** http://localhost:4200
 
 **Por que usar:**
-- 🎓 Simula ambiente enterprise Angular
-- 🔬 Estudo de Native Federation com Angular 20
-- 🏗️ Implementação mínima (lista + botões)
-- ⚠️ Não tem telemetria/ranking (apenas carrega MFEs)
+- 🎓 Ambiente enterprise Angular 20
+- 🔗 Compartilha runtime (@angular/core, rxjs, zone.js + 10 libs)
+- 🏗️ Native Federation HOST real
+- 📚 Perfeito para estudos
 
-**🎯 Shell padrão:** `Vanilla JS` (mais completo)
+**💡 Nota:** MFEs também podem ser acessados direto em http://localhost:9100 (Vanilla roda em paralelo)
+
+---
+
+### **Opção 3: Apenas o necessário (sem build)**
+
+```bash
+# Apenas MFEs + Shell Vanilla
+bash run-native-shell.sh
+```
+
+**Útil quando:**
+- Já fez build antes
+- Quer testar rápido
+- Não precisa de túneis
+
+**🎯 Shell recomendado:** `Vanilla JS` (produção) | `Angular 20` (estudo de Native Federation)
 
 ---
 

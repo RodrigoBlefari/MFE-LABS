@@ -1,57 +1,5 @@
  UPDATE  The latest version of `serve` is 14.2.6
  INFO  Accepting connections at http://localhost:9302
- HTTP  28/05/2026 04:23:34 127.0.0.1 GET /
- HTTP  28/05/2026 04:23:34 127.0.0.1 Returned 200 in 9 ms
- HTTP  28/05/2026 04:24:55 ::1 HEAD /mfe-a.js
- HTTP  28/05/2026 04:24:55 ::1 GET /mfe-a.js
- HTTP  28/05/2026 04:24:55 ::1 Returned 200 in 12 ms
- HTTP  28/05/2026 04:24:55 ::1 Returned 200 in 13 ms
- HTTP  28/05/2026 04:24:55 ::1 GET /mfe-a.js
- HTTP  28/05/2026 04:24:55 ::1 Returned 200 in 1 ms
- HTTP  28/05/2026 04:24:55 ::1 GET /mfe-a.js
- HTTP  28/05/2026 04:24:55 ::1 Returned 200 in 1 ms
- HTTP  28/05/2026 04:24:55 ::1 GET /mfe-a.js
- HTTP  28/05/2026 04:24:55 ::1 Returned 200 in 1 ms
- HTTP  28/05/2026 04:24:55 ::1 GET /mfe-a.css
- HTTP  28/05/2026 04:24:55 ::1 Returned 200 in 1 ms
- HTTP  28/05/2026 04:24:56 ::1 HEAD /mfe-a.js
- HTTP  28/05/2026 04:24:56 ::1 Returned 200 in 1 ms
- HTTP  28/05/2026 04:24:56 ::1 GET /mfe-a.js
- HTTP  28/05/2026 04:24:56 ::1 Returned 200 in 1 ms
- HTTP  28/05/2026 04:24:56 ::1 GET /mfe-a.js
- HTTP  28/05/2026 04:24:56 ::1 Returned 200 in 1 ms
- HTTP  28/05/2026 04:24:56 ::1 GET /mfe-a.js
- HTTP  28/05/2026 04:24:56 ::1 Returned 200 in 1 ms
- HTTP  28/05/2026 04:24:57 ::1 HEAD /mfe-a.js
- HTTP  28/05/2026 04:24:57 ::1 Returned 200 in 1 ms
- HTTP  28/05/2026 04:24:57 ::1 GET /mfe-a.js
- HTTP  28/05/2026 04:24:57 ::1 Returned 200 in 1 ms
- HTTP  28/05/2026 04:24:57 ::1 GET /mfe-a.js
- HTTP  28/05/2026 04:24:57 ::1 Returned 200 in 1 ms
- HTTP  28/05/2026 04:24:57 ::1 GET /mfe-a.js
- HTTP  28/05/2026 04:24:57 ::1 Returned 200 in 0 ms
- HTTP  28/05/2026 04:24:58 ::1 GET /mfe-a.js
- HTTP  28/05/2026 04:24:58 ::1 Returned 200 in 1 ms
- HTTP  28/05/2026 04:24:58 ::1 HEAD /mfe-a.js
- HTTP  28/05/2026 04:24:58 ::1 Returned 200 in 0 ms
- HTTP  28/05/2026 04:24:58 ::1 GET /mfe-a.js
- HTTP  28/05/2026 04:24:58 ::1 Returned 200 in 1 ms
- HTTP  28/05/2026 04:24:59 ::1 GET /mfe-a.js
- HTTP  28/05/2026 04:24:59 ::1 Returned 200 in 1 ms
- HTTP  28/05/2026 04:24:59 ::1 HEAD /mfe-a.js
- HTTP  28/05/2026 04:24:59 ::1 Returned 200 in 1 ms
- HTTP  28/05/2026 04:24:59 ::1 GET /mfe-a.js
- HTTP  28/05/2026 04:24:59 ::1 Returned 200 in 0 ms
- HTTP  28/05/2026 04:24:59 ::1 GET /mfe-a.js
- HTTP  28/05/2026 04:24:59 ::1 Returned 200 in 0 ms
- HTTP  28/05/2026 04:25:00 ::1 GET /mfe-a.js
- HTTP  28/05/2026 04:25:00 ::1 Returned 200 in 0 ms
- HTTP  28/05/2026 04:26:21 ::1 HEAD /mfe-a.js
- HTTP  28/05/2026 04:26:21 ::1 GET /mfe-a.js
- HTTP  28/05/2026 04:26:21 ::1 Returned 200 in 1 ms
- HTTP  28/05/2026 04:26:21 ::1 Returned 200 in 0 ms
- HTTP  28/05/2026 04:26:21 ::1 GET /mfe-a.js
- HTTP  28/05/2026 04:26:21 ::1 Returned 200 in 1 ms
- HTTP  28/05/2026 04:26:21 ::1 GET /mfe-a.js
- HTTP  28/05/2026 04:26:21 ::1 Returned 200 in 1 ms
+ HTTP  28/05/2026 13:03:59 127.0.0.1 GET /
+ HTTP  28/05/2026 13:03:59 127.0.0.1 Returned 200 in 9 ms
 ^C

@@ -173,9 +173,9 @@ for port in "${PORTS[@]}"; do
 done
 
 echo ""
-echo "📝 Gerando remotes.public.json..."
+echo "📝 Gerando arquivos de configuração..."
 
-# Gera JSON com URLs públicas
+# Gera JSON com URLs públicas para shell Vanilla
 cat > "$ROOT_DIR/native-federation-shell-angular/remotes.public.json" << EOF
 {
   "env": "public",
@@ -192,6 +192,24 @@ cat > "$ROOT_DIR/native-federation-shell-angular/remotes.public.json" << EOF
 EOF
 
 echo "✅ Arquivo gerado: native-federation-shell-angular/remotes.public.json"
+
+# Gera JSON com URLs públicas para shell Angular 20
+cat > "$ROOT_DIR/angular-shell-20/public/remotes.public.json" << EOF
+{
+  "env": "public",
+  "remotes": {
+    "nf": "${PUBLIC_URLS[9101]:-http://localhost:9101}/mfe1.js",
+    "mf": "${PUBLIC_URLS[9301]:-http://localhost:9301}/remote-a.js",
+    "ssa": "${PUBLIC_URLS[9302]:-http://localhost:9302}/mfe-a.js",
+    "ng": "${PUBLIC_URLS[9310]:-http://localhost:9310}/mfe-ng.js",
+    "ng-full": "${PUBLIC_URLS[9400]:-http://localhost:9400}/mfe-ng-full.js",
+    "react": "${PUBLIC_URLS[9201]:-http://localhost:9201}/mfe-react.js",
+    "vue": "${PUBLIC_URLS[9001]:-http://localhost:9001}/mfe-vue.js"
+  }
+}
+EOF
+
+echo "✅ Arquivo gerado: angular-shell-20/public/remotes.public.json"
 echo ""
 echo "🌐 URLs Públicas:"
 for port in "${!PUBLIC_URLS[@]}"; do
