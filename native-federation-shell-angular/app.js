@@ -282,26 +282,38 @@ async function probeUrlSize(url) {
 
   let size = 0;
   try {
-    const headRes = await fetch(url, { method: 'HEAD' });
-    const cl = headRes.headers.get('content-length');
-    if (cl) {
-      size = parseInt(cl, 10) || 0;
+    // Tenta HEAD primeiro (mais rápido)
+    try {
+      const headRes = await fetch(url, { method: 'HEAD' });
+      const cl = headRes.headers.get('content-length');
+      if (cl) {
+        size = parseInt(cl, 10) || 0;
+        if (size > 0) {
+          urlSizeCache.set(url, size);
+          return size;
+        }
+      }
+    } catch {
+      // HEAD pode falhar, continua com GET
     }
 
-    if (!size) {
-      const getRes = await fetch(url);
-      if (getRes.ok) {
-        const cl2 = getRes.headers.get('content-length');
-        if (cl2) {
-          size = parseInt(cl2, 10) || 0;
-        }
-        if (!size) {
-          const blob = await getRes.blob();
-          size = blob.size || 0;
-        }
+    // Sempre faz GET se HEAD não retornou tamanho
+    const getRes = await fetch(url);
+    if (getRes.ok) {
+      // Tenta content-length primeiro
+      const cl2 = getRes.headers.get('content-length');
+      if (cl2) {
+        size = parseInt(cl2, 10) || 0;
+      }
+      
+      // Se não tem content-length, sempre calcula via blob
+      if (!size) {
+        const blob = await getRes.blob();
+        size = blob.size || 0;
       }
     }
   } catch (err) {
+    console.warn(`[probeUrlSize] Erro ao medir ${url}:`, err.message);
     size = 0;
   }
 
