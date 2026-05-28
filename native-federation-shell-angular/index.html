@@ -37,9 +37,6 @@
         <p class="muted">Web-first, compacta e estável. Sem auto-carga pesada no boot.</p>
       </div>
       <div class="header-actions">
-        <button id="btn-open-overview" class="btn btn-primary" type="button">Visão geral</button>
-        <button id="btn-refresh-all" class="btn" type="button">Atualizar tudo</button>
-        <button id="btn-clear-cache" class="btn" type="button">Limpar cache</button>
         <button id="btn-open-bus" class="btn" type="button">Eventos BUS (<span id="bus-count">0</span>)</button>
         <button id="btn-bus-test" class="btn" type="button">Emitir BUS teste</button>
         <button id="btn-clear-stage" class="btn" type="button">Limpar palco</button>
@@ -84,6 +81,14 @@
       </section>
 
       <aside class="panel side-column">
+        <section>
+          <div class="header-actions" style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem;">
+            <button id="btn-open-overview" class="btn btn-primary" type="button">Visão geral</button>
+            <button id="btn-refresh-all" class="btn" type="button">Atualizar tudo</button>
+            <button id="btn-clear-cache" class="btn" type="button">Limpar cache</button>
+          </div>
+        </section>
+        
         <section>
           <p class="kicker">Atalhos</p>
           <h3>Navegação rápida</h3>
