@@ -8,12 +8,16 @@ Laboratório completo de **Micro Frontends** com múltiplas estratégias de inte
 
 **⚠️ Não é uma demo simples!** Este projeto simula um ambiente de **produção enterprise** real com:
 
-- 🎯 **Shell Universal** (Vanilla JS) que consome qualquer padrão de MFE
-- 🔧 **7 MFEs** em diferentes tecnologias e estratégias
-- 📊 **Telemetria em tempo real** com ranking científico
-- 🌐 **Túneis públicos** para testes em dispositivos reais
-- 🤖 **Automação completa** (1 comando para subir tudo)
-- 📏 **Governança** de remotes e shared dependencies
+- 🎯 **Shell Universal Vanilla JS** - Orquestrador agnóstico que consome qualquer padrão de MFE
+- 🔧 **7 MFEs** em diferentes tecnologias e estratégias (Angular, React, Vue, Webpack, Single-SPA)
+- 📊 **Telemetria científica em tempo real** com ranking automático
+- 🌐 **Túneis públicos** via Cloudflare/localtunnel para testes remotos
+- 🤖 **Automação completa** - 1 comando para subir tudo (`bash run-all.sh`)
+- 📏 **Governança** de remotes e shared dependencies com validação automática
+
+> **📌 Nota sobre a pasta "native-federation-shell-angular":**  
+> Apesar do nome, este shell é **100% Vanilla JavaScript** (HTML + JS + CSS puro, sem frameworks).  
+> O nome é histórico/descritivo mas pode ser confuso - é um shell agnóstico que consome MFEs de qualquer framework.
 
 ---
 
@@ -38,24 +42,42 @@ Shell Universal (Vanilla JS + importmap)
 
 ## 🏗️ **Arquitetura do Projeto**
 
-### **Shell (Orquestrador Universal)**
+### **Shell Universal (Orquestrador Agnóstico)**
 
-**Localização:** `native-federation-shell-angular/`
+**📁 Localização:** `native-federation-shell-angular/`  
+**⚙️ Tecnologia:** **Vanilla JavaScript puro** (HTML + JS + CSS, sem frameworks)  
+**🚀 Servidor:** `serve` na porta `9100`
 
-**Tecnologia:** Vanilla JavaScript + HTML + CSS
+> **⚠️ Por que o nome tem "angular"?**  
+> Nome histórico/descritivo que pode confundir! O shell é **100% Vanilla JS** e não usa Angular.  
+> É completamente agnóstico e consome MFEs de qualquer framework sem acoplamento.
 
-**Responsabilidades:**
+**🎯 Responsabilidades:**
+- ✅ Orquestrar 7 MFEs de diferentes frameworks e estratégias
 - ✅ Resolver manifest de remotes por ambiente (dev/hml/prod/public)
-- ✅ Montar MFEs no "palco" (stage)
-- ✅ Carregar previews em paralelo
-- ✅ Coletar telemetria científica (cold/warm cache)
-- ✅ Exibir ranking de performance
-- ✅ Suportar comunicação via BUS (Custom Events)
-- ✅ Detectar framework/bundle/runtime automaticamente
+- ✅ Montar MFEs dinamicamente no "palco" (stage) via import()
+- ✅ Carregar previews em paralelo com gerenciamento de lifecycle
+- ✅ Coletar telemetria científica (cold/warm cache, 5 runs cada)
+- ✅ Exibir ranking automático de performance e bundle size
+- ✅ Detectar automaticamente framework/bundle/runtime de cada MFE
+- ✅ Suportar qualquer contrato de export (render, mount, bootstrap, default)
+- ✅ Comunicação cross-MFE via Custom Events (BUS)
 
-**Portas:**
-- Shell: `9100`
-- URLs públicas: `?env=public`
+**📦 Arquivos principais:**
+- `app.js` - Lógica de orquestração, telemetria e lifecycle management
+- `index.html` - Interface HTML com tabelas e controles
+- `styles.css` + `design-system.css` - Estilização
+- `remotes.{dev|hml|prod|public}.json` - Manifests de remotes por ambiente
+- `package.json` - Apenas `serve` para servidor HTTP (sem build!)
+
+**🌐 URLs:**
+- Shell: `http://localhost:9100`
+- Com tunnel público: `http://localhost:9100/?env=public`
+
+**🔗 Outros shells no projeto (não usados por padrão):**
+- `module-federation-shell-angular/` - Shell experimental Webpack MF
+- `single-spa-shell-angular/` - Shell experimental Single-SPA
+- `angular-shell-20/` - Shell Angular 20 em desenvolvimento (fundação pronta)
 
 ---
 
