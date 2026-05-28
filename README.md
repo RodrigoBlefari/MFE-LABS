@@ -1,5 +1,7 @@
 # 🏗️ MFE-LABS - Micro Frontend Laboratory
 
+![Telemetria e Ranking de Performance](ranking.png)
+
 ## 📋 **Visão Geral**
 
 Laboratório completo de **Micro Frontends** com múltiplas estratégias de integração, shell universal e governança operacional. Este é um **Native Federation Híbrido** que consome MFEs de diferentes fontes e tecnologias.
@@ -635,22 +637,169 @@ http://localhost:9400  ← Angular 20 Native Federation ⭐
 
 ---
 
-## 📊 **Ranking de Performance (Real)**
+## 📊 **Ranking de Performance - Resultados Reais**
 
-| MFE | Tempo Médio | Bundle | Estratégia |
-|-----|-------------|--------|------------|
-| **Angular 20 NF** ⭐ | **51.9ms** | **40.9 KB** | Native Federation |
-| Native Federation | 27.4ms | 6754 KB | ESM embedado |
-| Angular 15 Element | 27.4ms | 6764 KB | Web Component |
-| Single-SPA | 27.7ms | 6765 KB | Lifecycle |
-| Module Federation | 29.0ms | 6754 KB | Webpack |
-| React 18 | 31.9ms | 7741 KB | Custom Element |
-| Vue 3 | 32.9ms | 7094 KB | Custom Element |
+### 🏆 **Vencedores por Categoria**
 
-**📌 Nota sobre Angular 20 NF:**
-- Bundle **98% menor** (40 KB vs 6.7 MB)
-- Tempo maior devido a múltiplos chunks otimizados
-- Em produção com CDN edge, fica MUITO mais rápido (cache)
+**🥇 Menor Bundle:** Angular 20 Native Federation - **44.0 KB** (98% menor!)  
+**🥈 Mais Rápido (Médio):** Angular 20 Native Federation - **81.5 ms**  
+**🥉 Mais Rápido (Melhor):** Angular 20 Native Federation - **1.2 ms**
+
+---
+
+### 📈 **Telemetria Completa - Performance & Bundle**
+
+| Posição | MFE | Framework | Média | Melhor | Pior | Bundle | Amostras |
+|---------|-----|-----------|-------|--------|------|--------|----------|
+| 🥇 | **Angular 20 NF** | Angular 20 Native Federation | **81.5 ms** | **1.2 ms** | 950.4 ms | **44.0 KB** | 12 |
+| 🥈 | **Vue 3** | Vue 3 | **104.4 ms** | 1.3 ms | 1020.1 ms | 7093.8 KB | 10 |
+| 🥉 | **React 18** | React 18 | **107.4 ms** | 1.7 ms | 1056.0 ms | 7741.0 KB | 10 |
+| 4️⃣ | **Native Fed** | Native Federation (ESM) | **120.4 ms** | 1.4 ms | 1188.3 ms | 6754.0 KB | 10 |
+| 5️⃣ | **Module Fed** | Webpack Module Federation | **134.7 ms** | 1.3 ms | 1332.4 ms | 6753.7 KB | 10 |
+| 6️⃣ | **Single-SPA** | Single-SPA (Angular 15) | **139.8 ms** | 1.3 ms | 1383.1 ms | 6764.9 KB | 10 |
+| 7️⃣ | **Angular 15** | Angular 15 (element) | **162.6 ms** | 1.5 ms | 1611.3 ms | 6764.5 KB | 10 |
+
+**📊 Resumo Geral:**
+- **Total de Amostras:** 72 montagens
+- **Bundle Total:** 41.9 MB (sem compartilhamento)
+- **Média Global:** 121.5 ms
+- **Melhor Tempo:** 1.2 ms (Angular 20 NF)
+- **Pior Tempo:** 1611.3 ms (Angular 15)
+
+---
+
+### 🔬 **Análise Detalhada - Por que Angular 20 Native Federation Venceu?**
+
+**1️⃣ Bundle Microscópico (44 KB)**
+```
+Angular 20 NF:  44.0 KB  ████
+Vue 3:        7093.8 KB  ████████████████████████████████████████
+React 18:     7741.0 KB  ██████████████████████████████████████████
+Outros:       ~6754 KB  █████████████████████████████████████
+```
+- **98% menor** que os concorrentes!
+- Usa CDN shared: lodash, moment, dayjs, date-fns, ramda, mathjs, three.js, chart.js, echarts, xlsx
+- Apenas código da aplicação no bundle
+
+**2️⃣ Estratégia de Compartilhamento**
+- **Angular 20 NF:** Dependências externas via CDN (10 libs compartilhadas)
+- **Vue 3:** Runtime chunks locais (loader.js separado)
+- **React 18:** Todas as libs embedadas (lodash, moment, dayjs, date-fns +8)
+- **Outros:** 100% embedado (framework + todas as libs)
+
+**3️⃣ Performance Temporal**
+- **Média:** Angular 20 NF (81.5ms) vs. Vue 3 (104.4ms) → **22% mais rápido**
+- **Melhor tempo:** Angular 20 NF (1.2ms) = **campeão absoluto**
+- **Consistência:** Todos ficam entre 1.2-1.7ms no melhor caso (cache warm)
+
+**4️⃣ Por que os "Piores" Tempos São Similares?**
+```
+Pior tempo (cold cache):
+- Angular 20 NF: 950.4 ms
+- Vue 3:        1020.1 ms
+- React 18:     1056.0 ms
+- Angular 15:   1611.3 ms  ← Mais pesado
+```
+- Cold cache inclui: download + parsing + execução
+- Bundles grandes são penalizados (Angular 15 com 1611ms)
+- Angular 20 NF mantém consistência mesmo em cold (950ms é excelente)
+
+---
+
+### 💡 **Por que Vue 3 e React 18 Ficaram em 2º e 3º?**
+
+**Vue 3 (2º lugar - 104.4 ms / 7.1 MB):**
+- ✅ Runtime chunks separados (loader.js)
+- ✅ Estratégia de lazy loading
+- ⚠️ Ainda embeda todas as heavy libs
+- 📦 Bundle 160x maior que Angular 20 NF
+
+**React 18 (3º lugar - 107.4 ms / 7.7 MB):**
+- ✅ React 18 otimizado (createRoot)
+- ✅ Custom element wrapper eficiente
+- ⚠️ Embedou 12 libs pesadas (lodash, moment, dayjs, date-fns, ramda, mathjs, three, chart.js, echarts, xlsx, react, react-dom)
+- 📦 Maior bundle de todos (7.7 MB)
+
+---
+
+### 🐌 **Por que Angular 15 Element Foi o Mais Lento?**
+
+**Angular 15 (7º lugar - 162.6 ms / 6.7 MB):**
+- ❌ Bundle monolítico (framework + app + libs)
+- ❌ @angular/elements overhead (Web Components polyfills)
+- ❌ Bootstrap complexo do Angular
+- ❌ Pior tempo: 1611.3ms (frio)
+- ❌ Sem estratégia de compartilhamento
+
+**Comparação Angular 15 vs. Angular 20 NF:**
+```
+Angular 15:      162.6 ms / 6764.5 KB  ████████████████
+Angular 20 NF:    81.5 ms /   44.0 KB  ██
+                   50% mais rápido
+                   99% menor bundle
+```
+
+---
+
+### 🎯 **Conclusões Técnicas**
+
+**1. Bundle Size Importa (mas não é tudo):**
+- Angular 20 NF: 44 KB → 81.5 ms (melhor custo-benefício)
+- Vue 3: 7.1 MB → 104.4 ms (eficiente apesar do tamanho)
+- React 18: 7.7 MB → 107.4 ms (bom mesmo com maior bundle)
+- Angular 15: 6.7 MB → 162.6 ms (pior relação tamanho/tempo)
+
+**2. Estratégia de Loading:**
+- **CDN sharing** (Angular 20 NF) = VENCEDOR 🏆
+- **Runtime chunks** (Vue 3) = Muito bom 🥈
+- **Embeded monolito** (React, outros) = Funcional mas pesado
+- **Web Components overhead** (Angular 15) = Evitar em prod
+
+**3. Cache Warm vs. Cold:**
+- **Cache warm:** Todos ficam rápidos (1.2-1.7ms)
+- **Cache cold:** Diferença aparece (950ms vs. 1611ms)
+- **Produção com CDN edge:** Angular 20 NF seria ~10-20ms consistente
+
+**4. Escalabilidade:**
+```
+Adicionar novo MFE ao sistema:
+
+Com Angular 20 NF:
++ 44 KB por MFE          ← Excelente! 
++ Shared deps já em cache
+
+Com React/Vue embedado:
++ 7 MB por MFE           ← Insustentável!
++ Zero compartilhamento
+```
+
+**5. Recomendação por Cenário:**
+
+| Cenário | Recomendação | Por quê |
+|---------|--------------|---------|
+| **Produção Enterprise** | Angular 20 NF | Bundle microscópico, shared deps, escalável |
+| **Prototipagem rápida** | Vue 3 | Bom equilíbrio, chunks separados |
+| **App isolado único** | React 18 | Sem overhead de federation |
+| **Migração legacy** | Single-SPA | Compatibilidade com diversos frameworks |
+| **Evitar** | Angular Elements standalone | Overhead alto, bundle pesado |
+
+---
+
+### 🚀 **Angular 20 Native Federation é o Futuro**
+
+**Por que venceu:**
+- ✅ 98% menor bundle (44 KB vs. 7 MB)
+- ✅ 50% mais rápido que Angular 15
+- ✅ Compartilhamento automático de 10 dependências
+- ✅ Escalável (adicionar MFE = +44 KB, não +7 MB)
+- ✅ Melhor tempo no cache warm (1.2 ms)
+- ✅ Consistente no cache cold (950 ms vs. 1611 ms)
+
+**Ideal para:**
+- Sistemas com múltiplos MFEs (3+)
+- Apps enterprise com shared dependencies
+- Cenários onde bundle size é crítico
+- Equipes que compartilham mesmas libs
 
 ---
 
