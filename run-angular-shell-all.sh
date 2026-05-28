@@ -70,10 +70,12 @@ fi
 echo "   └─ Building Shell Angular..."
 npm run build
 
-# 3. Inicia todos os MFEs (sem shell ainda)
+# 3. Inicia todos os MFEs (SEM shell vanilla)
 echo ""
 echo "🎯 [3/4] Iniciando MFEs em background..."
 cd "$ROOT_DIR"
+# Define variável para NÃO iniciar o shell vanilla
+export SKIP_SHELL_START=1
 bash run-native-shell.sh &
 MFE_PID=$!
 

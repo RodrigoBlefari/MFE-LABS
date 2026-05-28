@@ -82,8 +82,8 @@ tunnel_cloudflared() {
   local pid=$!
   echo $pid > "$ROOT_DIR/.run-logs/tunnel-$port.pid"
   
-  # Aguarda URL aparecer no log
-  for i in {1..30}; do
+  # Aguarda URL aparecer no log (aumentado para 60s por túnel)
+  for i in {1..60}; do
     if [ -f "$ROOT_DIR/.run-logs/tunnel-$port.log" ]; then
       local url=$(grep -oP 'https://[a-z0-9-]+\.trycloudflare\.com' "$ROOT_DIR/.run-logs/tunnel-$port.log" | head -n1)
       if [ -n "$url" ]; then
@@ -95,7 +95,7 @@ tunnel_cloudflared() {
     sleep 1
   done
   
-  echo "  ⚠️  Timeout aguardando URL"
+  echo "  ⚠️  Timeout aguardando URL (60s)"
   return 1
 }
 

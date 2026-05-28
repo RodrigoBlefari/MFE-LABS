@@ -471,6 +471,15 @@ if [ "${GENERATE_ONLY-0}" = "1" ] || [ "${GENERATE_MFE_VERSIONS_ONLY-0}" = "1" ]
   exit 0
 fi
 
+# Se SKIP_SHELL_START estiver definido, não inicia o shell vanilla
+if [ "${SKIP_SHELL_START-0}" = "1" ]; then
+  echo "[run-native-shell] SKIP_SHELL_START definido -> MFEs iniciados, shell vanilla NÃO será iniciado"
+  echo "[run-native-shell] Para acessar o shell vanilla manualmente, execute: cd native-federation-shell-angular && npm start"
+  # Mantém o processo vivo para não matar os MFEs
+  wait
+  exit 0
+fi
+
 echo "[run-native-shell] Iniciando shell Native Federation (em primeiro plano)..."
 ( 
   cd "$SHELL_DIR"

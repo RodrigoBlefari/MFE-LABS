@@ -4,30 +4,56 @@
 
  UPDATE  The latest version of `serve` is 14.2.6
  INFO  Accepting connections at http://localhost:9100
- HTTP  28/05/2026 13:07:09 ::1 GET /?env=public
- HTTP  28/05/2026 13:07:09 ::1 Returned 200 in 35 ms
- HTTP  28/05/2026 13:07:09 ::1 GET /design-system.css
- HTTP  28/05/2026 13:07:09 ::1 GET /styles.css
- HTTP  28/05/2026 13:07:09 ::1 GET /app.js
- HTTP  28/05/2026 13:07:09 ::1 Returned 200 in 3 ms
- HTTP  28/05/2026 13:07:09 ::1 Returned 200 in 2 ms
- HTTP  28/05/2026 13:07:09 ::1 Returned 200 in 9 ms
- HTTP  28/05/2026 13:07:09 ::1 GET /remotes.public.json
- HTTP  28/05/2026 13:07:09 ::1 Returned 200 in 2 ms
- HTTP  28/05/2026 13:07:09 ::1 GET /favicon.ico
- HTTP  28/05/2026 13:07:09 ::1 Returned 404 in 1 ms
- HTTP  28/05/2026 13:07:09 ::1 GET /.well-known/appspecific/com.chrome.devtools.json
- HTTP  28/05/2026 13:07:09 ::1 Returned 404 in 1 ms
- HTTP  28/05/2026 13:09:06 ::1 GET /?env=public
- HTTP  28/05/2026 13:09:06 ::1 Returned 200 in 1 ms
- HTTP  28/05/2026 13:09:06 ::1 GET /design-system.css
- HTTP  28/05/2026 13:09:06 ::1 GET /styles.css
- HTTP  28/05/2026 13:09:06 ::1 GET /app.js
- HTTP  28/05/2026 13:09:06 ::1 Returned 200 in 1 ms
- HTTP  28/05/2026 13:09:06 ::1 Returned 200 in 1 ms
- HTTP  28/05/2026 13:09:06 ::1 Returned 200 in 1 ms
- HTTP  28/05/2026 13:09:06 ::1 GET /remotes.public.json
- HTTP  28/05/2026 13:09:06 ::1 Returned 200 in 1 ms
- HTTP  28/05/2026 13:09:06 ::1 GET /.well-known/appspecific/com.chrome.devtools.json
- HTTP  28/05/2026 13:09:06 ::1 Returned 404 in 1 ms
+ HTTP  28/05/2026 13:17:52 ::1 GET /?env=public
+ HTTP  28/05/2026 13:17:52 ::1 Returned 200 in 10 ms
+ HTTP  28/05/2026 13:17:52 ::1 GET /app.js
+ HTTP  28/05/2026 13:17:52 ::1 GET /styles.css
+ HTTP  28/05/2026 13:17:52 ::1 GET /design-system.css
+ HTTP  28/05/2026 13:17:52 ::1 Returned 200 in 2 ms
+ HTTP  28/05/2026 13:17:52 ::1 Returned 304 in 2 ms
+ HTTP  28/05/2026 13:17:52 ::1 Returned 200 in 2 ms
+ HTTP  28/05/2026 13:17:52 ::1 GET /remotes.public.json
+ HTTP  28/05/2026 13:17:52 ::1 Returned 200 in 2 ms
+ HTTP  28/05/2026 13:17:52 ::1 GET /design-system.css
+ HTTP  28/05/2026 13:17:52 ::1 GET /styles.css
+ HTTP  28/05/2026 13:17:52 ::1 Returned 304 in 0 ms
+ HTTP  28/05/2026 13:17:52 ::1 Returned 304 in 1 ms
+ HTTP  28/05/2026 13:18:07 ::1 GET /?env=public
+ HTTP  28/05/2026 13:18:07 ::1 Returned 304 in 1 ms
+ HTTP  28/05/2026 13:18:07 ::1 GET /design-system.css
+ HTTP  28/05/2026 13:18:07 ::1 GET /styles.css
+ HTTP  28/05/2026 13:18:07 ::1 GET /app.js
+ HTTP  28/05/2026 13:18:07 ::1 Returned 304 in 1 ms
+ HTTP  28/05/2026 13:18:07 ::1 Returned 304 in 0 ms
+ HTTP  28/05/2026 13:18:07 ::1 Returned 304 in 0 ms
+ HTTP  28/05/2026 13:18:08 ::1 GET /remotes.public.json
+ HTTP  28/05/2026 13:18:08 ::1 Returned 304 in 0 ms
+ HTTP  28/05/2026 13:18:08 ::1 GET /design-system.css
+ HTTP  28/05/2026 13:18:08 ::1 GET /styles.css
+ HTTP  28/05/2026 13:18:08 ::1 Returned 304 in 1 ms
+ HTTP  28/05/2026 13:18:08 ::1 Returned 304 in 1 ms
+ HTTP  28/05/2026 13:18:15 ::1 GET /?env=public
+ HTTP  28/05/2026 13:18:15 ::1 Returned 304 in 0 ms
+ HTTP  28/05/2026 13:18:15 ::1 GET /design-system.css
+ HTTP  28/05/2026 13:18:15 ::1 Returned 304 in 0 ms
+ HTTP  28/05/2026 13:18:15 ::1 GET /styles.css
+ HTTP  28/05/2026 13:18:15 ::1 GET /app.js
+ HTTP  28/05/2026 13:18:15 ::1 Returned 304 in 0 ms
+ HTTP  28/05/2026 13:18:15 ::1 Returned 304 in 0 ms
+ HTTP  28/05/2026 13:18:15 ::1 GET /remotes.public.json
+ HTTP  28/05/2026 13:18:15 ::1 Returned 304 in 1 ms
+ HTTP  28/05/2026 13:18:42 ::1 GET /?env=public
+ HTTP  28/05/2026 13:18:42 ::1 Returned 304 in 0 ms
+ HTTP  28/05/2026 13:18:42 ::1 GET /design-system.css
+ HTTP  28/05/2026 13:18:42 ::1 Returned 304 in 0 ms
+ HTTP  28/05/2026 13:18:42 ::1 GET /styles.css
+ HTTP  28/05/2026 13:18:42 ::1 GET /app.js
+ HTTP  28/05/2026 13:18:42 ::1 Returned 304 in 1 ms
+ HTTP  28/05/2026 13:18:42 ::1 Returned 304 in 0 ms
+ HTTP  28/05/2026 13:18:42 ::1 GET /remotes.public.json
+ HTTP  28/05/2026 13:18:42 ::1 Returned 304 in 1 ms
+ HTTP  28/05/2026 13:18:42 ::1 GET /design-system.css
+ HTTP  28/05/2026 13:18:42 ::1 GET /styles.css
+ HTTP  28/05/2026 13:18:42 ::1 Returned 304 in 0 ms
+ HTTP  28/05/2026 13:18:42 ::1 Returned 304 in 1 ms
 ^C
