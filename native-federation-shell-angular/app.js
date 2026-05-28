@@ -4,7 +4,6 @@ const els = {
   telemetryBody: document.getElementById('telemetry-body'),
   previewGrid: document.getElementById('preview-grid'),
   selectedCount: document.getElementById('selected-count'),
-  busCount: document.getElementById('bus-count'),
 
   stageTitle: document.getElementById('stage-title'),
   stageSubtitle: document.getElementById('stage-subtitle'),
@@ -15,8 +14,6 @@ const els = {
   btnOpenOverview: document.getElementById('btn-open-overview'),
   btnRefreshAll: document.getElementById('btn-refresh-all'),
   btnClearCache: document.getElementById('btn-clear-cache'),
-  btnOpenBus: document.getElementById('btn-open-bus'),
-  btnBusTest: document.getElementById('btn-bus-test'),
   btnClearStage: document.getElementById('btn-clear-stage'),
   btnSelectAll: document.getElementById('btn-select-all'),
   btnSelectNone: document.getElementById('btn-select-none'),
@@ -68,7 +65,7 @@ const registry = [
     id: 'nf',
     label: 'Native Federation',
     tagline: 'ESM puro e contrato simples',
-    doc: 'MFE base usando módulos ES nativos e BUS para troca de eventos.',
+    doc: 'MFE base usando módulos ES nativos com troca de eventos.',
   },
   {
     id: 'mf',
@@ -103,7 +100,7 @@ const registry = [
   {
     id: 'vue',
     label: 'Vue 3',
-    tagline: 'Custom element com BUS',
+    tagline: 'Custom element com eventos',
     doc: 'Componente Vue com comunicação por evento e montagem segura.',
   },
 ];
@@ -114,8 +111,6 @@ const previewLifecycles = new Map();
 
 let activeStage = { id: null, lifecycle: null };
 let previewLoadToken = 0;
-
-window.__busLogs = window.__busLogs || [];
 
 function getRemoteUrl(id) {
   return runtimeRemotes[id] || defaultRemotes[id];
@@ -440,35 +435,6 @@ async function inspectRemoteRuntime(mfe, remoteUrl, mod) {
   return insight;
 }
 
-function updateBusCount() {
-  if (!els.busCount) return;
-  els.busCount.textContent = String((window.__busLogs || []).length);
-}
-
-function trackBus(event) {
-  window.__busLogs.push({
-    at: new Date().toLocaleTimeString('pt-BR'),
-    detail: event?.detail || {},
-  });
-  if (window.__busLogs.length > 80) window.__busLogs.shift();
-  updateBusCount();
-}
-
-function toBusHtml() {
-  const logs = (window.__busLogs || []).slice(-20).reverse();
-  if (!logs.length) {
-    return '<p>Nenhum evento BUS registrado.</p>';
-  }
-  return `
-    <ul>
-      ${logs
-        .map(
-          (l) => `<li><strong>${l.at}</strong><pre><code>${JSON.stringify(l.detail, null, 2)}</code></pre></li>`,
-        )
-        .join('')}
-    </ul>
-  `;
-}
 
 function openModal(title, html) {
   if (!els.modalBackdrop || !els.modalTitle || !els.modalContent) return;
@@ -660,8 +626,6 @@ function wireEvents() {
     });
   });
 
-  window.addEventListener('BUS', trackBus);
-
   els.sectionHead?.addEventListener('click', () => {
     toggleStageCollapse();
   });
@@ -683,28 +647,12 @@ function wireEvents() {
     );
   });
 
-  els.btnOpenBus?.addEventListener('click', () => {
-    openModal('Eventos BUS', toBusHtml());
-  });
-
   els.btnRefreshAll?.addEventListener('click', () => {
     void refreshAll();
   });
 
   els.btnClearCache?.addEventListener('click', () => {
     clearRuntimeCaches();
-  });
-
-  els.btnBusTest?.addEventListener('click', () => {
-    window.dispatchEvent(
-      new CustomEvent('BUS', {
-        detail: {
-          id: 'shell',
-          name: 'SHELL-PING',
-          at: new Date().toISOString(),
-        },
-      }),
-    );
   });
 
   els.btnClearStage?.addEventListener('click', () => {
@@ -758,7 +706,6 @@ async function init() {
   renderQuickNav();
   renderCards();
   renderSelectedCount();
-  updateBusCount();
 }
 
 init().catch((error) => {
@@ -1014,7 +961,6 @@ function renderCards() {
       <div class="mfe-card-actions">
         <button type="button" class="btn btn-primary" data-action="stage">Abrir no palco</button>
         <button type="button" class="btn" data-action="docs">Docs</button>
-        <button type="button" class="btn" data-action="bus">BUS</button>
       </div>
     `;
 
@@ -1039,10 +985,6 @@ function renderCards() {
           <pre><code>${getRemoteUrl(mfe.id)}</code></pre>
         `,
       );
-    });
-
-    card.querySelector('[data-action="bus"]')?.addEventListener('click', () => {
-      openModal(`BUS · ${mfe.label}`, toBusHtml());
     });
 
     els.cardsGrid.appendChild(card);
