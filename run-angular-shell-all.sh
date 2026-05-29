@@ -1,11 +1,14 @@
 #!/bin/bash
 
-set -euo pipefail
+set -uo pipefail
 
 echo "⚡ MFE-LABS - Shell Angular 20 (Estudo)"
 echo "========================================"
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Array para armazenar PIDs dos processos em background
+declare -a BACKGROUND_PIDS=()
 
 # Função para matar processo em uma porta específica
 kill_port() {
@@ -18,7 +21,7 @@ kill_port() {
     if [ -n "$pid" ]; then
       echo "   └─ Matando processo $pid na porta $port"
       kill -9 $pid 2>/dev/null || true
-      sleep 1
+      sleep 0.5
     fi
   elif command -v netstat >/dev/null 2>&1; then
     # Windows usando netstat
@@ -26,10 +29,42 @@ kill_port() {
     if [ -n "$pid" ] && [ "$pid" != "0" ]; then
       echo "   └─ Matando processo $pid na porta $port"
       taskkill //PID $pid //F 2>/dev/null || true
-      sleep 1
+      sleep 0.5
     fi
   fi
 }
+
+# Função de cleanup para parar todos os processos
+cleanup() {
+  echo ""
+  echo "🛑 Parando todos os processos e limpando portas..."
+  
+  # Mata processos em background rastreados
+  for pid in "${BACKGROUND_PIDS[@]}"; do
+    if ps -p $pid > /dev/null 2>&1; then
+      echo "   └─ Matando processo $pid"
+      kill -9 $pid 2>/dev/null || true
+    fi
+  done
+  
+  # Limpa todas as portas
+  echo "   └─ Limpando todas as portas localhost..."
+  kill_port 4200  # Shell Angular
+  kill_port 9100  # Shell Vanilla
+  kill_port 9001  # Vue 3
+  kill_port 9101  # Native Federation
+  kill_port 9201  # React 18
+  kill_port 9301  # Module Federation
+  kill_port 9302  # Single-SPA
+  kill_port 9310  # Angular 15 Element
+  kill_port 9400  # Angular 20 Native Federation
+  
+  echo "   └─ ✅ Todas as portas limpas e processos parados!"
+  exit 0
+}
+
+# Captura Ctrl+C (SIGINT) e SIGTERM para fazer cleanup
+trap cleanup SIGINT SIGTERM EXIT
 
 # Limpa portas que serão usadas
 echo ""
@@ -78,6 +113,7 @@ cd "$ROOT_DIR"
 export SKIP_SHELL_START=1
 bash run-native-shell.sh &
 MFE_PID=$!
+BACKGROUND_PIDS+=($MFE_PID)
 
 echo "   └─ MFEs iniciando em background (PID: $MFE_PID)"
 echo "   └─ Aguardando 30 segundos para MFEs inicializarem..."
@@ -89,6 +125,7 @@ echo "🌐 [3.5/4] Expondo MFEs via túneis públicos..."
 if [ -f "$ROOT_DIR/cloudflared.exe" ] || command -v cloudflared >/dev/null 2>&1; then
   bash "$ROOT_DIR/expose-public.sh" &
   TUNNEL_PID=$!
+  BACKGROUND_PIDS+=($TUNNEL_PID)
   echo "   └─ Túneis Cloudflare iniciando em background (PID: $TUNNEL_PID)"
   echo "   └─ Aguardando 15 segundos para túneis serem criados..."
   sleep 15
@@ -127,9 +164,7 @@ echo "   ✅ Compartilha runtime com MFEs"
 echo "   ✅ Lista de 7 MFEs disponíveis"
 echo "   ✅ Carregamento simples (estudo)"
 echo ""
-echo "🛑 Para parar tudo:"
-echo "   kill $MFE_PID"
-echo "   Ctrl+C (shell Angular)"
+echo "🛑 Para parar tudo: Pressione Ctrl+C"
 echo ""
 echo "📝 Logs dos MFEs:"
 echo "   tail -f .run-logs/*.log"
